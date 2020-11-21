@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+docker run -it --rm -v $PWD:/usr/src/app -w /usr/src/app php vendor/bin/psalm "$@"

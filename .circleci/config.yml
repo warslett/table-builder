@@ -1,0 +1,39 @@
+version: 2
+
+jobs:
+  build:
+    machine: true
+    steps:
+
+      - checkout
+
+      - run:
+          name: "Pull PHP Image"
+          command: "docker pull php:7.4-cli"
+
+      - run:
+          name: "Build Testing Image"
+          command: "docker build -t php ."
+
+      - run:
+          name: "Install Composer Dependencies"
+          command: "bin/composer install"
+
+      - run:
+          name: "Run Code Sniffer (Coding Standards)"
+          command: "bin/phpcs"
+
+      - run:
+          name: "Run Psalm (PHP Static Analysis)"
+          command: "bin/psalm"
+
+      - run:
+          name: "Run PHPUnit (Unit Tests)"
+          command: "bin/phpunit --coverage-text --coverage-clover clover.xml --log-junit .circleci/test-results/phpunit/default.xml"
+
+      - run:
+          name: "Verify Code Coverage"
+          command: "bin/coverage-check clover.xml 100"
+
+      - store_test_results:
+          path: ".circleci/test-results"

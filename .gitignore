@@ -1,0 +1,7 @@
+table-builder.iml
+.idea/
+vendor/
+composer.lock
+.phpunit.result.cache
+clover.xml
+.circleci/test-results
