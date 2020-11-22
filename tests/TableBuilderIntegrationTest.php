@@ -424,4 +424,19 @@ class TableBuilderIntegrationTest extends TestCase
 
         $this->assertSame(2, $table->getRowsPerPage());
     }
+
+    /**
+     * @return void
+     */
+    public function testSetRowsPerPageOptions(): void
+    {
+        $tableBuilderFactory = new TableBuilderFactory();
+        $rowsPerPageOptions = [10, 20, 50];
+        $table = $tableBuilderFactory->createTableBuilder()
+            ->setRowsPerPageOptions($rowsPerPageOptions)
+            ->buildTable('user_table')
+        ;
+
+        $this->assertSame($rowsPerPageOptions, $table->getRowsPerPageOptions());
+    }
 }

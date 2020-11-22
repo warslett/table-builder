@@ -57,8 +57,8 @@ $firstRowFirstNameValue = $firstRowFirstNameCell->getValue(); // "John"
 
 ### Table Rendering
 Modeling tables in an abstract way allows you to render them in a variety of ways. Renderers that render html implement
-the interface HtmlTableRendererInterface. The twig and phtml renderers are provided out of the box and are themeable
-with a bootstrap4 theme provided out the box.
+the interface HtmlTableRendererInterface. The twig renderer is provided out of the box and is themeable with a
+bootstrap4 theme provided out the box.
 ``` php
 /** @var \Twig\Environment $twig */
 $renderer = new TwigRenderer($twig, 'bootstrap4.html.twig');

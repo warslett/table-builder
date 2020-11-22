@@ -17,6 +17,9 @@ final class TableBuilder implements TableBuilderInterface
     /** @var int */
     private int $maxRowsPerPage = Table::DEFAULT_MAX_ROWS_PER_PAGE;
 
+    /** @var array<int> */
+    private array $rowsPerPageOptions = [];
+
     /**
      * @param ColumnInterface $column
      * @return $this
@@ -48,11 +51,27 @@ final class TableBuilder implements TableBuilderInterface
     }
 
     /**
+     * @param array<int> $rowsPerPageOptions
+     * @return $this
+     */
+    public function setRowsPerPageOptions(array $rowsPerPageOptions): self
+    {
+        $this->rowsPerPageOptions = $rowsPerPageOptions;
+        return $this;
+    }
+
+    /**
      * @param string $name
      * @return Table
      */
     public function buildTable(string $name): Table
     {
-        return new Table($name, $this->columns, $this->defaultRowsPerPage, $this->maxRowsPerPage);
+        return new Table(
+            $name,
+            $this->columns,
+            $this->defaultRowsPerPage,
+            $this->maxRowsPerPage,
+            $this->rowsPerPageOptions
+        );
     }
 }

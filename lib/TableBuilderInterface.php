@@ -28,6 +28,12 @@ interface TableBuilderInterface
     public function setMaxRowsPerPage(int $maxRowsPerPage): self;
 
     /**
+     * @param array<int> $rowsPerPageOptions
+     * @return $this
+     */
+    public function setRowsPerPageOptions(array $rowsPerPageOptions): self;
+
+    /**
      * @param string $name
      * @return Table
      */

@@ -41,11 +41,15 @@ class Table
     /** @var int */
     private int $pageNumber = 0;
 
+    /** @var array<int> */
+    private array $rowsPerPageOptions;
+
     public function __construct(
         string $name,
         array $columns,
         int $defaultRowsPerPage = self::DEFAULT_ROWS_PER_PAGE,
-        int $maxRowsPerPage = self::DEFAULT_MAX_ROWS_PER_PAGE
+        int $maxRowsPerPage = self::DEFAULT_MAX_ROWS_PER_PAGE,
+        array $rowsPerPageOptions = []
     ) {
         $this->name = $name;
         $this->columns = $columns;
@@ -54,6 +58,7 @@ class Table
         }, $this->columns);
         $this->rowsPerPage = $defaultRowsPerPage;
         $this->maxRowsPerPage = $maxRowsPerPage;
+        $this->rowsPerPageOptions = $rowsPerPageOptions;
     }
 
     /**
@@ -150,5 +155,13 @@ class Table
     public function getTotalPages(): int
     {
         return (int) ceil($this->totalRows / $this->rowsPerPage);
+    }
+
+    /**
+     * @return array<int>
+     */
+    public function getRowsPerPageOptions(): array
+    {
+        return $this->rowsPerPageOptions;
     }
 }
