@@ -16,7 +16,7 @@ This package has no core dependencies but some of the optional features have dep
 Configure your tables using a variety of column types or implement your own column types. Then load data into the table
 using one of our data adapters or implement your own. Handle a request to apply sorting an pagination using one of our
 request adapters or implement your own.
-```
+``` php
 $table = $this->tableBuilderFactory->createTableBuilder()
     ->addColumn(TextColumn::withName('first_name')
         ->setLabel('First Name')
@@ -41,7 +41,7 @@ $table = $this->tableBuilderFactory->createTableBuilder()
 ### Table Abstraction
 Table Builder models tables in an abstract way that isn't coupled to any particular data source or output. You can
 interact with tables like this:
-```
+``` php
 $tableName = $table->getName(); // "students"
 $tablePageNumber = $table->getPageNumber(); // 1
 
@@ -59,14 +59,14 @@ $firstRowFirstNameValue = $firstRowFirstNameCell->getValue(); // "John"
 Modeling tables in an abstract way allows you to render them in a variety of ways. Renderers that render html implement
 the interface HtmlTableRendererInterface. The twig and phtml renderers are provided out of the box and are themeable
 with a bootstrap4 theme provided out the box.
-```
+``` php
 /** @var \Twig\Environment $twig */
 $renderer = new TwigRenderer($twig, 'bootstrap4.html.twig');
 
 echo $renderer->renderTable($table);
 ```
 Will output html:
-```
+``` html
 <table class="table">
     <thead>
         <tr>
