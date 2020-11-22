@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace WArslett\TableBuilder\Tests\RequestAdapter;
 
 use Symfony\Component\HttpFoundation\Request;
-use WArslett\TableBuilder\RequestAdapter\SymfonyAdapter;
+use WArslett\TableBuilder\RequestAdapter\SymfonyHttpAdapter;
 use WArslett\TableBuilder\Tests\TestCase;
 use Mockery as m;
 use Mockery\Mock;
@@ -16,7 +16,7 @@ class SymfonyAdapterTest extends TestCase
     public function testGetParameterDelegatesToRequest()
     {
         $request = $this->mockRequest();
-        $adapter = SymfonyAdapter::withRequest($request);
+        $adapter = SymfonyHttpAdapter::withRequest($request);
         $parameter = 'foo';
 
         $adapter->getParameter($parameter);
