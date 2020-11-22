@@ -6,6 +6,6 @@ namespace WArslett\TableBuilder\Exception;
 
 use Exception;
 
-class NoColumnAdapterException extends Exception
+class NoValueAdapterException extends Exception
 {
 }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace WArslett\TableBuilder\Tests;
 
 use WArslett\TableBuilder\Column\TextColumn;
-use WArslett\TableBuilder\ColumnAdapter\PropertyAccessAdapter;
+use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 use WArslett\TableBuilder\DataAdapter\ArrayDataAdapter;
-use WArslett\TableBuilder\Exception\NoColumnAdapterException;
+use WArslett\TableBuilder\Exception\NoValueAdapterException;
 use WArslett\TableBuilder\Exception\NoDataAdapterException;
 use WArslett\TableBuilder\RequestAdapter\ArrayRequestAdapter;
 use WArslett\TableBuilder\TableBuilderFactory;
@@ -140,7 +140,7 @@ class TableBuilderIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
 
-        $this->expectException(NoColumnAdapterException::class);
+        $this->expectException(NoValueAdapterException::class);
 
         $tableBuilderFactory->createTableBuilder()
             ->addColumn(TextColumn::withName('foo'))
@@ -161,7 +161,7 @@ class TableBuilderIntegrationTest extends TestCase
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
             ->addColumn(TextColumn::withName('foo')
-                ->setColumnAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
+                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
             ->setDefaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
@@ -280,7 +280,7 @@ class TableBuilderIntegrationTest extends TestCase
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
             ->addColumn(TextColumn::withName('foo')
-                ->setColumnAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
+                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
             ->setDefaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
@@ -303,7 +303,7 @@ class TableBuilderIntegrationTest extends TestCase
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
             ->addColumn(TextColumn::withName('foo')
-                ->setColumnAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
+                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
             ->setDefaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([

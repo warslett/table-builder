@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder\Column;
 
-use WArslett\TableBuilder\Exception\NoColumnAdapterException;
+use WArslett\TableBuilder\Exception\NoValueAdapterException;
 use WArslett\TableBuilder\TableCell;
 use WArslett\TableBuilder\TableHeading;
 
@@ -14,10 +14,10 @@ abstract class AbstractColumn implements ColumnInterface
     protected ?string $label = null;
 
     /**
-     * Private construct (use static named constructors for concretions)
+     * Protected construct (use static named constructors for concretions)
      * @param string $name
      */
-    private function __construct(string $name)
+    protected function __construct(string $name)
     {
         $this->name = $name;
     }
@@ -51,7 +51,7 @@ abstract class AbstractColumn implements ColumnInterface
     /**
      * @param mixed $row
      * @return TableCell
-     * @throws NoColumnAdapterException
+     * @throws NoValueAdapterException
      */
     public function buildTableCell($row): TableCell
     {
@@ -61,7 +61,7 @@ abstract class AbstractColumn implements ColumnInterface
     /**
      * @param mixed $row
      * @return mixed
-     * @throws NoColumnAdapterException
+     * @throws NoValueAdapterException
      */
     abstract protected function getCellValue($row);
 

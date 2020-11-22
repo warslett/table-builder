@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace WArslett\TableBuilder\ColumnAdapter;
+namespace WArslett\TableBuilder\ValueAdapter;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-final class PropertyAccessAdapter implements StringColumnAdapterInterface
+final class PropertyAccessAdapter implements StringValueAdapterInterface
 {
     private string $propertyPath;
     private PropertyAccessor $propertyAccessor;
