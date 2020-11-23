@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder\Tests\RequestAdapter;
 
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use WArslett\TableBuilder\RequestAdapter\SymfonyHttpAdapter;
 use WArslett\TableBuilder\Tests\TestCase;
@@ -13,25 +14,28 @@ use Mockery\Mock;
 class SymfonyAdapterTest extends TestCase
 {
 
-    public function testGetParameterDelegatesToRequest()
+    /**
+     * @return void
+     */
+    public function testGetParametersReturnsRequestParameters(): void
     {
-        $request = $this->mockRequest();
+        $parameters = ['foo' => 'bar'];
+        $request = $this->mockRequest($parameters);
         $adapter = SymfonyHttpAdapter::withRequest($request);
-        $parameter = 'foo';
 
-        $adapter->getParameter($parameter);
+        $actual = $adapter->getParameters();
 
-        $request->shouldHaveReceived('get')->once()->with($parameter);
+        $this->assertSame($parameters, $actual);
     }
 
     /**
-     * @param array $data
+     * @param array $params
      * @return Request&Mock
      */
-    private function mockRequest(array $data = []): Request
+    private function mockRequest(array $params): Request
     {
         $request = m::mock(Request::class);
-        $request->shouldReceive('get')->andReturn($data);
+        $request->query = new InputBag($params);
         return $request;
     }
 }

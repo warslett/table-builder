@@ -6,6 +6,7 @@ namespace WArslett\TableBuilder;
 
 use WArslett\TableBuilder\Column\ColumnInterface;
 use WArslett\TableBuilder\DataAdapter\DataAdapterInterface;
+use WArslett\TableBuilder\Exception\DataAdapterException;
 use WArslett\TableBuilder\Exception\NoDataAdapterException;
 use WArslett\TableBuilder\RequestAdapter\RequestAdapterInterface;
 
@@ -31,6 +32,9 @@ class Table
 
     /** @var DataAdapterInterface|null  */
     private ?DataAdapterInterface $dataAdapter = null;
+
+    /** @var array - the query params of the handled request */
+    private array $params = [];
 
     /** @var array<array<string, TableCell>> */
     private array $rows = [];
@@ -83,6 +87,7 @@ class Table
      * @param RequestAdapterInterface $request
      * @return $this
      * @throws NoDataAdapterException
+     * @throws DataAdapterException
      */
     public function handleRequest(RequestAdapterInterface $request): self
     {
@@ -90,10 +95,8 @@ class Table
             throw new NoDataAdapterException("Cannot handle request until data adapter has been set");
         }
 
-        $tableRequestParameters = $request->getParameter($this->name);
-        if (false === is_array($tableRequestParameters)) {
-            $tableRequestParameters = null;
-        }
+        $this->params = $request->getParameters();
+        $tableRequestParameters = $this->params[$this->name] ?? [];
 
         $requestRowsPerPage = (int) ($tableRequestParameters['rows_per_page'] ?? $this->rowsPerPage);
         $this->rowsPerPage = $requestRowsPerPage > $this->maxRowsPerPage ? $this->maxRowsPerPage : $requestRowsPerPage;
@@ -107,6 +110,20 @@ class Table
         }, $this->dataAdapter->getPage($this->pageNumber, $this->rowsPerPage));
 
         return $this;
+    }
+
+    /**
+     * @param array $merge - an array of params to merge into the table params for this table
+     * @return array - the query params of the current request merged with any provided table params
+     */
+    public function getParams(array $merge = []): array
+    {
+        return array_merge($this->params, [
+            $this->name => array_merge([
+                'page' => $this->pageNumber,
+                'rows_per_page' => $this->rowsPerPage
+            ], $merge)
+        ]);
     }
 
     /**

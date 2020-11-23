@@ -8,8 +8,7 @@ interface RequestAdapterInterface
 {
 
     /**
-     * @param string $name
-     * @return mixed|null
+     * @return array - all query parameters on the request as multidimensional assoc array
      */
-    public function getParameter(string $name);
+    public function getParameters(): array;
 }

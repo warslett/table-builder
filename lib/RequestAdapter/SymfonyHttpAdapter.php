@@ -16,12 +16,11 @@ final class SymfonyHttpAdapter implements RequestAdapterInterface
     }
 
     /**
-     * @param string $name
-     * @return mixed|null
+     * @return array
      */
-    public function getParameter(string $name)
+    public function getParameters(): array
     {
-        return $this->request->get($name);
+        return $this->request->query->all();
     }
 
     /**

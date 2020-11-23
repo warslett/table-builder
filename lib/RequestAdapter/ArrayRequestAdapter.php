@@ -14,20 +14,19 @@ final class ArrayRequestAdapter implements RequestAdapterInterface
     }
 
     /**
+     * @return array
+     */
+    public function getParameters(): array
+    {
+        return $this->array;
+    }
+
+    /**
      * @param array $array
      * @return self
      */
     public static function withArray(array $array): self
     {
         return new self($array);
-    }
-
-    /**
-     * @param string $name
-     * @return mixed|null
-     */
-    public function getParameter(string $name)
-    {
-        return $this->array[$name] ?? null;
     }
 }

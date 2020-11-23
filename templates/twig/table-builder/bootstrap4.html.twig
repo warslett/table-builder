@@ -1,0 +1,70 @@
+{% block table %}
+    {{ table_rows_per_page_options(table) }}
+    {{ table_element(table) }}
+    {{ table_pagination(table) }}
+{% endblock %}
+
+{% block table_rows_per_page_options %}
+    {% if table.rowsPerPageOptions is not empty %}
+        <div class="dropdown mb-2">
+            Rows per page:
+            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="{{ table.name }}_rows_per_page_dropwdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ table.rowsPerPage }}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                {% for option in table.rowsPerPageOptions %}
+                    <a
+                            href="?{{ table.params({'rows_per_page': option, 'page': 1})|url_encode }}"
+                            class="dropdown-item {{ option == table.rowsPerPage ? 'active' : '' }}"
+                    >{{ option }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block table_element %}
+    <table class="table">
+        <thead>
+            <tr>
+                {% for heading in table.headings %}
+                    {{ table_heading(table, heading) }}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in table.rows %}
+                {{ table_row(table, row) }}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block table_heading %}
+    <th scope="col">{{ heading.label }}</th>
+{% endblock %}
+
+{% block table_row %}
+    <tr>
+        {% for cell in row %}
+            {{ table_cell(table, row, cell) }}
+        {% endfor %}
+    </tr>
+{% endblock %}
+
+{% block table_cell %}
+    <td>{{ cell.value }}</td>
+{% endblock %}
+
+{% block table_pagination %}
+    {% if table.totalPages > 1 %}
+        <div class="btn-group" role="group" aria-label="Basic example">
+            {% for i in 1..table.totalPages %}
+                <a
+                        href="?{{ table.params({'page': i})|url_encode }}"
+                        class="btn btn-primary {{ i == table.pageNumber ? 'active' : '' }}"
+                >{{ i }}</a>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
