@@ -8,7 +8,8 @@ and sorting taken care of.
 
 ## Requirements
 PHP 7.4
-This package has no core dependencies but some of the optional features have dependencies.
+This package has no core composer dependencies but some of the optional features have dependencies. See dependencies
+below.
 
 ## Features
 
@@ -56,14 +57,27 @@ $firstRowFirstNameValue = $firstRowFirstNameCell->getValue(); // "John"
 ```
 
 ### Table Rendering
-Modeling tables in an abstract way allows you to render them in a variety of ways. Renderers that render html implement
-the interface HtmlTableRendererInterface. The twig renderer is provided out of the box and is themeable with a
-bootstrap4 theme provided out the box.
+Modeling tables in an abstract way allows us to provide a variety of generic renderers for rendering them. Renderers
+that render html implement the interface HtmlTableRendererInterface. The twig renderer is provided out of the box and is
+themeable with a bootstrap4 theme provided out the box.
 ``` php
-/** @var \Twig\Environment $twig */
-$renderer = new TwigRenderer($twig, 'bootstrap4.html.twig');
+use Twig\Environment;
+use WArslett\TableBuilder\Renderer\Html\TwigRenderer;
+use WArslett\TableBuilder\Twig\StandardTemplatesLoader;
+use WArslett\TableBuilder\Twig\TableRendererExtension;
+
+$twigEnvironment = new Environment(new StandardTemplatesLoader());
+$renderer = new TwigRenderer($twigEnvironment, 'table-builder/bootstrap4.html.twig');
+$twigEnvironment->addExtension(new TableRendererExtension($renderer));
 
 echo $renderer->renderTable($table);
+```
+Or with the TableRendererExtension added to your twig environment you can render directly within twig
+``` twig
+<div class="container">
+    {# table twig function takes a table object #}
+    {{ table(table) }}
+</div>
 ```
 Will output html:
 ``` html
@@ -96,3 +110,10 @@ Will output html:
 </div>
 ```
 It is possible to render multiple tables on the same page which will sort and paginate independently.
+
+## Dependencies
+Table builder has no core dependencies however some optional features have dependencies.
+* TwigRenderer and related classes depends on `twig/twig`
+* DoctrineORMAdapter data adapter depends on `doctrine/orm`
+* PropertyAccessAdapter value adapter depends on `symfony/property-access`
+* SymfonyHttpAdapter response adapter depends on `symfony/http-foundation`
