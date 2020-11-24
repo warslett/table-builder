@@ -6,6 +6,8 @@ namespace WArslett\TableBuilder\Tests;
 
 use Throwable;
 use Twig\Environment;
+use Twig\Loader\ChainLoader;
+use Twig\Loader\FilesystemLoader;
 use WArslett\TableBuilder\Column\TextColumn;
 use WArslett\TableBuilder\DataAdapter\ArrayDataAdapter;
 use WArslett\TableBuilder\Exception\DataAdapterException;
@@ -137,6 +139,78 @@ class TwigRendererIntegrationTest extends TestCase
      * @return void
      * @throws Throwable
      */
+    public function testRenderTableCellValueNoBlockOrTemplateForRenderingType()
+    {
+        $table = $this->buildTable();
+        $row = $table->getRows()[0];
+        $cell = $row['foo'];
+
+        $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
+
+        $output = $twigRenderer->renderTableCellValue($table, $row, $cell);
+
+        $this->assertSame('bar', $output);
+    }
+
+    /**
+     * @return void
+     * @throws Throwable
+     */
+    public function testRenderTableCellValueWithCellValueBlockRendersWithCellValueBlock()
+    {
+        $table = $this->buildTable();
+        $row = $table->getRows()[0];
+        $cell = $row['foo'];
+
+        $twigRenderer = $this->buildRenderer('bootstrap4_with_cellvalue_block.html.twig');
+        $twigRenderer->registerCellValueBlock(TextColumn::class, 'my_cell_value_block');
+
+        $output = $twigRenderer->renderTableCellValue($table, $row, $cell);
+
+        $this->assertSame('MY_BLOCKbarMY_BLOCK', $output);
+    }
+
+    /**
+     * @return void
+     * @throws Throwable
+     */
+    public function testRenderTableCellValueWithCellValueTemplateRendersWithCellValueTemplate()
+    {
+        $table = $this->buildTable();
+        $row = $table->getRows()[0];
+        $cell = $row['foo'];
+
+        $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
+        $twigRenderer->registerCellValueTemplate(TextColumn::class, 'column_template.html.twig');
+
+        $output = $twigRenderer->renderTableCellValue($table, $row, $cell);
+
+        $this->assertSame('MY_TEMPLATEbarMY_TEMPLATE', $output);
+    }
+
+    /**
+     * @return void
+     * @throws Throwable
+     */
+    public function testRenderTableCellValueWithCellValueTemplateAndCellValueBlockRendersWithCellValueTemplate()
+    {
+        $table = $this->buildTable();
+        $row = $table->getRows()[0];
+        $cell = $row['foo'];
+
+        $twigRenderer = $this->buildRenderer('bootstrap4_with_cellvalue_block.html.twig');
+        $twigRenderer->registerCellValueBlock(TextColumn::class, 'my_cell_value_block');
+        $twigRenderer->registerCellValueTemplate(TextColumn::class, 'column_template.html.twig');
+
+        $output = $twigRenderer->renderTableCellValue($table, $row, $cell);
+
+        $this->assertSame('MY_TEMPLATEbarMY_TEMPLATE', $output);
+    }
+
+    /**
+     * @return void
+     * @throws Throwable
+     */
     public function testRenderTablePagination()
     {
         $table = $this->buildTable();
@@ -180,7 +254,10 @@ class TwigRendererIntegrationTest extends TestCase
      */
     private function buildRenderer(string $templatePath): TwigRenderer
     {
-        $twigEnvironment = new Environment(new StandardTemplatesLoader());
+        $twigEnvironment = new Environment(new ChainLoader([
+            new StandardTemplatesLoader(),
+            new FilesystemLoader(__DIR__ . '/resources/twig_renderer/test_templates')
+        ]));
         $twigRenderer = new TwigRenderer($twigEnvironment, $templatePath);
         $twigEnvironment->addExtension(new TableRendererExtension($twigRenderer));
         return $twigRenderer;

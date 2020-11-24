@@ -52,6 +52,14 @@ interface HtmlTableRendererInterface
 
     /**
      * @param Table $table
+     * @param array<TableCell> $row
+     * @param TableCell $cell
+     * @return string
+     */
+    public function renderTableCellValue(Table $table, array $row, TableCell $cell): string;
+
+    /**
+     * @param Table $table
      * @return string
      */
     public function renderTablePagination(Table $table): string;

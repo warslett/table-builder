@@ -53,7 +53,7 @@
 {% endblock %}
 
 {% block table_cell %}
-    <td>{{ cell.value }}</td>
+    <td>{{ table_cell_value(table, row, cell) }}</td>
 {% endblock %}
 
 {% block table_pagination %}

@@ -19,6 +19,8 @@ final class TwigRenderer implements HtmlTableRendererInterface
     private Environment $environment;
     private string $themeTemplatePath;
     private ?TemplateWrapper $template = null;
+    private array $cellValueBlocks = [];
+    private array $cellValueTemplates = [];
 
     public function __construct(Environment $environment, string $themeTemplatePath)
     {
@@ -108,6 +110,36 @@ final class TwigRenderer implements HtmlTableRendererInterface
 
     /**
      * @param Table $table
+     * @param array $row
+     * @param TableCell $cell
+     * @return string
+     * @throws Throwable
+     */
+    public function renderTableCellValue(Table $table, array $row, TableCell $cell): string
+    {
+        $renderingType = $cell->getRenderingType();
+
+        if (isset($this->cellValueTemplates[$renderingType])) {
+            return $this->environment->render($this->cellValueTemplates[$renderingType], [
+                'table' => $table,
+                'row' => $row,
+                'cell' => $cell
+            ]);
+        }
+
+        if (isset($this->cellValueBlocks[$renderingType])) {
+            return $this->getTemplate()->renderBlock($this->cellValueBlocks[$renderingType], [
+                'table' => $table,
+                'row' => $row,
+                'cell' => $cell
+            ]);
+        }
+
+        return (string) $cell->getValue();
+    }
+
+    /**
+     * @param Table $table
      * @return string
      * @throws Throwable
      */
@@ -116,6 +148,26 @@ final class TwigRenderer implements HtmlTableRendererInterface
         return $this->getTemplate()->renderBlock('table_pagination', [
             'table' => $table
         ]);
+    }
+
+    /**
+     * @param string $renderingType
+     * @param string $blockName
+     * @return void
+     */
+    public function registerCellValueBlock(string $renderingType, string $blockName)
+    {
+        $this->cellValueBlocks[$renderingType] = $blockName;
+    }
+
+    /**
+     * @param string $renderingType
+     * @param string $templatePath
+     * @return void
+     */
+    public function registerCellValueTemplate(string $renderingType, string $templatePath)
+    {
+        $this->cellValueTemplates[$renderingType] = $templatePath;
     }
 
     /**
