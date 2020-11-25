@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder\ValueAdapter;
 
-interface StringValueAdapterInterface
+interface ValueAdapterInterface
 {
 
     /**
      * @param mixed $row
-     * @return string
+     * @return mixed
      */
-    public function getStringValue($row): string;
+    public function getValue($row);
 }

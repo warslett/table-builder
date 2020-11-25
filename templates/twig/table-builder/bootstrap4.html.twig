@@ -68,3 +68,15 @@
         </div>
     {% endif %}
 {% endblock %}
+
+{% block action_group %}
+    <div class="btn-group" role="group">
+        {% for action in cell.value.actions %}
+            <a
+                    href="{{ action.route is not null ? table_route(action.route, action.routeParams) : '#' }}"
+                    class="btn btn-primary btn-sm">
+                {{ action.label }}
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}

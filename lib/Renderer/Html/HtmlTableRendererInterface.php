@@ -59,6 +59,13 @@ interface HtmlTableRendererInterface
     public function renderTableCellValue(Table $table, array $row, TableCell $cell): string;
 
     /**
+     * @param string $route
+     * @param array $params
+     * @return string
+     */
+    public function renderTableRoute(string $route, array $params = []): string;
+
+    /**
      * @param Table $table
      * @return string
      */

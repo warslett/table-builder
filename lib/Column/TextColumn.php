@@ -4,22 +4,13 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder\Column;
 
-use WArslett\TableBuilder\ValueAdapter\StringValueAdapterInterface;
+use WArslett\TableBuilder\ValueAdapter\ValueAdapterInterface;
 use WArslett\TableBuilder\Exception\NoValueAdapterException;
+use WArslett\TableBuilder\ValueAdapter\ValueAdapterTrait;
 
 final class TextColumn extends AbstractColumn
 {
-    private ?StringValueAdapterInterface $valueAdapter = null;
-
-    /**
-     * @param StringValueAdapterInterface $valueAdapter
-     * @return $this
-     */
-    public function setValueAdapter(StringValueAdapterInterface $valueAdapter): self
-    {
-        $this->valueAdapter = $valueAdapter;
-        return $this;
-    }
+    use ValueAdapterTrait;
 
     /**
      * @param mixed $row
@@ -34,6 +25,6 @@ final class TextColumn extends AbstractColumn
             );
         }
 
-        return $this->valueAdapter->getStringValue($row);
+        return $this->valueAdapter->getValue($row);
     }
 }

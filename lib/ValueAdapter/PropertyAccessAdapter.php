@@ -7,7 +7,7 @@ namespace WArslett\TableBuilder\ValueAdapter;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
-final class PropertyAccessAdapter implements StringValueAdapterInterface
+final class PropertyAccessAdapter implements ValueAdapterInterface
 {
     private string $propertyPath;
     private PropertyAccessor $propertyAccessor;
@@ -20,11 +20,11 @@ final class PropertyAccessAdapter implements StringValueAdapterInterface
 
     /**
      * @param mixed $row
-     * @return string
+     * @return mixed
      */
-    public function getStringValue($row): string
+    public function getValue($row)
     {
-        return (string) $this->propertyAccessor->getValue($row, $this->propertyPath);
+        return $this->propertyAccessor->getValue($row, $this->propertyPath);
     }
 
     /**

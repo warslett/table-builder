@@ -14,6 +14,7 @@ use WArslett\TableBuilder\Exception\DataAdapterException;
 use WArslett\TableBuilder\Exception\NoDataAdapterException;
 use WArslett\TableBuilder\Renderer\Html\TwigRenderer;
 use WArslett\TableBuilder\RequestAdapter\ArrayRequestAdapter;
+use WArslett\TableBuilder\RouteGeneratorAdapter\SprintfAdapter;
 use WArslett\TableBuilder\Table;
 use WArslett\TableBuilder\TableBuilderFactory;
 use WArslett\TableBuilder\Twig\StandardTemplatesLoader;
@@ -226,6 +227,19 @@ class TwigRendererIntegrationTest extends TestCase
     }
 
     /**
+     * @return void
+     * @throws Throwable
+     */
+    public function testRenderTableRoute()
+    {
+        $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
+
+        $output = $twigRenderer->renderTableRoute('/resource/%d', [123]);
+
+        $this->assertSame('/resource/123', $output);
+    }
+
+    /**
      * @return Table
      * @throws DataAdapterException
      * @throws NoDataAdapterException
@@ -258,7 +272,7 @@ class TwigRendererIntegrationTest extends TestCase
             new StandardTemplatesLoader(),
             new FilesystemLoader(__DIR__ . '/resources/twig_renderer/test_templates')
         ]));
-        $twigRenderer = new TwigRenderer($twigEnvironment, $templatePath);
+        $twigRenderer = new TwigRenderer($twigEnvironment, new SprintfAdapter(), $templatePath);
         $twigEnvironment->addExtension(new TableRendererExtension($twigRenderer));
         return $twigRenderer;
     }

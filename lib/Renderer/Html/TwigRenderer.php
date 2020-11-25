@@ -10,6 +10,8 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\TemplateWrapper;
+use WArslett\TableBuilder\Column\ActionGroupColumn;
+use WArslett\TableBuilder\RouteGeneratorAdapter\RouteGeneratorAdapterInterface;
 use WArslett\TableBuilder\Table;
 use WArslett\TableBuilder\TableCell;
 use WArslett\TableBuilder\TableHeading;
@@ -17,14 +19,21 @@ use WArslett\TableBuilder\TableHeading;
 final class TwigRenderer implements HtmlTableRendererInterface
 {
     private Environment $environment;
+    private RouteGeneratorAdapterInterface $routeGeneratorAdapter;
     private string $themeTemplatePath;
     private ?TemplateWrapper $template = null;
-    private array $cellValueBlocks = [];
+    private array $cellValueBlocks = [
+        ActionGroupColumn::class => 'action_group'
+    ];
     private array $cellValueTemplates = [];
 
-    public function __construct(Environment $environment, string $themeTemplatePath)
-    {
+    public function __construct(
+        Environment $environment,
+        RouteGeneratorAdapterInterface $routeGeneratorAdapter,
+        string $themeTemplatePath
+    ) {
         $this->environment = $environment;
+        $this->routeGeneratorAdapter = $routeGeneratorAdapter;
         $this->themeTemplatePath = $themeTemplatePath;
     }
 
@@ -136,6 +145,16 @@ final class TwigRenderer implements HtmlTableRendererInterface
         }
 
         return (string) $cell->getValue();
+    }
+
+    /**
+     * @param string $route
+     * @param array $params
+     * @return string
+     */
+    public function renderTableRoute(string $route, array $params = []): string
+    {
+        return $this->routeGeneratorAdapter->renderRoute($route, $params);
     }
 
     /**

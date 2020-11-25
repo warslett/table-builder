@@ -59,6 +59,11 @@ final class TableRendererExtension extends AbstractExtension
                 ['is_safe' => ['html']]
             ),
             new TwigFunction(
+                'table_route',
+                [$this->htmlTableRenderer, 'renderTableRoute'],
+                ['is_safe' => ['html']]
+            ),
+            new TwigFunction(
                 'table_pagination',
                 [$this->htmlTableRenderer, 'renderTablePagination'],
                 ['is_safe' => ['html']]
