@@ -7,9 +7,6 @@ namespace WArslett\TableBuilder\Tests;
 use stdClass;
 use WArslett\TableBuilder\Exception\ValueException;
 use WArslett\TableBuilder\TableCell;
-use WArslett\TableBuilder\Tests\TestCase;
-use Mockery as m;
-use Mockery\Mock;
 
 class TableCellTest extends TestCase
 {
@@ -18,6 +15,6 @@ class TableCellTest extends TestCase
     {
         $this->expectException(ValueException::class);
 
-        $cell = new TableCell('foo', new stdClass());
+        new TableCell('foo', new stdClass());
     }
 }

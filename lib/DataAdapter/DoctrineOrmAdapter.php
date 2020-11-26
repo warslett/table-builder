@@ -9,7 +9,11 @@ use WArslett\TableBuilder\Exception\DataAdapterException;
 
 final class DoctrineOrmAdapter implements DataAdapterInterface
 {
+    /** @var ORM\QueryBuilder */
     private ORM\QueryBuilder $queryBuilder;
+
+    /** @var array<string, string> */
+    private array $sortToggleMapping = [];
 
     public function __construct(ORM\QueryBuilder $queryBuilder)
     {
@@ -19,11 +23,21 @@ final class DoctrineOrmAdapter implements DataAdapterInterface
     /**
      * @param int $pageNumber
      * @param int $rowsPerPage
+     * @param string|null $sortToggle
+     * @param bool $isSortedDescending
      * @return array
      */
-    public function getPage(int $pageNumber, int $rowsPerPage): array
-    {
+    public function getPage(
+        int $pageNumber,
+        int $rowsPerPage,
+        ?string $sortToggle = null,
+        bool $isSortedDescending = false
+    ): array {
         $queryBuilder = clone($this->queryBuilder);
+
+        if (null !== $sortToggle && isset($this->sortToggleMapping[$sortToggle])) {
+            $queryBuilder->orderBy($this->sortToggleMapping[$sortToggle], $isSortedDescending ? 'DESC' : 'ASC');
+        }
 
         return $queryBuilder
             ->setFirstResult(($pageNumber - 1) * $rowsPerPage)
@@ -57,6 +71,26 @@ final class DoctrineOrmAdapter implements DataAdapterInterface
             ->select($this->queryBuilder->expr()->countDistinct($from->getAlias()))
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * @param string $sortToggle
+     * @return bool
+     */
+    public function canSort(string $sortToggle): bool
+    {
+        return isset($this->sortToggleMapping[$sortToggle]);
+    }
+
+    /**
+     * @param string $sortToggle
+     * @param string $orderBy
+     * @return $this
+     */
+    public function mapSortToggle(string $sortToggle, string $orderBy): self
+    {
+        $this->sortToggleMapping[$sortToggle] = $orderBy;
+        return $this;
     }
 
     /**

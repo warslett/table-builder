@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace WArslett\TableBuilder\Tests;
+namespace WArslett\TableBuilder\Tests\Renderer\Html;
 
+use SimpleXMLElement;
 use Throwable;
 use Twig\Environment;
 use Twig\Loader\ChainLoader;
@@ -17,12 +18,14 @@ use WArslett\TableBuilder\RequestAdapter\ArrayRequestAdapter;
 use WArslett\TableBuilder\RouteGeneratorAdapter\SprintfAdapter;
 use WArslett\TableBuilder\Table;
 use WArslett\TableBuilder\TableBuilderFactory;
+use WArslett\TableBuilder\Tests\TestCase;
 use WArslett\TableBuilder\Twig\StandardTemplatesLoader;
 use WArslett\TableBuilder\Twig\TableRendererExtension;
 use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 class TwigRendererIntegrationTest extends TestCase
 {
+    private const EXPECTATION_RESOURCES_DIR = __DIR__ . "/../../resources/expectations/";
 
     /**
      * @return void
@@ -31,15 +34,12 @@ class TwigRendererIntegrationTest extends TestCase
     public function testRenderTable()
     {
         $table = $this->buildTable();
-
         $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
 
         $output = $twigRenderer->renderTable($table);
 
-        $resourcePath = __DIR__ . "/resources/twig_renderer/bootstrap4/expected_table.html";
-        $resource = fopen($resourcePath, 'r');
-
-        $this->assertSame(trim(fread($resource, filesize($resourcePath))), trim($output));
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table.html";
+        $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
     /**
@@ -49,15 +49,12 @@ class TwigRendererIntegrationTest extends TestCase
     public function testRenderTableRowsPerPageOptions()
     {
         $table = $this->buildTable();
-
         $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
 
         $output = $twigRenderer->renderTableRowsPerPageOptions($table);
 
-        $resourcePath = __DIR__ . "/resources/twig_renderer/bootstrap4/expected_table_rows_per_page_options.html";
-        $resource = fopen($resourcePath, 'r');
-
-        $this->assertSame(trim(fread($resource, filesize($resourcePath))), trim($output));
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table_rows_per_page_options.html";
+        $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
     /**
@@ -67,15 +64,12 @@ class TwigRendererIntegrationTest extends TestCase
     public function testRenderTableElement()
     {
         $table = $this->buildTable();
-
         $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
 
         $output = $twigRenderer->renderTableElement($table);
 
-        $resourcePath = __DIR__ . "/resources/twig_renderer/bootstrap4/expected_table_element.html";
-        $resource = fopen($resourcePath, 'r');
-
-        $this->assertSame(trim(fread($resource, filesize($resourcePath))), trim($output));
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table_element.html";
+        $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
     /**
@@ -91,10 +85,9 @@ class TwigRendererIntegrationTest extends TestCase
 
         $output = $twigRenderer->renderTableHeading($table, $heading);
 
-        $resourcePath = __DIR__ . "/resources/twig_renderer/bootstrap4/expected_table_heading.html";
-        $resource = fopen($resourcePath, 'r');
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table_heading.html";
 
-        $this->assertSame(trim(fread($resource, filesize($resourcePath))), trim($output));
+        $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
     /**
@@ -105,15 +98,12 @@ class TwigRendererIntegrationTest extends TestCase
     {
         $table = $this->buildTable();
         $row = $table->getRows()[0];
-
         $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
 
         $output = $twigRenderer->renderTableRow($table, $row);
 
-        $resourcePath = __DIR__ . "/resources/twig_renderer/bootstrap4/expected_table_row.html";
-        $resource = fopen($resourcePath, 'r');
-
-        $this->assertSame(trim(fread($resource, filesize($resourcePath))), trim($output));
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table_row.html";
+        $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
     /**
@@ -125,15 +115,12 @@ class TwigRendererIntegrationTest extends TestCase
         $table = $this->buildTable();
         $row = $table->getRows()[0];
         $cell = $row['foo'];
-
         $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
 
         $output = $twigRenderer->renderTableCell($table, $row, $cell);
 
-        $resourcePath = __DIR__ . "/resources/twig_renderer/bootstrap4/expected_table_cell.html";
-        $resource = fopen($resourcePath, 'r');
-
-        $this->assertSame(trim(fread($resource, filesize($resourcePath))), trim($output));
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table_cell.html";
+        $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
     /**
@@ -145,7 +132,6 @@ class TwigRendererIntegrationTest extends TestCase
         $table = $this->buildTable();
         $row = $table->getRows()[0];
         $cell = $row['foo'];
-
         $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
 
         $output = $twigRenderer->renderTableCellValue($table, $row, $cell);
@@ -162,7 +148,6 @@ class TwigRendererIntegrationTest extends TestCase
         $table = $this->buildTable();
         $row = $table->getRows()[0];
         $cell = $row['foo'];
-
         $twigRenderer = $this->buildRenderer('bootstrap4_with_cellvalue_block.html.twig');
         $twigRenderer->registerCellValueBlock(TextColumn::class, 'my_cell_value_block');
 
@@ -180,7 +165,6 @@ class TwigRendererIntegrationTest extends TestCase
         $table = $this->buildTable();
         $row = $table->getRows()[0];
         $cell = $row['foo'];
-
         $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
         $twigRenderer->registerCellValueTemplate(TextColumn::class, 'column_template.html.twig');
 
@@ -198,7 +182,6 @@ class TwigRendererIntegrationTest extends TestCase
         $table = $this->buildTable();
         $row = $table->getRows()[0];
         $cell = $row['foo'];
-
         $twigRenderer = $this->buildRenderer('bootstrap4_with_cellvalue_block.html.twig');
         $twigRenderer->registerCellValueBlock(TextColumn::class, 'my_cell_value_block');
         $twigRenderer->registerCellValueTemplate(TextColumn::class, 'column_template.html.twig');
@@ -215,15 +198,12 @@ class TwigRendererIntegrationTest extends TestCase
     public function testRenderTablePagination()
     {
         $table = $this->buildTable();
-
         $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
 
         $output = $twigRenderer->renderTablePagination($table);
 
-        $resourcePath = __DIR__ . "/resources/twig_renderer/bootstrap4/expected_table_pagination.html";
-        $resource = fopen($resourcePath, 'r');
-
-        $this->assertSame(trim(fread($resource, filesize($resourcePath))), trim($output));
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table_pagination.html";
+        $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
     /**
@@ -252,13 +232,17 @@ class TwigRendererIntegrationTest extends TestCase
             ->setDefaultRowsPerPage(2)
             ->addColumn(TextColumn::withName('foo')
                 ->setLabel('Foo')
+                ->setSortToggle('foo')
                 ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
             ->buildTable('user_table')
-            ->setDataAdapter(ArrayDataAdapter::withArray([
-                ['foo' => 'bar'],
-                ['foo' => 'baz'],
-                ['foo' => 'qux']
-            ]))
+            ->setDataAdapter(
+                ArrayDataAdapter::withArray([
+                    ['foo' => 'bar'],
+                    ['foo' => 'baz'],
+                    ['foo' => 'qux']
+                ])
+                ->mapSortToggle('foo', fn($a, $b) => 0)
+            )
             ->handleRequest(ArrayRequestAdapter::withArray([]));
     }
 
@@ -270,10 +254,25 @@ class TwigRendererIntegrationTest extends TestCase
     {
         $twigEnvironment = new Environment(new ChainLoader([
             new StandardTemplatesLoader(),
-            new FilesystemLoader(__DIR__ . '/resources/twig_renderer/test_templates')
+            new FilesystemLoader(__DIR__ . '/../../resources/twig_renderer/test_templates')
         ]));
         $twigRenderer = new TwigRenderer($twigEnvironment, new SprintfAdapter(), $templatePath);
         $twigEnvironment->addExtension(new TableRendererExtension($twigRenderer));
         return $twigRenderer;
+    }
+
+    /**
+     * @param string $resourcePath
+     * @param string $output
+     * @return void
+     */
+    private function assertOutputEquivalentToResource(string $resourcePath, string $output)
+    {
+        $resource = fopen($resourcePath, 'r');
+        $resourceHtml = fread($resource, filesize($resourcePath));
+        $resourceDom = new SimpleXMLElement(sprintf("<root>%s</root>", $resourceHtml));
+        $outputDom = new SimpleXMLElement(sprintf("<root>%s</root>", $output));
+
+        $this->assertEquals($resourceDom, $outputDom);
     }
 }

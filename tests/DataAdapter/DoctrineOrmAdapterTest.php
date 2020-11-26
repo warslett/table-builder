@@ -34,6 +34,22 @@ class DoctrineOrmAdapterTest extends TestCase
         $query->shouldHaveReceived('setMaxResults')->once()->with($rowsPerPage);
     }
 
+    public function testGetPageWithSortToggleSetsOrderByOnQuery(): void
+    {
+        $query = $this->mockQueryWithResult();
+        $entityManager = $this->mockEntityManager($query);
+        $sortToggle = 'foo';
+
+        $queryBuilder = new QueryBuilder($entityManager);
+        $queryBuilder->select('u')->from('User', 'u');
+        $adapter = DoctrineOrmAdapter::withQueryBuilder($queryBuilder)->mapSortToggle('foo', 'u.foo');
+        $adapter->getPage(1, 10, $sortToggle);
+
+        $entityManager->shouldHaveReceived('createQuery')
+            ->once()
+            ->with('SELECT u FROM User u ORDER BY u.foo ASC');
+    }
+
     public function testGetPageGetsResult(): void
     {
         $query = $this->mockQueryWithResult();
@@ -127,6 +143,7 @@ class DoctrineOrmAdapterTest extends TestCase
      * @return void
      * @throws NoResultException
      * @throws NonUniqueResultException
+     * @throws DataAdapterException
      */
     public function testCountGetsResult(): void
     {
@@ -141,6 +158,29 @@ class DoctrineOrmAdapterTest extends TestCase
         $adapter->countTotalRows();
 
         $query->shouldHaveReceived('getSingleScalarResult')->once();
+    }
+
+    /**
+     * @return void
+     */
+    public function testCanSortWithUnMappedToggleReturnsFalse(): void
+    {
+        $query = $this->mockQueryWithSingleScalarResult('2');
+        $adapter = DoctrineOrmAdapter::withQueryBuilder(new QueryBuilder($this->mockEntityManager($query)));
+
+        $this->assertFalse($adapter->canSort('foo'));
+    }
+
+    /**
+     * @return void
+     */
+    public function testCanSortWithMappedToggleReturnsTrue(): void
+    {
+        $query = $this->mockQueryWithSingleScalarResult('2');
+        $adapter = DoctrineOrmAdapter::withQueryBuilder(new QueryBuilder($this->mockEntityManager($query)));
+        $adapter->mapSortToggle('foo', 'e.foo');
+
+        $this->assertTrue($adapter->canSort('foo'));
     }
 
     /**

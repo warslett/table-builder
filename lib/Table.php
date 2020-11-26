@@ -8,7 +8,9 @@ use WArslett\TableBuilder\Column\ColumnInterface;
 use WArslett\TableBuilder\DataAdapter\DataAdapterInterface;
 use WArslett\TableBuilder\Exception\DataAdapterException;
 use WArslett\TableBuilder\Exception\NoDataAdapterException;
+use WArslett\TableBuilder\Exception\SortToggleException;
 use WArslett\TableBuilder\RequestAdapter\RequestAdapterInterface;
+use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 class Table
 {
@@ -45,6 +47,12 @@ class Table
     /** @var int */
     private int $pageNumber = 0;
 
+    /** @var string|null */
+    private ?string $sortColumnName = null;
+
+    /** @var bool */
+    private bool $isSortedDescending = false;
+
     /** @var array<int> */
     private array $rowsPerPageOptions;
 
@@ -76,9 +84,22 @@ class Table
     /**
      * @param DataAdapterInterface $dataAdapter
      * @return $this
+     * @throws SortToggleException
      */
     public function setDataAdapter(DataAdapterInterface $dataAdapter): self
     {
+        foreach ($this->columns as $column) {
+            $sortToggle = $column->getSortToggle();
+            if (null !== $sortToggle && false === $dataAdapter->canSort($sortToggle)) {
+                throw new SortToggleException(sprintf(
+                    "The data adapter cannot sort using the toggle \"%s\" which is set on the column \"%s\". "
+                        . "Did you forget some config?",
+                    $sortToggle,
+                    $column->getName()
+                ));
+            }
+        }
+
         $this->dataAdapter = $dataAdapter;
         return $this;
     }
@@ -103,11 +124,21 @@ class Table
         $this->pageNumber = (int) ($tableRequestParameters['page'] ?? 1);
         $this->totalRows = $this->dataAdapter->countTotalRows();
 
+        $this->sortColumnName = $tableRequestParameters['sort_column'] ?? null;
+        $sortToggle = null;
+        if (null !== $this->sortColumnName && isset($this->columns[$this->sortColumnName])) {
+            $sortColumn = $this->columns[$this->sortColumnName];
+            $sortToggle = $sortColumn->getSortToggle();
+        }
+
+        $sortDirection = $tableRequestParameters['sort_dir'] ?? null;
+        $this->isSortedDescending = $sortDirection === RequestAdapterInterface::SORT_DESCENDING;
+
         $this->rows = array_map(function ($row): array {
             return array_map(function (ColumnInterface $column) use ($row): TableCell {
                 return $column->buildTableCell($row);
             }, $this->columns);
-        }, $this->dataAdapter->getPage($this->pageNumber, $this->rowsPerPage));
+        }, $this->dataAdapter->getPage($this->pageNumber, $this->rowsPerPage, $sortToggle, $this->isSortedDescending));
 
         return $this;
     }
@@ -121,7 +152,11 @@ class Table
         return array_merge($this->params, [
             $this->name => array_merge([
                 'page' => $this->pageNumber,
-                'rows_per_page' => $this->rowsPerPage
+                'rows_per_page' => $this->rowsPerPage,
+                'sort_column' => $this->sortColumnName,
+                'sort_dir' => $this->isSortedDescending
+                    ? RequestAdapterInterface::SORT_DESCENDING
+                    : null,
             ], $merge)
         ]);
     }
@@ -172,6 +207,22 @@ class Table
     public function getTotalPages(): int
     {
         return (int) ceil($this->totalRows / $this->rowsPerPage);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSortColumnName(): ?string
+    {
+        return $this->sortColumnName;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSortedDescending(): bool
+    {
+        return $this->isSortedDescending;
     }
 
     /**

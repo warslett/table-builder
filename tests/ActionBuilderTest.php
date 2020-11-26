@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace WArslett\TableBuilder\Tests;
 
 use WArslett\TableBuilder\ActionBuilder;
-use WArslett\TableBuilder\Tests\TestCase;
 use Mockery as m;
 use Mockery\Mock;
 use WArslett\TableBuilder\ValueAdapter\ValueAdapterInterface;

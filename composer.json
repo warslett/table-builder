@@ -10,6 +10,7 @@
         }
     ],
     "require-dev": {
+        "ext-simplexml": "*",
         "phpunit/phpunit": "^9.4",
         "mockery/mockery": "^1.4",
         "rregeer/phpunit-coverage-check": "^0.3.1",

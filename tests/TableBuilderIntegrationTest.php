@@ -9,13 +9,14 @@ use WArslett\TableBuilder\ActionBuilder;
 use WArslett\TableBuilder\Column\ActionGroupColumn;
 use WArslett\TableBuilder\Column\TextColumn;
 use WArslett\TableBuilder\Exception\DataAdapterException;
+use WArslett\TableBuilder\Exception\SortToggleException;
+use WArslett\TableBuilder\RequestAdapter\RequestAdapterInterface;
 use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 use WArslett\TableBuilder\DataAdapter\ArrayDataAdapter;
 use WArslett\TableBuilder\Exception\NoValueAdapterException;
 use WArslett\TableBuilder\Exception\NoDataAdapterException;
 use WArslett\TableBuilder\RequestAdapter\ArrayRequestAdapter;
 use WArslett\TableBuilder\TableBuilderFactory;
-use WArslett\TableBuilder\TableCell;
 
 class TableBuilderIntegrationTest extends TestCase
 {
@@ -68,6 +69,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testOneRowOfDataNoColumnsReturnsArrayContainingOneEmptyArray(): void
     {
@@ -101,6 +103,23 @@ class TableBuilderIntegrationTest extends TestCase
         $headings = $table->getHeadings();
         $this->assertSame(1, count($headings));
         $this->assertArrayHasKey($columnName, $headings);
+    }
+
+    /**
+     * @return void
+     */
+    public function testColumnNameIsIncludedOnHeading(): void
+    {
+        $tableBuilderFactory = new TableBuilderFactory();
+        $columnName = 'foo';
+
+        $table = $tableBuilderFactory->createTableBuilder()
+            ->addColumn(TextColumn::withName($columnName))
+            ->buildTable('user_table')
+        ;
+
+        $headings = $table->getHeadings();
+        $this->assertSame($columnName, $headings[$columnName]->getName());
     }
 
     /**
@@ -142,6 +161,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testOneRowOfDataOneColumnNoAdapterHandleRequestThrowsException(): void
     {
@@ -163,6 +183,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testOneRowOfDataOneColumnMapsRowToCell(): void
     {
@@ -202,6 +223,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testTwoRowsOfDataOneRowPerPageHasTwoTotalRows(): void
     {
@@ -226,6 +248,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testEmptyRequestPageNumber1(): void
     {
@@ -244,6 +267,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testTwoRowsOfDataOneRowPerPageHasTwoTotalPages(): void
     {
@@ -265,6 +289,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testTwoRowsOfDataOneRowPerPageHasOneRowInTable(): void
     {
@@ -287,6 +312,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testTwoRowsOfDataOneRowPerPageRequestPageOneMapsFirstResultColumn(): void
     {
@@ -311,6 +337,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testTwoRowsOfDataOneRowPerPageRequestPageTwoMapsSecondResultColumn(): void
     {
@@ -335,6 +362,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testThreeRowsOfDataTwoRowPerPageRequestPageOneHasTwoRowsInTable(): void
     {
@@ -358,6 +386,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testThreeRowsOfDataTwoRowPerPageRequestPageTwoHasOneRowInTable(): void
     {
@@ -381,6 +410,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testThreeRowsOfDataDefaultTwoRowsPerPageRequestOneRowPerPageOneRowPerPage(): void
     {
@@ -403,6 +433,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testThreeRowsOfDataDefaultTwoRowsPerPageRequestOneRowPerPageOneRowInTable(): void
     {
@@ -426,6 +457,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testThreeRowsOfDataMaxTwoRowsPerPageRequestThreeRowsPerPageHasTwoRowsPerPage(): void
     {
@@ -463,6 +495,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testTableGetParamsReturnsRequestParams(): void
     {
@@ -482,6 +515,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testTableGetParamsMergesTableParams(): void
     {
@@ -490,18 +524,27 @@ class TableBuilderIntegrationTest extends TestCase
             ->setDefaultRowsPerPage(5)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([]))
-            ->handleRequest(ArrayRequestAdapter::withArray(['foo' => 'bar']))
+            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => [
+                'sort_column' => 'foo',
+                'sort_dir' => 'desc'
+            ]]))
         ;
 
         $params = $table->getParams();
         $this->assertArrayHasKey('user_table', $params);
-        $this->assertSame(['page' => 1, 'rows_per_page' => 5], $params['user_table']);
+        $this->assertSame([
+            'page' => 1,
+            'rows_per_page' => 5,
+            'sort_column' => 'foo',
+            'sort_dir' => 'desc'
+        ], $params['user_table']);
     }
 
     /**
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testTableGetParamsMergesInputParamsWithTableParams(): void
     {
@@ -515,13 +558,19 @@ class TableBuilderIntegrationTest extends TestCase
 
         $params = $table->getParams(['page' => 2]);
         $this->assertArrayHasKey('user_table', $params);
-        $this->assertSame(['page' => 2, 'rows_per_page' => 5], $params['user_table']);
+        $this->assertSame([
+            'page' => 2,
+            'rows_per_page' => 5,
+            'sort_column' => null,
+            'sort_dir' => null,
+        ], $params['user_table']);
     }
 
     /**
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testTableQueryParamNotArrayIgnores(): void
     {
@@ -536,7 +585,9 @@ class TableBuilderIntegrationTest extends TestCase
         $this->assertSame($table->getParams(), [
             'user_table' => [
                 'page' => 1,
-                'rows_per_page' => 10
+                'rows_per_page' => 10,
+                'sort_column' => null,
+                'sort_dir' => null
             ]
         ]);
     }
@@ -545,6 +596,7 @@ class TableBuilderIntegrationTest extends TestCase
      * @return void
      * @throws NoDataAdapterException
      * @throws DataAdapterException
+     * @throws SortToggleException
      */
     public function testActionGroupColumnWithActionOneRowBuildsAction(): void
     {
@@ -576,5 +628,95 @@ class TableBuilderIntegrationTest extends TestCase
         $this->assertSame($actionLabel, $action->getLabel());
         $this->assertSame($actionRoute, $action->getRoute());
         $this->assertSame([$paramName => $paramValue], $action->getRouteParams());
+    }
+
+    /**
+     * @return void
+     * @throws NoDataAdapterException
+     * @throws DataAdapterException
+     * @throws SortToggleException
+     */
+    public function testSortToggleSortsData(): void
+    {
+        $tableBuilderFactory = new TableBuilderFactory();
+        $table = $tableBuilderFactory->createTableBuilder()
+            ->addColumn(TextColumn::withName('foo_column')
+                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
+                ->setSortToggle('foo_toggle'))
+            ->buildTable('user_table')
+            ->setDataAdapter(ArrayDataAdapter::withArray([
+                ['foo' => 3],
+                ['foo' => 4],
+                ['foo' => 2],
+                ['foo' => 1],
+            ])->mapSortToggle('foo_toggle', function (array $a, array $b) {
+                return $a['foo'] < $b['foo'] ? -1 : 1;
+            }))
+            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['sort_column' => 'foo_column']]))
+        ;
+
+        $this->assertSame('foo_column', $table->getSortColumnName());
+
+        $rows = $table->getRows();
+        $this->assertSame(1, $rows[0]['foo_column']->getValue());
+        $this->assertSame(2, $rows[1]['foo_column']->getValue());
+        $this->assertSame(3, $rows[2]['foo_column']->getValue());
+        $this->assertSame(4, $rows[3]['foo_column']->getValue());
+    }
+
+    /**
+     * @return void
+     * @throws NoDataAdapterException
+     * @throws DataAdapterException
+     * @throws SortToggleException
+     */
+    public function testSortToggleSortsDataDescending(): void
+    {
+        $tableBuilderFactory = new TableBuilderFactory();
+        $table = $tableBuilderFactory->createTableBuilder()
+            ->addColumn(TextColumn::withName('foo_column')
+                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
+                ->setSortToggle('foo_toggle'))
+            ->buildTable('user_table')
+            ->setDataAdapter(ArrayDataAdapter::withArray([
+                ['foo' => 3],
+                ['foo' => 4],
+                ['foo' => 2],
+                ['foo' => 1],
+            ])->mapSortToggle('foo_toggle', function (array $a, array $b) {
+                return $a['foo'] < $b['foo'] ? -1 : 1;
+            }))
+            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => [
+                'sort_column' => 'foo_column',
+                'sort_dir' => RequestAdapterInterface::SORT_DESCENDING
+            ]]))
+        ;
+
+        $this->assertTrue($table->isSortedDescending());
+
+        $rows = $table->getRows();
+        $this->assertSame(4, $rows[0]['foo_column']->getValue());
+        $this->assertSame(3, $rows[1]['foo_column']->getValue());
+        $this->assertSame(2, $rows[2]['foo_column']->getValue());
+        $this->assertSame(1, $rows[3]['foo_column']->getValue());
+    }
+
+    /**
+     * @return void
+     * @throws SortToggleException
+     */
+    public function testSortToggleSetDataAdapterCannotSortThrowsException(): void
+    {
+        $tableBuilderFactory = new TableBuilderFactory();
+
+        $this->expectException(SortToggleException::class);
+
+        $tableBuilderFactory->createTableBuilder()
+            ->addColumn(TextColumn::withName('foo_column')
+                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
+                ->setSortToggle('foo_toggle'))
+            ->buildTable('user_table')
+            ->setDataAdapter(ArrayDataAdapter::withArray([]))
+        ;
     }
 }

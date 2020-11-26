@@ -12,14 +12,27 @@ interface DataAdapterInterface
     /**
      * @param int $pageNumber
      * @param int $rowsPerPage
+     * @param string|null $sortToggle
+     * @param bool $isSortedDescending
      * @return array
      * @throws DataAdapterException
      */
-    public function getPage(int $pageNumber, int $rowsPerPage): array;
+    public function getPage(
+        int $pageNumber,
+        int $rowsPerPage,
+        ?string $sortToggle = null,
+        bool $isSortedDescending = false
+    ): array;
 
     /**
      * @return int
      * @throws DataAdapterException
      */
     public function countTotalRows(): int;
+
+    /**
+     * @param string $sortToggle
+     * @return bool
+     */
+    public function canSort(string $sortToggle): bool;
 }

@@ -16,6 +16,11 @@ interface ColumnInterface
     public function getName(): string;
 
     /**
+     * @return string|null
+     */
+    public function getSortToggle(): ?string;
+
+    /**
      * @return TableHeading
      */
     public function buildTableHeading(): TableHeading;

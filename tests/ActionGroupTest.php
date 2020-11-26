@@ -6,9 +6,6 @@ namespace WArslett\TableBuilder\Tests;
 
 use WArslett\TableBuilder\Action;
 use WArslett\TableBuilder\ActionGroup;
-use WArslett\TableBuilder\Tests\TestCase;
-use Mockery as m;
-use Mockery\Mock;
 
 class ActionGroupTest extends TestCase
 {

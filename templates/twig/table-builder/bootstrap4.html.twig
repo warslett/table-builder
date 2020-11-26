@@ -7,10 +7,14 @@
 {% block table_rows_per_page_options %}
     {% if table.rowsPerPageOptions is not empty %}
         <div class="dropdown mb-2">
-            Rows per page:
-            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="{{ table.name }}_rows_per_page_dropwdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ table.rowsPerPage }}
-            </button>
+            <span>Rows per page:</span>
+            <button
+                    class="btn btn-primary btn-sm dropdown-toggle"
+                    type="button" id="{{ table.name }}_rows_per_page_dropwdown"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+            >{{ table.rowsPerPage }}</button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 {% for option in table.rowsPerPageOptions %}
                     <a
@@ -27,7 +31,7 @@
     <table class="table">
         <thead>
             <tr>
-                {% for heading in table.headings %}
+                {% for column_name, heading in table.headings %}
                     {{ table_heading(table, heading) }}
                 {% endfor %}
             </tr>
@@ -41,7 +45,26 @@
 {% endblock %}
 
 {% block table_heading %}
-    <th scope="col">{{ heading.label }}</th>
+    <th scope="col">
+        <div class="d-flex">
+            <span>{{ heading.label }}</span>
+            {% if heading.sortable %}
+                <span class="ml-auto mr-0">
+                    {% if table.sortColumnName == heading.name and not table.sortedDescending %}
+                        <a href="?{{ table.params({'sort_column': null, 'sort_dir': null})|url_encode }}" class="text-secondary">&#11205;</a>
+                    {% else %}
+                        <a href="?{{ table.params({'sort_column': heading.name, 'sort_dir': 'asc'})|url_encode }}">&#11205;</a>
+                    {% endif %}
+
+                    {% if table.sortColumnName == heading.name and table.sortedDescending %}
+                        <a href="?{{ table.params({'sort_column': null, 'sort_dir': null})|url_encode }}" class="text-secondary">&#11206;</a>
+                    {% else %}
+                        <a href="?{{ table.params({'sort_column': heading.name, 'sort_dir': 'desc'})|url_encode }}">&#11206;</a>
+                    {% endif %}
+                </span>
+            {% endif %}
+        </div>
+    </th>
 {% endblock %}
 
 {% block table_row %}
@@ -74,9 +97,8 @@
         {% for action in cell.value.actions %}
             <a
                     href="{{ action.route is not null ? table_route(action.route, action.routeParams) : '#' }}"
-                    class="btn btn-primary btn-sm">
-                {{ action.label }}
-            </a>
+                    class="btn btn-primary btn-sm"
+            >{{ action.label }}</a>
         {% endfor %}
     </div>
 {% endblock %}

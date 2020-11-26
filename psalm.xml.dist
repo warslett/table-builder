@@ -33,7 +33,8 @@
         <MixedReturnTypeCoercion errorLevel="suppress" />
         <MixedStringOffsetAssignment errorLevel="suppress" />
 
-        <!-- return statements for closures are not required-->
+        <!-- return statements and parameter types for closures are not required-->
         <MissingClosureReturnType errorLevel="suppress" />
+        <MissingClosureParamType errorLevel="suppress" />
     </issueHandlers>
 </psalm>
