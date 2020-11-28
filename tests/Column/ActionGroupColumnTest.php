@@ -9,6 +9,7 @@ use WArslett\TableBuilder\ActionBuilderInterface;
 use WArslett\TableBuilder\ActionGroup;
 use WArslett\TableBuilder\Column\ActionGroupColumn;
 use WArslett\TableBuilder\Exception\NoValueAdapterException;
+use WArslett\TableBuilder\Exception\ValueException;
 use WArslett\TableBuilder\Tests\TestCase;
 use Mockery as m;
 use Mockery\Mock;
@@ -19,6 +20,7 @@ class ActionGroupColumnTest extends TestCase
     /**
      * @return void
      * @throws NoValueAdapterException
+     * @throws ValueException
      */
     public function testBuildTableCellSetsRenderingTypeOnTableCell()
     {
@@ -30,7 +32,7 @@ class ActionGroupColumnTest extends TestCase
     /**
      * @return void
      */
-    public function testBuildTableCellSetsLabelOnHeading()
+    public function testBuildTableHeadingSetsLabelOnHeading()
     {
         $label = 'My Label';
         $actionGroupColumn = ActionGroupColumn::withName('my_action_group')->setLabel($label);
@@ -40,7 +42,19 @@ class ActionGroupColumnTest extends TestCase
 
     /**
      * @return void
+     */
+    public function testBuildTableCellSetsNameOnHeading()
+    {
+        $name = 'my_column';
+        $actionGroupColumn = ActionGroupColumn::withName($name);
+        $heading = $actionGroupColumn->buildTableHeading();
+        $this->assertSame($name, $heading->getName());
+    }
+
+    /**
+     * @return void
      * @throws NoValueAdapterException
+     * @throws ValueException
      */
     public function testBuildTableCellSetsValueToActionGroup()
     {
@@ -53,6 +67,7 @@ class ActionGroupColumnTest extends TestCase
     /**
      * @return void
      * @throws NoValueAdapterException
+     * @throws ValueException
      */
     public function testBuildTableCellOneActionBuilderBuildsOneAction()
     {
@@ -75,6 +90,7 @@ class ActionGroupColumnTest extends TestCase
     /**
      * @return void
      * @throws NoValueAdapterException
+     * @throws ValueException
      */
     public function testBuildTableCellTwoActionBuilderBuildsTwoAction()
     {
