@@ -17,45 +17,51 @@ below.
 
 ### Table Building
 Configure your tables using a variety of column types or implement your own column types. Then load data into the table
-using one of our data adapters or implement your own. Handle a request to apply sorting an pagination using one of our
+using one of our data adapters or implement your own. Handle a request to apply sorting and pagination using one of our
 request adapters or implement your own.
 ``` php
-$table = $this->tableBuilderFactory->createTableBuilder()
-    ->addColumn(TextColumn::withName('first_name')
-        ->setLabel('First Name')
-        ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('firstName')))
-    ->addColumn(TextColumn::withName('last_name')
-        ->setLabel('Last Name')
-        ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('lastName')))
-    ->addColumn(TextColumn::withName('major')
-        ->setLabel('Major Name')
-        ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('major.name')))
-    ->buildTable('students')
-    ->setDataAdapter(DoctrineOrmAdapter::withQueryBuilder($this->entityManager->createQueryBuilder()
-        ->select('s')
-        ->from(Student::class, 's')
-        ->where('s.major = :major')
-        ->setParameter('major', $major)
-    ))
-    ->handleRequest(SymfonyHttpAdapter::withRequest($request))
-;
-```
+// Configure the table structure with a range of out the box column types
+$tableBuilder = $this->tableBuilderFactory->createTableBuilder()
+    ->setRowsPerPageOptions([10, 20, 50])
+    ->setDefaultRowsPerPage(10)
+    ->addColumn(TextColumn::withName('email')
+        ->setLabel('Email')
+        ->setSortToggle('email')
+        ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('email')))
+    ->addColumn(DateTimeColumn::withName('last_login')
+        ->setLabel('Last Login')
+        ->setDateTimeFormat('Y-m-d H:i:s')
+        ->setSortToggle('last_login')
+        ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('lastLogin')))
+    ->addColumn(ActionGroupColumn::withName('actions')
+        ->setLabel('Actions')
+        ->addActionBuilder(ActionBuilder::withName('update')
+            ->setLabel('Update')
+            ->setRoute('user_update', [
+                'id' => PropertyAccessAdapter::withPropertyPath('id')
+            ]))
+        ->addActionBuilder(ActionBuilder::withName('delete')
+            ->setLabel('Delete')
+            ->setRoute('user_delete', [
+                'id' => PropertyAccessAdapter::withPropertyPath('id')
+            ])));
 
-### Table Abstraction
-Table Builder models tables in an abstract way that isn't coupled to any particular data source or output. You can
-interact with tables like this:
-``` php
-$tableName = $table->getName(); // "students"
-$tablePageNumber = $table->getPageNumber(); // 1
+// Build the table object
+$table = $tableBuilder->buildTable('users');
 
-$tableHeadings = $table->getHeadings();
-$firstNameHeading = $tableHeadings['first_name'];
-$firstNameLabel = $firstNameHeading->getLabel(); // "First Name"
+// Configure how data will be loaded into the table
+$queryBuilder = $this->entityManager->createQueryBuilder()
+    ->select('u')
+    ->from(User::class, 'u');
 
-$rows = $table->getRows();
-$firstRow = $row[0];
-$firstRowFirstNameCell = $firstRow['first_name'];
-$firstRowFirstNameValue = $firstRowFirstNameCell->getValue(); // "John"
+$dataAdapter = DoctrineOrmAdapter::withQueryBuilder($queryBuilder)
+    ->mapSortToggle('email', 'u.email')
+    ->mapSortToggle('last_login', 'u.lastLogin');
+
+$table->setDataAdapter($dataAdapter);
+
+// Uses parameters on the request to load data into the table with sorting and pagination
+$table->handleRequest(SymfonyHttpAdapter::withRequest($request));
 ```
 
 ### Table Rendering
@@ -65,53 +71,26 @@ themeable with a bootstrap4 theme provided out the box.
 ``` php
 use Twig\Environment;
 use WArslett\TableBuilder\Renderer\Html\TwigRenderer;
+use WArslett\TableBuilder\RouteGeneratorAdapter\SymfonyRoutingAdapter;
 use WArslett\TableBuilder\Twig\StandardTemplatesLoader;
 use WArslett\TableBuilder\Twig\TableRendererExtension;
 
+// Route generators are used for generating routes to actions in your table (Symfony and Sprintf adapters provided otb)
+$routeGenerator = new SymfonyRoutingAdapter($router);
+
+// StandardTemplatesLoader loads the templates for the standard themes in the table-builder/ namespace
 $twigEnvironment = new Environment(new StandardTemplatesLoader());
-$renderer = new TwigRenderer($twigEnvironment, 'table-builder/bootstrap4.html.twig');
-$twigEnvironment->addExtension(new TableRendererExtension($renderer));
+$renderer = new TwigRenderer($twigEnvironment, $routeGenerator, 'table-builder/bootstrap4.html.twig');
+$twigEnvironment->addExtension(new TableRendererExtension($renderer)); // Extension must be registered before rendering
 
 echo $renderer->renderTable($table);
 ```
 Or with the TableRendererExtension added to your twig environment you can render directly within twig
 ``` twig
 <div class="container">
-    {# table twig function takes a table object #}
     {{ table(table) }}
 </div>
 ```
-Will output html:
-``` html
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">First Name</th>
-            <th scope="col">Last Name</th>
-            <th scope="col">Major Name</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>John</td>
-            <td>Smith</td>
-            <td>Fine Art</td>
-        </tr>
-        <tr>
-            <td>Jane</td>
-            <td>Smith</td>
-            <td>Computer Science</td>
-        </tr>
-        ...
-    </tbody>
-</table>
-<div class="btn-group" role="group">
-    <a href="?students%5Bpage%5D=1" class="btn btn-primary active">1</a>
-    <a href="?students%5Bpage%5D=2" class="btn btn-primary">2</a>
-    <a href="?students%5Bpage%5D=3" class="btn btn-primary">3</a>
-</div>
-```
-It is possible to render multiple tables on the same page which will sort and paginate independently.
 
 ## Dependencies
 Table builder has no core dependencies however some optional features have dependencies.
@@ -119,3 +98,4 @@ Table builder has no core dependencies however some optional features have depen
 * DoctrineORMAdapter data adapter depends on `doctrine/orm`
 * PropertyAccessAdapter value adapter depends on `symfony/property-access`
 * SymfonyHttpAdapter response adapter depends on `symfony/http-foundation`
+* SymfonyRoutingAdapter route generator adapter depends on `symfony/routing`
