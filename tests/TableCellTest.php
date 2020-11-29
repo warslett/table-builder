@@ -15,6 +15,6 @@ class TableCellTest extends TestCase
     {
         $this->expectException(ValueException::class);
 
-        new TableCell('foo', new stdClass());
+        new TableCell('foo', 'bar', new stdClass());
     }
 }

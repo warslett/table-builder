@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder;
 
+use JsonSerializable;
 use WArslett\TableBuilder\Action;
 
-class ActionGroup
+class ActionGroup implements JsonSerializable
 {
     /**
      * @var array<string, Action>
@@ -32,5 +33,15 @@ class ActionGroup
     public function __toString()
     {
         return implode(', ', array_keys($this->actions));
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'actions' => $this->actions
+        ];
     }
 }

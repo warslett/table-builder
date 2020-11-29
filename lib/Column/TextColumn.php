@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder\Column;
 
-use WArslett\TableBuilder\ValueAdapter\ValueAdapterInterface;
 use WArslett\TableBuilder\Exception\NoValueAdapterException;
 use WArslett\TableBuilder\ValueAdapter\ValueAdapterTrait;
 

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder;
 
-class Action
+use JsonSerializable;
+
+class Action implements JsonSerializable
 {
     private string $label;
     private ?string $route = null;
@@ -48,5 +50,17 @@ class Action
     {
         $this->route = $route;
         $this->routeParams = $routeParams;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'label' => $this->label,
+            'route' => $this->route,
+            'route_params' => $this->routeParams
+        ];
     }
 }

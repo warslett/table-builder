@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder;
 
-class TableHeading
+use JsonSerializable;
+
+class TableHeading implements JsonSerializable
 {
     private string $name;
     private string $label;
@@ -39,5 +41,17 @@ class TableHeading
     public function isSortable(): bool
     {
         return $this->isSortable;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'name' => $this->name,
+            'label' => $this->label,
+            'is_sortable' => $this->isSortable
+        ];
     }
 }

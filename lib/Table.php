@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder;
 
+use JsonSerializable;
 use WArslett\TableBuilder\Column\ColumnInterface;
 use WArslett\TableBuilder\DataAdapter\DataAdapterInterface;
 use WArslett\TableBuilder\Exception\DataAdapterException;
 use WArslett\TableBuilder\Exception\NoDataAdapterException;
 use WArslett\TableBuilder\Exception\SortToggleException;
 use WArslett\TableBuilder\RequestAdapter\RequestAdapterInterface;
-use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
-class Table
+class Table implements JsonSerializable
 {
     public const DEFAULT_ROWS_PER_PAGE = 20;
     public const DEFAULT_MAX_ROWS_PER_PAGE = 100;
@@ -231,5 +231,24 @@ class Table
     public function getRowsPerPageOptions(): array
     {
         return $this->rowsPerPageOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'name' => $this->name,
+            'rows_per_page' => $this->rowsPerPage,
+            'max_rows_per_page' => $this->maxRowsPerPage,
+            'headings' => $this->headings,
+            'rows' => $this->rows,
+            'total_rows' => $this->totalRows,
+            'page_number' => $this->pageNumber,
+            'rows_per_page_options' => $this->rowsPerPageOptions,
+            'sort_column' => $this->sortColumnName,
+            'sort_dir' => $this->isSortedDescending() ? 'desc' : 'asc',
+        ];
     }
 }

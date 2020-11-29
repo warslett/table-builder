@@ -76,7 +76,7 @@ abstract class AbstractColumn implements ColumnInterface
      */
     public function buildTableCell($row): TableCell
     {
-        return new TableCell(static::class, $this->getCellValue($row));
+        return new TableCell($this->name, static::class, $this->getCellValue($row));
     }
 
     /**
@@ -87,7 +87,6 @@ abstract class AbstractColumn implements ColumnInterface
     abstract protected function getCellValue($row);
 
     /**
-     * @psalm-suppress UnsafeInstantiation - we know it's safe because we made the constructor final
      * @param string $name
      * @return static
      */

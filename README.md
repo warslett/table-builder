@@ -92,6 +92,15 @@ Or with the TableRendererExtension added to your twig environment you can render
 </div>
 ```
 
+### Single Page Applications
+Tables also implement JsonSerializable so they can be encoded as json in a response and consumed by a single page
+application.
+
+``` php
+// GET /users/table
+return new JsonResponse($table);
+```
+
 ## Dependencies
 Table builder has no core dependencies however some optional features have dependencies.
 * TwigRenderer and related classes depends on `twig/twig`

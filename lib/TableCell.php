@@ -4,22 +4,30 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder;
 
+use JsonSerializable;
 use WArslett\TableBuilder\Exception\ValueException;
 
-class TableCell
+class TableCell implements JsonSerializable
 {
+    /** @var string */
+    private string $name;
+
+    /** @var string */
     private string $renderingType;
 
     /** @var mixed */
     private $value;
 
     /**
+     * @param string $name
      * @param string $renderingType
      * @param mixed $value
      * @throws ValueException
      */
-    public function __construct(string $renderingType, $value)
+    public function __construct(string $name, string $renderingType, $value)
     {
+        $this->name = $name;
+
         /* TableCell value must be capable of casting as a string without blowing up. This guarantees that renderers can
            always fall back to rendering as a string. From PHP 8 we will be able to replace this with a union type
            typehint incorporating Stringable interface */
@@ -49,5 +57,17 @@ class TableCell
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return [
+            'name' => $this->name,
+            'rendering_type' => $this->renderingType,
+            'value' => $this->value
+        ];
     }
 }

@@ -9,6 +9,9 @@
             "email": "will@arslett.uk"
         }
     ],
+    "require": {
+        "ext-json": "*"
+    },
     "require-dev": {
         "ext-simplexml": "*",
         "phpunit/phpunit": "^9.4",
