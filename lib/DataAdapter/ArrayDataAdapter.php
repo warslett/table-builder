@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder\DataAdapter;
 
+use Closure;
+
 final class ArrayDataAdapter implements DataAdapterInterface
 {
     /** @var array */
     private array $array;
 
-    /** @var array<string, callable> */
+    /** @var array<string, Closure> */
     private array $sortToggleMapping = [];
 
     public function __construct(array $array)
@@ -58,10 +60,10 @@ final class ArrayDataAdapter implements DataAdapterInterface
 
     /**
      * @param string $sortToggle
-     * @param callable $callable
+     * @param Closure $callable
      * @return $this
      */
-    public function mapSortToggle(string $sortToggle, callable $callable): self
+    public function mapSortToggle(string $sortToggle, Closure $callable): self
     {
         $this->sortToggleMapping[$sortToggle] = $callable;
         return $this;

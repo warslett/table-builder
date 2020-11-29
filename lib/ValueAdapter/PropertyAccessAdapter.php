@@ -33,6 +33,6 @@ final class PropertyAccessAdapter implements ValueAdapterInterface
      */
     public static function withPropertyPath(string $propertyPath): self
     {
-        return new PropertyAccessAdapter($propertyPath);
+        return new self($propertyPath);
     }
 }
