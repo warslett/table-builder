@@ -92,7 +92,7 @@
     {% endif %}
 {% endblock %}
 
-{% block action_group %}
+{% block action_group_cell_value %}
     <div class="btn-group" role="group">
         {% for action in cell.value.actions %}
             <a
@@ -101,4 +101,8 @@
             >{{ action.label }}</a>
         {% endfor %}
     </div>
+{% endblock %}
+
+{% block boolean_cell_value %}
+    {{ cell.value ? '&#10004;' : '&#10008;' }}
 {% endblock %}

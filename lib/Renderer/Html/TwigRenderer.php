@@ -11,6 +11,7 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\TemplateWrapper;
 use WArslett\TableBuilder\Column\ActionGroupColumn;
+use WArslett\TableBuilder\Column\BooleanColumn;
 use WArslett\TableBuilder\RouteGeneratorAdapter\RouteGeneratorAdapterInterface;
 use WArslett\TableBuilder\Table;
 use WArslett\TableBuilder\TableCell;
@@ -23,7 +24,8 @@ final class TwigRenderer implements HtmlTableRendererInterface
     private string $themeTemplatePath;
     private ?TemplateWrapper $template = null;
     private array $cellValueBlocks = [
-        ActionGroupColumn::class => 'action_group'
+        ActionGroupColumn::class => 'action_group_cell_value',
+        BooleanColumn::class => 'boolean_cell_value'
     ];
     private array $cellValueTemplates = [];
 
