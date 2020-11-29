@@ -19,11 +19,7 @@ final class TextColumn extends AbstractColumn
      */
     protected function getCellValue($row)
     {
-        if (null === $this->valueAdapter) {
-            throw new NoValueAdapterException(
-                sprintf("Cannot handle request until value adapter has been set for %s", $this->name)
-            );
-        }
+        $this->assertHasValueAdapter();
 
         return $this->valueAdapter->getValue($row);
     }

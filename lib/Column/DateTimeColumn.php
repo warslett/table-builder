@@ -34,11 +34,7 @@ final class DateTimeColumn extends AbstractColumn
      */
     protected function getCellValue($row)
     {
-        if (null === $this->valueAdapter) {
-            throw new NoValueAdapterException(
-                sprintf("Cannot handle request until value adapter has been set for %s", $this->name)
-            );
-        }
+        $this->assertHasValueAdapter();
 
         $value = $this->valueAdapter->getValue($row);
         if (false === $value instanceof DateTime) {
