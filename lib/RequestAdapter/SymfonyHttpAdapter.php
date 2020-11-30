@@ -24,8 +24,8 @@ final class SymfonyHttpAdapter implements RequestAdapterInterface
     }
 
     /**
-     * @param $request
-     * @return static
+     * @param Request $request
+     * @return self
      */
     public static function withRequest(Request $request): self
     {
