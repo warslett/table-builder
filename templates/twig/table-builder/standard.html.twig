@@ -1,0 +1,91 @@
+{% block table %}
+    {{ table_rows_per_page_options(table) }}
+    {{ table_element(table) }}
+    {{ table_pagination(table) }}
+{% endblock %}
+
+{% block table_rows_per_page_options %}
+    {% if table.rowsPerPageOptions is not empty %}
+        <p>
+            <span>Rows per page:</span>
+            {% for option in table.rowsPerPageOptions %}
+                {% if option == table.rowsPerPage %}
+                    <strong>
+                        <a href="?{{ table.params({'rows_per_page': option, 'page': 1})|url_encode }}">{{ option }}</a>
+                    </strong>
+                {% else %}
+                    <a href="?{{ table.params({'rows_per_page': option, 'page': 1})|url_encode }}">{{ option }}</a>
+                {% endif %}
+                {{ loop.last ? '' : '|' }}
+            {% endfor %}
+        </p>
+    {% endif %}
+{% endblock %}
+
+{% block table_element %}
+    <table>
+        <thead>
+            <tr>
+                {% for column_name, heading in table.headings %}
+                    {{ table_heading(table, heading) }}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in table.rows %}
+                {{ table_row(table, row) }}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block table_heading %}
+    <th scope="col">
+        <span>{{ heading.label }}</span>
+        {% if heading.sortable %}
+            <span>
+                {% if table.sortColumnName == heading.name and not table.sortedDescending %}
+                    <a href="?{{ table.params({'sort_column': null, 'sort_dir': null})|url_encode }}">&#11205;</a>
+                {% else %}
+                    <a href="?{{ table.params({'sort_column': heading.name, 'sort_dir': 'asc'})|url_encode }}">&#11205;</a>
+                {% endif %}
+
+                {% if table.sortColumnName == heading.name and table.sortedDescending %}
+                    <a href="?{{ table.params({'sort_column': null, 'sort_dir': null})|url_encode }}">&#11206;</a>
+                {% else %}
+                    <a href="?{{ table.params({'sort_column': heading.name, 'sort_dir': 'desc'})|url_encode }}">&#11206;</a>
+                {% endif %}
+            </span>
+        {% endif %}
+    </th>
+{% endblock %}
+
+{% block table_row %}
+    <tr>
+        {% for cell in row %}
+            {{ table_cell(table, row, cell) }}
+        {% endfor %}
+    </tr>
+{% endblock %}
+
+{% block table_cell %}
+    <td>{{ table_cell_value(table, row, cell) }}</td>
+{% endblock %}
+
+{% block table_pagination %}
+    {% if table.totalPages > 1 %}
+        {% for i in 1..table.totalPages %}
+            <a href="?{{ table.params({'page': i})|url_encode }}">{{ i }}</a>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block action_group_cell_value %}
+    {% for action in cell.value.actions %}
+        <a href="{{ action.route is not null ? table_route(action.route, action.routeParams) : '#' }}">{{ action.label }}</a>
+    {% endfor %}
+{% endblock %}
+
+{% block boolean_cell_value %}
+    {{ cell.value ? '&#10004;' : '&#10008;' }}
+{% endblock %}

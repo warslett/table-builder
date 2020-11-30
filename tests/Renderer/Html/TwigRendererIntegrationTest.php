@@ -27,112 +27,135 @@ class TwigRendererIntegrationTest extends TestCase
 {
     private const EXPECTATION_RESOURCES_DIR = __DIR__ . "/../../resources/expectations/";
 
+    public function getTestData(): array
+    {
+        return [
+            'standard' => ['template' => 'standard'],
+            'bootstrap4' => ['template' => 'bootstrap4'],
+        ];
+    }
+
     /**
+     * @dataProvider getTestData
+     * @param string $template
      * @return void
      * @throws Throwable
      */
-    public function testRenderTable()
+    public function testRenderTable(string $template)
     {
         $table = $this->buildTable();
-        $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
+        $twigRenderer = $this->buildRenderer("table-builder/$template.html.twig");
 
         $output = $twigRenderer->renderTable($table);
 
-        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table.html";
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "$template/expected_table.html";
         $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
     /**
+     * @dataProvider getTestData
+     * @param string $template
      * @return void
      * @throws Throwable
      */
-    public function testRenderTableRowsPerPageOptions()
+    public function testRenderTableRowsPerPageOptions(string $template)
     {
         $table = $this->buildTable();
-        $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
+        $twigRenderer = $this->buildRenderer("table-builder/$template.html.twig");
 
         $output = $twigRenderer->renderTableRowsPerPageOptions($table);
 
-        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table_rows_per_page_options.html";
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "$template/expected_table_rows_per_page_options.html";
         $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
     /**
+     * @dataProvider getTestData
+     * @param string $template
      * @return void
      * @throws Throwable
      */
-    public function testRenderTableElement()
+    public function testRenderTableElement(string $template)
     {
         $table = $this->buildTable();
-        $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
+        $twigRenderer = $this->buildRenderer("table-builder/$template.html.twig");
 
         $output = $twigRenderer->renderTableElement($table);
 
-        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table_element.html";
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "$template/expected_table_element.html";
         $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
+
     /**
+     * @dataProvider getTestData
+     * @param string $template
      * @return void
      * @throws Throwable
      */
-    public function testRenderTableHeading()
+    public function testRenderTableHeading(string $template)
     {
         $table = $this->buildTable();
         $heading = $table->getHeadings()['foo'];
 
-        $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
+        $twigRenderer = $this->buildRenderer("table-builder/$template.html.twig");
 
         $output = $twigRenderer->renderTableHeading($table, $heading);
 
-        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table_heading.html";
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "$template/expected_table_heading.html";
 
         $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
     /**
+     * @dataProvider getTestData
+     * @param string $template
      * @return void
      * @throws Throwable
      */
-    public function testRenderTableRow()
+    public function testRenderTableRow(string $template)
     {
         $table = $this->buildTable();
         $row = $table->getRows()[0];
-        $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
+        $twigRenderer = $this->buildRenderer("table-builder/$template.html.twig");
 
         $output = $twigRenderer->renderTableRow($table, $row);
 
-        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table_row.html";
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "$template/expected_table_row.html";
         $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
     /**
+     * @dataProvider getTestData
+     * @param string $template
      * @return void
      * @throws Throwable
      */
-    public function testRenderTableCell()
+    public function testRenderTableCell(string $template)
     {
         $table = $this->buildTable();
         $row = $table->getRows()[0];
         $cell = $row['foo'];
-        $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
+        $twigRenderer = $this->buildRenderer("table-builder/$template.html.twig");
 
         $output = $twigRenderer->renderTableCell($table, $row, $cell);
 
-        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table_cell.html";
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "$template/expected_table_cell.html";
         $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 
     /**
+     * @dataProvider getTestData
+     * @param string $template
      * @return void
      * @throws Throwable
      */
-    public function testRenderTableCellValueNoBlockOrTemplateForRenderingType()
+    public function testRenderTableCellValueNoBlockOrTemplateForRenderingType(string $template)
     {
         $table = $this->buildTable();
         $row = $table->getRows()[0];
         $cell = $row['foo'];
-        $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
+        $twigRenderer = $this->buildRenderer("table-builder/$template.html.twig");
 
         $output = $twigRenderer->renderTableCellValue($table, $row, $cell);
 
@@ -177,7 +200,7 @@ class TwigRendererIntegrationTest extends TestCase
      * @return void
      * @throws Throwable
      */
-    public function testRenderTableCellValueWithCellValueTemplateAndCellValueBlockRendersWithCellValueTemplate()
+    public function testRenderTableCellValueWithCellValueTemplateAndCellValueBlockRendersWithTemplate()
     {
         $table = $this->buildTable();
         $row = $table->getRows()[0];
@@ -192,17 +215,19 @@ class TwigRendererIntegrationTest extends TestCase
     }
 
     /**
+     * @dataProvider getTestData
+     * @param string $template
      * @return void
      * @throws Throwable
      */
-    public function testRenderTablePagination()
+    public function testRenderTablePagination(string $template)
     {
         $table = $this->buildTable();
-        $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
+        $twigRenderer = $this->buildRenderer("table-builder/$template.html.twig");
 
         $output = $twigRenderer->renderTablePagination($table);
 
-        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "bootstrap4/expected_table_pagination.html";
+        $resourcePath = self::EXPECTATION_RESOURCES_DIR . "$template/expected_table_pagination.html";
         $this->assertOutputEquivalentToResource($resourcePath, $output);
     }
 

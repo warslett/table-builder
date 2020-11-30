@@ -1,8 +1,4 @@
-{% block table %}
-    {{ table_rows_per_page_options(table) }}
-    {{ table_element(table) }}
-    {{ table_pagination(table) }}
-{% endblock %}
+{% extends 'table-builder/standard.html.twig' %}
 
 {% block table_rows_per_page_options %}
     {% if table.rowsPerPageOptions is not empty %}
@@ -67,18 +63,6 @@
     </th>
 {% endblock %}
 
-{% block table_row %}
-    <tr>
-        {% for cell in row %}
-            {{ table_cell(table, row, cell) }}
-        {% endfor %}
-    </tr>
-{% endblock %}
-
-{% block table_cell %}
-    <td>{{ table_cell_value(table, row, cell) }}</td>
-{% endblock %}
-
 {% block table_pagination %}
     {% if table.totalPages > 1 %}
         <div class="btn-group" role="group" aria-label="Basic example">
@@ -101,8 +85,4 @@
             >{{ action.label }}</a>
         {% endfor %}
     </div>
-{% endblock %}
-
-{% block boolean_cell_value %}
-    {{ cell.value ? '&#10004;' : '&#10008;' }}
 {% endblock %}
