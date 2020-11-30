@@ -69,7 +69,7 @@
 {% endblock %}
 
 {% block table_cell %}
-    <td>{{ table_cell_value(table, row, cell) }}</td>
+    <td class="{{ cell.attribute('extra_classes', {})|join(' ') }}">{{ table_cell_value(table, row, cell) }}</td>
 {% endblock %}
 
 {% block table_pagination %}

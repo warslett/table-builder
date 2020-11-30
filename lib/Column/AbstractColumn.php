@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder\Column;
 
+use Closure;
 use WArslett\TableBuilder\Exception\NoValueAdapterException;
 use WArslett\TableBuilder\Exception\ValueException;
 use WArslett\TableBuilder\TableCell;
@@ -14,6 +15,7 @@ abstract class AbstractColumn implements ColumnInterface
     protected string $name;
     protected ?string $label = null;
     protected ?string $sortToggle = null;
+    protected ?Closure $afterBuildCell = null;
 
     /**
      * Final protected construct (use static named constructors for concretions)
@@ -60,6 +62,12 @@ abstract class AbstractColumn implements ColumnInterface
         return $this;
     }
 
+    public function afterBuildCell(Closure $callback): self
+    {
+        $this->afterBuildCell = $callback;
+        return $this;
+    }
+
     /**
      * @return TableHeading
      */
@@ -76,7 +84,13 @@ abstract class AbstractColumn implements ColumnInterface
      */
     public function buildTableCell($row): TableCell
     {
-        return new TableCell($this->name, static::class, $this->getCellValue($row));
+        $cell =  new TableCell($this->name, static::class, $this->getCellValue($row));
+
+        if (null !== $this->afterBuildCell) {
+            ($this->afterBuildCell)($cell, $row);
+        }
+
+        return $cell;
     }
 
     /**

@@ -18,6 +18,9 @@ class TableCell implements JsonSerializable
     /** @var mixed */
     private $value;
 
+    /** @var array<string, mixed> */
+    private array $attributes = [];
+
     /**
      * @param string $name
      * @param string $renderingType
@@ -57,6 +60,34 @@ class TableCell implements JsonSerializable
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setValue($value): void
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * @param string $attributeKey
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getAttribute(string $attributeKey, $default = null)
+    {
+        return $this->attributes[$attributeKey] ?? $default;
+    }
+
+    /**
+     * @param string $attributeKey
+     * @param mixed $attributeValue
+     * @return void
+     */
+    public function setAttribute(string $attributeKey, $attributeValue): void
+    {
+        $this->attributes[$attributeKey] = $attributeValue;
     }
 
     /**
