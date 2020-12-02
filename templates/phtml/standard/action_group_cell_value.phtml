@@ -1,0 +1,19 @@
+<?php
+
+use WArslett\TableBuilder\ActionGroup;
+use WArslett\TableBuilder\Renderer\Html\HtmlTableRendererInterface;
+use WArslett\TableBuilder\Table;
+use WArslett\TableBuilder\TableCell;
+
+/**
+ * @var HtmlTableRendererInterface $this
+ * @var Table $table
+ * @var TableCell<ActionGroup> $cell;
+ */
+?>
+
+<?php foreach ($cell->getValue()->getActions() as $action) : ?>
+    <a
+        href="<?= null !== $action->getRoute() ? $this->renderTableRoute($action->getRoute(), $action->getRouteParams()) : '#' ?>"
+    ><?= $action->getLabel() ?></a>
+<?php endforeach; ?>

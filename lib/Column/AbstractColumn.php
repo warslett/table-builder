@@ -10,6 +10,9 @@ use WArslett\TableBuilder\Exception\ValueException;
 use WArslett\TableBuilder\TableCell;
 use WArslett\TableBuilder\TableHeading;
 
+/**
+ * @template T
+ */
 abstract class AbstractColumn implements ColumnInterface
 {
     protected string $name;
@@ -78,7 +81,7 @@ abstract class AbstractColumn implements ColumnInterface
 
     /**
      * @param mixed $row
-     * @return TableCell
+     * @return TableCell<T>
      * @throws NoValueAdapterException
      * @throws ValueException
      */
@@ -95,7 +98,7 @@ abstract class AbstractColumn implements ColumnInterface
 
     /**
      * @param mixed $row
-     * @return mixed
+     * @return T
      * @throws NoValueAdapterException
      */
     abstract protected function getCellValue($row);

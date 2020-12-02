@@ -8,13 +8,16 @@ use WArslett\TableBuilder\Exception\NoValueAdapterException;
 use WArslett\TableBuilder\Exception\ValueException;
 use WArslett\TableBuilder\ValueAdapter\ValueAdapterTrait;
 
+/**
+ * @extends AbstractColumn<bool>
+ */
 final class BooleanColumn extends AbstractColumn
 {
     use ValueAdapterTrait;
 
     /**
      * @param mixed $row
-     * @return mixed
+     * @return bool
      * @throws NoValueAdapterException
      * @throws ValueException
      */

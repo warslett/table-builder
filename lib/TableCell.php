@@ -7,6 +7,9 @@ namespace WArslett\TableBuilder;
 use JsonSerializable;
 use WArslett\TableBuilder\Exception\ValueException;
 
+/**
+ * @template T
+ */
 class TableCell implements JsonSerializable
 {
     /** @var string */
@@ -24,7 +27,7 @@ class TableCell implements JsonSerializable
     /**
      * @param string $name
      * @param string $renderingType
-     * @param mixed $value
+     * @param T $value
      * @throws ValueException
      */
     public function __construct(string $name, string $renderingType, $value)
@@ -55,7 +58,7 @@ class TableCell implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return T
      */
     public function getValue()
     {
@@ -63,7 +66,7 @@ class TableCell implements JsonSerializable
     }
 
     /**
-     * @param mixed $value
+     * @param T $value
      */
     public function setValue($value): void
     {

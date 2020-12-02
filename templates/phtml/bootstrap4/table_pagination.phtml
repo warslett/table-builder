@@ -1,0 +1,21 @@
+<?php
+
+use WArslett\TableBuilder\Renderer\Html\HtmlTableRendererInterface;
+use WArslett\TableBuilder\Table;
+
+/**
+ * @var HtmlTableRendererInterface $this
+ * @var Table $table
+ */
+?>
+
+<?php if ($table->getTotalPages() > 1) : ?>
+    <div class="btn-group" role="group">
+        <?php for ($i = 1; $i <= $table->getTotalPages(); $i++) : ?>
+            <a
+                href="?<?= http_build_query($table->getParams(['page' => $i]), '', '&amp;') ?>"
+                class="btn btn-primary <?= $i === $table->getPageNumber() ? 'active' : '' ?>"
+            ><?= $i ?></a>
+        <?php endfor; ?>
+    </div>
+<?php endif; ?>

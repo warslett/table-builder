@@ -1,0 +1,30 @@
+<?php
+
+use WArslett\TableBuilder\Renderer\Html\HtmlTableRendererInterface;
+use WArslett\TableBuilder\Table;
+
+/**
+ * @var HtmlTableRendererInterface $this
+ * @var Table $table
+ */
+?>
+
+<?php if (false === empty($table->getRowsPerPageOptions())) : ?>
+    <p>
+        <span>Rows per page:</span>
+        <?php foreach ($table->getRowsPerPageOptions() as $index => $option) : ?>
+            <?php if ($option === $table->getRowsPerPage()) : ?>
+            <strong>
+                <a
+                    href="?<?= http_build_query($table->getParams(['rows_per_page' => $option, 'page' => 1]), '', '&amp;'); ?>"
+                ><?= $option ?></a>
+            </strong>
+            <?php else : ?>
+            <a
+                href="?<?= http_build_query($table->getParams(['rows_per_page' => $option, 'page' => 1]), '', '&amp;'); ?>"
+            ><?= $option ?></a>
+            <?php endif; ?>
+            <?= $index === count($table->getRowsPerPageOptions()) ? '' : '|'; ?>
+        <?php endforeach; ?>
+    </p>
+<?php endif; ?>

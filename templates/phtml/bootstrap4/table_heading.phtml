@@ -1,0 +1,42 @@
+<?php
+
+use WArslett\TableBuilder\Renderer\Html\HtmlTableRendererInterface;
+use WArslett\TableBuilder\RequestAdapter\RequestAdapterInterface;
+use WArslett\TableBuilder\Table;
+use WArslett\TableBuilder\TableHeading;
+
+/**
+ * @var HtmlTableRendererInterface $this
+ * @var Table $table
+ * @var TableHeading $heading
+ */
+?>
+
+<th scope="col">
+    <div class="d-flex">
+        <span><?= $heading->getLabel(); ?></span>
+        <?php if ($heading->isSortable()) : ?>
+            <span class="ml-auto mr-0">
+                <?php if ($table->getSortColumnName() === $heading->getName() && false === $table->isSortedDescending()) : ?>
+                    <a
+                        href="?<?= http_build_query($table->getParams(['sort_column' => null, 'sort_dir' => null]), '', '&amp;') ?>"
+                    >&#11205;</a>
+                <?php else : ?>
+                    <a
+                        href="?<?= http_build_query($table->getParams(['sort_column' => $heading->getName(), 'sort_dir' => RequestAdapterInterface::SORT_ASCENDING]), '', '&amp;') ?>"
+                    >&#11205;</a>
+                <?php endif; ?>
+
+                <?php if ($table->getSortColumnName() === $heading->getName() && $table->isSortedDescending()) : ?>
+                    <a
+                        href="?<?= http_build_query($table->getParams(['sort_column' => null, 'sort_dir' => null]), '', '&amp;') ?>"
+                    >&#11206;</a>
+                <?php else : ?>
+                    <a
+                        href="?<?= http_build_query($table->getParams(['sort_column' => $heading->getName(), 'sort_dir' => RequestAdapterInterface::SORT_DESCENDING]), '', '&amp;') ?>"
+                    >&#11206;</a>
+                <?php endif; ?>
+            </span>
+        <?php endif; ?>
+    </div>
+</th>

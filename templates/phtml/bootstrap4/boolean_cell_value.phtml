@@ -1,0 +1,14 @@
+<?php
+
+use WArslett\TableBuilder\Renderer\Html\HtmlTableRendererInterface;
+use WArslett\TableBuilder\Table;
+use WArslett\TableBuilder\TableCell;
+
+/**
+ * @var HtmlTableRendererInterface $this
+ * @var Table $table
+ * @var TableCell<bool> $cell;
+ */
+?>
+
+<?= $cell->getValue() ? '&#10004;' : '&#10008;';

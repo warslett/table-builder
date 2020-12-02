@@ -65,32 +65,30 @@ $table->handleRequest(SymfonyHttpAdapter::withRequest($request));
 ```
 
 ### Table Rendering
-Modeling tables in an abstract way allows us to provide a variety of generic renderers for rendering them. Renderers
-that render html implement the interface HtmlTableRendererInterface. The twig renderer is provided out of the box and is
-themeable with a bootstrap4 theme provided out the box.
-``` php
-use Twig\Environment;
-use WArslett\TableBuilder\Renderer\Html\TwigRenderer;
-use WArslett\TableBuilder\RouteGeneratorAdapter\SymfonyRoutingAdapter;
-use WArslett\TableBuilder\Twig\StandardTemplatesLoader;
-use WArslett\TableBuilder\Twig\TableRendererExtension;
+Modeling tables in an abstract way allows us to provide a variety of generic renderers for rendering them. 
 
-// Route generators are used for generating routes to actions in your table (Symfony and Sprintf adapters provided otb)
-$routeGenerator = new SymfonyRoutingAdapter($router);
-
-// StandardTemplatesLoader loads the templates for the standard themes in the table-builder/ namespace
-$twigEnvironment = new Environment(new StandardTemplatesLoader());
-$renderer = new TwigRenderer($twigEnvironment, $routeGenerator, 'table-builder/bootstrap4.html.twig');
-$twigEnvironment->addExtension(new TableRendererExtension($renderer)); // Extension must be registered before rendering
-
-echo $renderer->renderTable($table);
-```
-Or with the TableRendererExtension added to your twig environment you can render directly within twig
+For example, with the TwigRendererExtension registered you can render the table in a twig template like this:
 ``` twig
 <div class="container">
     {{ table(table) }}
 </div>
 ```
+
+Or if you aren't using twig you can use the PhtmlRenderer which uses plain old php templates and has 0 third party
+dependencies:
+``` php
+<?php
+
+use WArslett\TableBuilder\Renderer\Html\PhtmlRenderer;
+
+// Route generators are used to generate uris for actions using route names and parameters
+$routeGenerator = ...;
+$renderer = new PhtmlRenderer($routeGenerator);
+
+echo $renderer->renderTable($table);
+```
+
+Both of the above renderers are themeable and are available with a standard theme and bootstrap4 theme out the box.
 
 ### Single Page Applications
 Tables also implement JsonSerializable so they can be encoded as json in a response and consumed by a single page
@@ -107,4 +105,5 @@ Table builder has no core dependencies however some optional features have depen
 * DoctrineORMAdapter data adapter depends on `doctrine/orm`
 * PropertyAccessAdapter value adapter depends on `symfony/property-access`
 * SymfonyHttpAdapter response adapter depends on `symfony/http-foundation`
+* Psr7Adapter response adapter depends on `psr/http-message`
 * SymfonyRoutingAdapter route generator adapter depends on `symfony/routing`

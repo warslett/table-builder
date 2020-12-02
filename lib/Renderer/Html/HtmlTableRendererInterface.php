@@ -44,19 +44,17 @@ interface HtmlTableRendererInterface
 
     /**
      * @param Table $table
-     * @param array<TableCell> $row
      * @param TableCell $cell
      * @return string
      */
-    public function renderTableCell(Table $table, array $row, TableCell $cell): string;
+    public function renderTableCell(Table $table, TableCell $cell): string;
 
     /**
      * @param Table $table
-     * @param array<TableCell> $row
      * @param TableCell $cell
      * @return string
      */
-    public function renderTableCellValue(Table $table, array $row, TableCell $cell): string;
+    public function renderTableCellValue(Table $table, TableCell $cell): string;
 
     /**
      * @param string $route

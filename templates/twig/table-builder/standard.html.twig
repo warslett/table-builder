@@ -63,13 +63,13 @@
 {% block table_row %}
     <tr>
         {% for cell in row %}
-            {{ table_cell(table, row, cell) }}
+            {{ table_cell(table, cell) }}
         {% endfor %}
     </tr>
 {% endblock %}
 
 {% block table_cell %}
-    <td class="{{ cell.attribute('extra_classes', {})|join(' ') }}">{{ table_cell_value(table, row, cell) }}</td>
+    <td class="{{ cell.attribute('extra_classes', {})|join(' ') }}">{{ table_cell_value(table, cell) }}</td>
 {% endblock %}
 
 {% block table_pagination %}
