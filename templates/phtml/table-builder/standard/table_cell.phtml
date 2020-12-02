@@ -1,0 +1,16 @@
+<?php
+
+use WArslett\TableBuilder\Renderer\Html\HtmlTableRendererInterface;
+use WArslett\TableBuilder\Table;
+use WArslett\TableBuilder\TableCell;
+
+/**
+ * @var HtmlTableRendererInterface $this
+ * @var Table $table
+ * @var TableCell $cell;
+ */
+?>
+
+<td
+    class="<?= implode(' ', $cell->getAttribute('extra_classes', [])); ?>"
+><?= $this->renderTableCellValue($table, $cell); ?></td>

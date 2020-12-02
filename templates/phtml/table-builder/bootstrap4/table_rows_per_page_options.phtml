@@ -1,0 +1,30 @@
+<?php
+
+use WArslett\TableBuilder\Renderer\Html\HtmlTableRendererInterface;
+use WArslett\TableBuilder\Table;
+
+/**
+ * @var HtmlTableRendererInterface $this
+ * @var Table $table
+ */
+?>
+
+<?php if (false === empty($table->getRowsPerPageOptions())) : ?>
+    <div class="dropdown mb-2">
+        <span>Rows per page:</span>
+        <button
+            class="btn btn-primary btn-sm dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+        ><?= $table->getRowsPerPage() ?></button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <?php foreach ($table->getRowsPerPageOptions() as $index => $option) : ?>
+                <a
+                    href="?<?= http_build_query($table->getParams(['rows_per_page' => $option, 'page' => 1]), '', '&amp;'); ?>"
+                    class="dropdown-item <?= $option === $table->getRowsPerPage() ? 'active' : '' ?>"
+                ><?= $option ?></a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+<?php endif; ?>

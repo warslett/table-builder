@@ -9,6 +9,9 @@ use WArslett\TableBuilder\Exception\NoValueAdapterException;
 use WArslett\TableBuilder\Exception\ValueException;
 use WArslett\TableBuilder\ValueAdapter\ValueAdapterTrait;
 
+/**
+ * @extends AbstractColumn<string>
+ */
 final class DateTimeColumn extends AbstractColumn
 {
     use ValueAdapterTrait;
@@ -28,7 +31,7 @@ final class DateTimeColumn extends AbstractColumn
 
     /**
      * @param mixed $row
-     * @return mixed
+     * @return string
      * @throws NoValueAdapterException
      * @throws ValueException
      */

@@ -5,11 +5,11 @@
         <div class="dropdown mb-2">
             <span>Rows per page:</span>
             <button
-                    class="btn btn-primary btn-sm dropdown-toggle"
-                    type="button" id="{{ table.name }}_rows_per_page_dropwdown"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
+                class="btn btn-primary btn-sm dropdown-toggle"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
             >{{ table.rowsPerPage }}</button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 {% for option in table.rowsPerPageOptions %}
@@ -65,7 +65,7 @@
 
 {% block table_pagination %}
     {% if table.totalPages > 1 %}
-        <div class="btn-group" role="group" aria-label="Basic example">
+        <div class="btn-group" role="group">
             {% for i in 1..table.totalPages %}
                 <a
                         href="?{{ table.params({'page': i})|url_encode }}"

@@ -1,0 +1,18 @@
+<?php
+
+use WArslett\TableBuilder\Renderer\Html\HtmlTableRendererInterface;
+use WArslett\TableBuilder\Table;
+use WArslett\TableBuilder\TableCell;
+
+/**
+ * @var HtmlTableRendererInterface $this
+ * @var Table $table
+ * @var array<TableCell> $row;
+ */
+?>
+
+<tr>
+    <?php foreach ($row as $cell) : ?>
+        <?= $this->renderTableCell($table, $cell); ?>
+    <?php endforeach; ?>
+</tr>

@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder\Renderer\Html;
 
-use Throwable;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
-use Twig\TemplateWrapper;
 use WArslett\TableBuilder\Column\ActionGroupColumn;
 use WArslett\TableBuilder\Column\BooleanColumn;
 use WArslett\TableBuilder\RouteGeneratorAdapter\RouteGeneratorAdapterInterface;
@@ -17,39 +11,39 @@ use WArslett\TableBuilder\Table;
 use WArslett\TableBuilder\TableCell;
 use WArslett\TableBuilder\TableHeading;
 
-final class TwigRenderer implements HtmlTableRendererInterface
+final class PhtmlRenderer implements HtmlTableRendererInterface
 {
-    public const STANDARD_THEME_PATH = 'table-builder/standard.html.twig';
-    public const BOOTSTRAP4_THEME_PATH = 'table-builder/bootstrap4.html.twig';
-
-    private Environment $environment;
-    private RouteGeneratorAdapterInterface $routeGeneratorAdapter;
-    private string $themeTemplatePath;
-    private ?TemplateWrapper $template = null;
-    private array $cellValueBlocks = [
-        ActionGroupColumn::class => 'action_group_cell_value',
-        BooleanColumn::class => 'boolean_cell_value'
+    public const STANDARD_THEME_DIRECTORY_PATH = __DIR__ . '/../../../templates/phtml/table-builder/standard';
+    public const BOOTSTRAP4_THEME_DIRECTORY_PATH = __DIR__ . '/../../../templates/phtml/table-builder/bootstrap4';
+    private const RELATIVE_DEFAULT_CELL_VALUE_TEMPLATES = [
+        ActionGroupColumn::class => "action_group_cell_value.phtml",
+        BooleanColumn::class => "boolean_cell_value.phtml"
     ];
-    private array $cellValueTemplates = [];
+
+    private RouteGeneratorAdapterInterface $routeGeneratorAdapter;
+    private string $themeDirectoryPath;
+    private array $cellValueTemplates;
 
     public function __construct(
-        Environment $environment,
         RouteGeneratorAdapterInterface $routeGeneratorAdapter,
-        string $themeTemplatePath = self::STANDARD_THEME_PATH
+        string $themeDirectoryPath = self::STANDARD_THEME_DIRECTORY_PATH
     ) {
-        $this->environment = $environment;
         $this->routeGeneratorAdapter = $routeGeneratorAdapter;
-        $this->themeTemplatePath = $themeTemplatePath;
+        $this->themeDirectoryPath = $themeDirectoryPath;
+
+        $this->cellValueTemplates = array_map(
+            fn ($relativePath) => "$this->themeDirectoryPath/$relativePath",
+            self::RELATIVE_DEFAULT_CELL_VALUE_TEMPLATES
+        );
     }
 
     /**
      * @param Table $table
      * @return string
-     * @throws Throwable
      */
     public function renderTable(Table $table): string
     {
-        return $this->getTemplate()->renderBlock('table', [
+        return $this->renderTemplate("$this->themeDirectoryPath/table.phtml", [
             'table' => $table
         ]);
     }
@@ -57,11 +51,10 @@ final class TwigRenderer implements HtmlTableRendererInterface
     /**
      * @param Table $table
      * @return string
-     * @throws Throwable
      */
     public function renderTableRowsPerPageOptions(Table $table): string
     {
-        return $this->getTemplate()->renderBlock('table_rows_per_page_options', [
+        return $this->renderTemplate("$this->themeDirectoryPath/table_rows_per_page_options.phtml", [
             'table' => $table
         ]);
     }
@@ -69,11 +62,10 @@ final class TwigRenderer implements HtmlTableRendererInterface
     /**
      * @param Table $table
      * @return string
-     * @throws Throwable
      */
     public function renderTableElement(Table $table): string
     {
-        return $this->getTemplate()->renderBlock('table_element', [
+        return $this->renderTemplate("$this->themeDirectoryPath/table_element.phtml", [
             'table' => $table
         ]);
     }
@@ -82,11 +74,10 @@ final class TwigRenderer implements HtmlTableRendererInterface
      * @param Table $table
      * @param TableHeading $heading
      * @return string
-     * @throws Throwable
      */
     public function renderTableHeading(Table $table, TableHeading $heading): string
     {
-        return $this->getTemplate()->renderBlock('table_heading', [
+        return $this->renderTemplate("$this->themeDirectoryPath/table_heading.phtml", [
             'table' => $table,
             'heading' => $heading
         ]);
@@ -94,13 +85,12 @@ final class TwigRenderer implements HtmlTableRendererInterface
 
     /**
      * @param Table $table
-     * @param array $row
+     * @param array<TableCell> $row
      * @return string
-     * @throws Throwable
      */
     public function renderTableRow(Table $table, array $row): string
     {
-        return $this->getTemplate()->renderBlock('table_row', [
+        return $this->renderTemplate("$this->themeDirectoryPath/table_row.phtml", [
             'table' => $table,
             'row' => $row
         ]);
@@ -110,11 +100,10 @@ final class TwigRenderer implements HtmlTableRendererInterface
      * @param Table $table
      * @param TableCell $cell
      * @return string
-     * @throws Throwable
      */
     public function renderTableCell(Table $table, TableCell $cell): string
     {
-        return $this->getTemplate()->renderBlock('table_cell', [
+        return $this->renderTemplate("$this->themeDirectoryPath/table_cell.phtml", [
             'table' => $table,
             'cell' => $cell
         ]);
@@ -124,21 +113,11 @@ final class TwigRenderer implements HtmlTableRendererInterface
      * @param Table $table
      * @param TableCell $cell
      * @return string
-     * @throws Throwable
      */
     public function renderTableCellValue(Table $table, TableCell $cell): string
     {
-        $renderingType = $cell->getRenderingType();
-
-        if (isset($this->cellValueTemplates[$renderingType])) {
-            return $this->environment->render($this->cellValueTemplates[$renderingType], [
-                'table' => $table,
-                'cell' => $cell
-            ]);
-        }
-
-        if (isset($this->cellValueBlocks[$renderingType])) {
-            return $this->getTemplate()->renderBlock($this->cellValueBlocks[$renderingType], [
+        if (isset($this->cellValueTemplates[$cell->getRenderingType()])) {
+            return $this->renderTemplate($this->cellValueTemplates[$cell->getRenderingType()], [
                 'table' => $table,
                 'cell' => $cell
             ]);
@@ -160,23 +139,10 @@ final class TwigRenderer implements HtmlTableRendererInterface
     /**
      * @param Table $table
      * @return string
-     * @throws Throwable
      */
     public function renderTablePagination(Table $table): string
     {
-        return $this->getTemplate()->renderBlock('table_pagination', [
-            'table' => $table
-        ]);
-    }
-
-    /**
-     * @param string $renderingType
-     * @param string $blockName
-     * @return void
-     */
-    public function registerCellValueBlock(string $renderingType, string $blockName): void
-    {
-        $this->cellValueBlocks[$renderingType] = $blockName;
+        return $this->renderTemplate("$this->themeDirectoryPath/table_pagination.phtml", ['table' => $table]);
     }
 
     /**
@@ -190,17 +156,19 @@ final class TwigRenderer implements HtmlTableRendererInterface
     }
 
     /**
-     * @return TemplateWrapper
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @psalm-suppress UnresolvableInclude - unresolvable include is template
+     * @param string $template
+     * @param array $params
+     * @return string
      */
-    private function getTemplate(): TemplateWrapper
+    private function renderTemplate(string $template, array $params = []): string
     {
-        if (null === $this->template) {
-            $this->template = $this->environment->load($this->themeTemplatePath);
+        foreach ($params as $key => $value) {
+            ${$key} = $value;
         }
 
-        return $this->template;
+        ob_start();
+        require "$template";
+        return ob_get_clean();
     }
 }

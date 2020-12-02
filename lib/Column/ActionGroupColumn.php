@@ -7,6 +7,9 @@ namespace WArslett\TableBuilder\Column;
 use WArslett\TableBuilder\ActionBuilderInterface;
 use WArslett\TableBuilder\ActionGroup;
 
+/**
+ * @extends AbstractColumn<ActionGroup>
+ */
 final class ActionGroupColumn extends AbstractColumn
 {
     /** @var array<string, ActionBuilderInterface> */
@@ -16,7 +19,7 @@ final class ActionGroupColumn extends AbstractColumn
      * @param ActionBuilderInterface $actionBuilder
      * @return $this
      */
-    public function addActionBuilder(ActionBuilderInterface $actionBuilder)
+    public function addActionBuilder(ActionBuilderInterface $actionBuilder): self
     {
         $this->actionBuilders[$actionBuilder->getName()] = $actionBuilder;
         return $this;
