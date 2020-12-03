@@ -32,7 +32,7 @@ abstract class AbstractColumn implements ColumnInterface
     /**
      * @return string
      */
-    public function getName(): string
+    final public function getName(): string
     {
         return $this->name;
     }
@@ -50,7 +50,7 @@ abstract class AbstractColumn implements ColumnInterface
     /**
      * @return string|null
      */
-    public function getSortToggle(): ?string
+    final public function getSortToggle(): ?string
     {
         return $this->sortToggle;
     }
@@ -65,6 +65,10 @@ abstract class AbstractColumn implements ColumnInterface
         return $this;
     }
 
+    /**
+     * @param Closure $callback
+     * @return $this
+     */
     public function afterBuildCell(Closure $callback): self
     {
         $this->afterBuildCell = $callback;
@@ -74,7 +78,7 @@ abstract class AbstractColumn implements ColumnInterface
     /**
      * @return TableHeading
      */
-    public function buildTableHeading(): TableHeading
+    final public function buildTableHeading(): TableHeading
     {
         return new TableHeading($this->name, $this->label ?? $this->name, null !== $this->sortToggle);
     }
@@ -85,7 +89,7 @@ abstract class AbstractColumn implements ColumnInterface
      * @throws NoValueAdapterException
      * @throws ValueException
      */
-    public function buildTableCell($row): TableCell
+    final public function buildTableCell($row): TableCell
     {
         $cell =  new TableCell($this->name, static::class, $this->getCellValue($row));
 
