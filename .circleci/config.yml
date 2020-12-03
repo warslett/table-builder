@@ -37,3 +37,6 @@ jobs:
 
       - store_test_results:
           path: ".circleci/test-results"
+
+      - store_artifacts:
+          path: clover.xml
