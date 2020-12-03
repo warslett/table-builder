@@ -46,7 +46,10 @@ class PhtmlRendererIntegrationTest extends TestCase
     public function testRenderTable(string $template)
     {
         $table = $this->buildTable($this->getTableBuilder());
-        $renderer = new PhtmlRenderer(new SprintfAdapter(), __DIR__ . "/../../../templates/phtml/$template");
+        $renderer = new PhtmlRenderer(
+            new SprintfAdapter(),
+            __DIR__ . "/../../../templates/phtml/table-builder/$template"
+        );
 
         $output = $renderer->renderTable($table);
 
@@ -63,7 +66,10 @@ class PhtmlRendererIntegrationTest extends TestCase
     public function testRenderTableRowsPerPageOptions(string $template)
     {
         $table = $this->buildTable($this->getTableBuilder());
-        $renderer = new PhtmlRenderer(new SprintfAdapter(), __DIR__ . "/../../../templates/phtml/$template");
+        $renderer = new PhtmlRenderer(
+            new SprintfAdapter(),
+            __DIR__ . "/../../../templates/phtml/table-builder/$template"
+        );
 
         $output = $renderer->renderTableRowsPerPageOptions($table);
 
@@ -80,7 +86,10 @@ class PhtmlRendererIntegrationTest extends TestCase
     public function testRenderTableElement(string $template)
     {
         $table = $this->buildTable($this->getTableBuilder());
-        $renderer = new PhtmlRenderer(new SprintfAdapter(), __DIR__ . "/../../../templates/phtml/$template");
+        $renderer = new PhtmlRenderer(
+            new SprintfAdapter(),
+            __DIR__ . "/../../../templates/phtml/table-builder/$template"
+        );
 
         $output = $renderer->renderTableElement($table);
 
@@ -98,7 +107,10 @@ class PhtmlRendererIntegrationTest extends TestCase
     {
         $table = $this->buildTable($this->getTableBuilder());
         $heading = $table->getHeadings()['foo'];
-        $renderer = new PhtmlRenderer(new SprintfAdapter(), __DIR__ . "/../../../templates/phtml/$template");
+        $renderer = new PhtmlRenderer(
+            new SprintfAdapter(),
+            __DIR__ . "/../../../templates/phtml/table-builder/$template"
+        );
 
         $output = $renderer->renderTableHeading($table, $heading);
 
@@ -117,7 +129,10 @@ class PhtmlRendererIntegrationTest extends TestCase
     {
         $table = $this->buildTable($this->getTableBuilder());
         $row = $table->getRows()[0];
-        $renderer = new PhtmlRenderer(new SprintfAdapter(), __DIR__ . "/../../../templates/phtml/$template");
+        $renderer = new PhtmlRenderer(
+            new SprintfAdapter(),
+            __DIR__ . "/../../../templates/phtml/table-builder/$template"
+        );
 
         $output = $renderer->renderTableRow($table, $row);
 
@@ -136,7 +151,10 @@ class PhtmlRendererIntegrationTest extends TestCase
         $table = $this->buildTable($this->getTableBuilder());
         $row = $table->getRows()[0];
         $cell = $row['foo'];
-        $renderer = new PhtmlRenderer(new SprintfAdapter(), __DIR__ . "/../../../templates/phtml/$template");
+        $renderer = new PhtmlRenderer(
+            new SprintfAdapter(),
+            __DIR__ . "/../../../templates/phtml/table-builder/$template"
+        );
 
         $output = $renderer->renderTableCell($table, $cell);
 
@@ -155,7 +173,10 @@ class PhtmlRendererIntegrationTest extends TestCase
         $table = $this->buildTable($this->getTableBuilder());
         $row = $table->getRows()[0];
         $cell = $row['foo'];
-        $renderer = new PhtmlRenderer(new SprintfAdapter(), __DIR__ . "/../../../templates/phtml/$template");
+        $renderer = new PhtmlRenderer(
+            new SprintfAdapter(),
+            __DIR__ . "/../../../templates/phtml/table-builder/$template"
+        );
 
         $output = $renderer->renderTableCellValue($table, $cell);
 
@@ -180,7 +201,10 @@ class PhtmlRendererIntegrationTest extends TestCase
         $table = $this->buildTable($builder);
         $row = $table->getRows()[0];
         $cell = $row['actions'];
-        $renderer = new PhtmlRenderer(new SprintfAdapter(), __DIR__ . "/../../../templates/phtml/$template");
+        $renderer = new PhtmlRenderer(
+            new SprintfAdapter(),
+            __DIR__ . "/../../../templates/phtml/table-builder/$template"
+        );
 
         $output = $renderer->renderTableCellValue($table, $cell);
 
@@ -204,7 +228,10 @@ class PhtmlRendererIntegrationTest extends TestCase
         $table = $this->buildTable($builder);
         $row = $table->getRows()[0];
         $cell = $row['boolean'];
-        $renderer = new PhtmlRenderer(new SprintfAdapter(), __DIR__ . "/../../../templates/phtml/$template");
+        $renderer = new PhtmlRenderer(
+            new SprintfAdapter(),
+            __DIR__ . "/../../../templates/phtml/table-builder/$template"
+        );
 
         $output = $renderer->renderTableCellValue($table, $cell);
 
@@ -241,7 +268,10 @@ class PhtmlRendererIntegrationTest extends TestCase
     public function testRenderTablePagination(string $template)
     {
         $table = $this->buildTable($this->getTableBuilder());
-        $renderer = new PhtmlRenderer(new SprintfAdapter(), __DIR__ . "/../../../templates/phtml/$template");
+        $renderer = new PhtmlRenderer(
+            new SprintfAdapter(),
+            __DIR__ . "/../../../templates/phtml/table-builder/$template"
+        );
 
         $output = $renderer->renderTablePagination($table);
 
