@@ -15,6 +15,10 @@ final class PhtmlRenderer implements HtmlTableRendererInterface
 {
     public const STANDARD_THEME_DIRECTORY_PATH = __DIR__ . '/../../../templates/phtml/standard';
     public const BOOTSTRAP4_THEME_DIRECTORY_PATH = __DIR__ . '/../../../templates/phtml/bootstrap4';
+    private const RELATIVE_DEFAULT_CELL_VALUE_TEMPLATES = [
+        ActionGroupColumn::class => "action_group_cell_value.phtml",
+        BooleanColumn::class => "boolean_cell_value.phtml"
+    ];
 
     private RouteGeneratorAdapterInterface $routeGeneratorAdapter;
     private string $themeDirectoryPath;
@@ -27,10 +31,10 @@ final class PhtmlRenderer implements HtmlTableRendererInterface
         $this->routeGeneratorAdapter = $routeGeneratorAdapter;
         $this->themeDirectoryPath = $themeDirectoryPath;
 
-        $this->cellValueTemplates = [
-            ActionGroupColumn::class => "$this->themeDirectoryPath/action_group_cell_value.phtml",
-            BooleanColumn::class => "$this->themeDirectoryPath/boolean_cell_value.phtml"
-        ];
+        $this->cellValueTemplates = array_map(
+            fn ($relativePath) => "$this->themeDirectoryPath/$relativePath",
+            self::RELATIVE_DEFAULT_CELL_VALUE_TEMPLATES
+        );
     }
 
     /**
