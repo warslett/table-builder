@@ -7,13 +7,17 @@ and sorting taken care of.
 
 ## Installation
 `composer require warslett/table-builder`
+or if you are using symfony there is an optional bundle that will configure the services
+`composer require warslett/table-builder warslett/table-builder-bundle`
 
 ## Requirements
 PHP 7.4
-This package has no core composer dependencies but some of the optional features have dependencies. See dependencies
-below.
+This package has no core composer dependencies however [some optional features have dependencies](#Dependencies).
 
-## Features
+## Documentation
+Full documentation available [here](docs/en/index.md).
+
+## Overview
 
 ### Table Building
 Configure your tables using a variety of column types or implement your own column types. Then load data into the table
@@ -81,10 +85,7 @@ dependencies:
 
 use WArslett\TableBuilder\Renderer\Html\PhtmlRenderer;
 
-// Route generators are used to generate uris for actions using route names and parameters
-$routeGenerator = ...;
-$renderer = new PhtmlRenderer($routeGenerator);
-
+$renderer = new PhtmlRenderer();
 echo $renderer->renderTable($table);
 ```
 
@@ -99,7 +100,7 @@ application.
 return new JsonResponse($table);
 ```
 
-## Dependencies
+## <a name="Dependencies"></a>Dependencies
 Table builder has no core dependencies however some optional features have dependencies.
 * TwigRenderer and related classes depends on `twig/twig`
 * DoctrineORMAdapter data adapter depends on `doctrine/orm`

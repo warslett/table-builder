@@ -7,6 +7,7 @@ namespace WArslett\TableBuilder\Renderer\Html;
 use WArslett\TableBuilder\Column\ActionGroupColumn;
 use WArslett\TableBuilder\Column\BooleanColumn;
 use WArslett\TableBuilder\RouteGeneratorAdapter\RouteGeneratorAdapterInterface;
+use WArslett\TableBuilder\RouteGeneratorAdapter\SprintfAdapter;
 use WArslett\TableBuilder\Table;
 use WArslett\TableBuilder\TableCell;
 use WArslett\TableBuilder\TableHeading;
@@ -25,10 +26,10 @@ final class PhtmlRenderer implements HtmlTableRendererInterface
     private array $cellValueTemplates;
 
     public function __construct(
-        RouteGeneratorAdapterInterface $routeGeneratorAdapter,
+        ?RouteGeneratorAdapterInterface $routeGeneratorAdapter = null,
         string $themeDirectoryPath = self::STANDARD_THEME_DIRECTORY_PATH
     ) {
-        $this->routeGeneratorAdapter = $routeGeneratorAdapter;
+        $this->routeGeneratorAdapter = $routeGeneratorAdapter ?? new SprintfAdapter();
         $this->themeDirectoryPath = $themeDirectoryPath;
 
         $this->cellValueTemplates = array_map(
