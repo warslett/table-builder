@@ -231,7 +231,7 @@ use WArslett\TableBuilder\Exception\NoValueAdapterException;
 use WArslett\TableBuilder\ValueAdapter\ValueAdapterTrait;
 
 /**
- * @extends AbstractColumn<string>
+ * @extends AbstractColumn<Image>
  */
 final class ImageColumn extends AbstractColumn
 {
