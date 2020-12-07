@@ -10,7 +10,8 @@
   * [DateTimeColumn](./columns.md#DateTimeColumn)
   * [BooleanColumn](./columns.md#BooleanColumn)
   * [ActionGroupColumn](./columns.md#ActionGroupColumn)
-  * Implementing your own Columns
+  * [Conditional Formatting](./columns.md#ConditionalFormatting)
+  * [Implementing your own Columns](./columns.md#ImplementingColumns)
 * Data Adapters
   * ArrayDataAdapter
   * DoctrineOrmAdapter
