@@ -67,8 +67,8 @@ The twig would look something like this:
 If you are not using twig you can render the table as html just as well using the PhtmlRenderer.
 
 ## <a name="Sorting"></a>Sorting
-Table results can be sorted using parameters on the query string. TwigRenderer and PhtmlRenderer will display links in
-the table headings to toggle different sorts on or off.
+Table results can be sorted using parameters on the query string of the request. TwigRenderer and PhtmlRenderer will
+display links in the table headings to toggle different sorts on or off.
 
 Columns that extend AbstractColumn include a configuration method `setSortToggle`. A sort toggle is a string that can
 be used to map a Column to configuration on the data adapter for sorting your data. First assign your column a sort
@@ -77,7 +77,7 @@ toggle to enable sorting on that column.
 $column->setSortToggle('sort_name');
 ```
 Then map the sort toggle on your data adapter. Different data adapters map sort toggles in different ways. For example
-DoctrineOrmAdapter maps sort toggles to a field which will be used in the "order by" clause on the query:
+DoctrineOrmAdapter maps sort toggles to a field in the query which will then be used in the "order by" clause:
 ```php
 $dataAdapter->mapSortToggle('sort_name', 'u.name');
 ```
@@ -95,9 +95,9 @@ named "email".
 Table results are paginated using parameters on the query string. TwigRenderer and PhtmlRenderer will display page links
 below the table.
 
-Tables have a "rows per page" limit. The table will only display results up to the rows per page limit. When the data
-surpasses the limit, the data adapter will load a page of results selected using the 'page' attribute in the query
-string. For example if the table is named "users" then the querystring `?users[page]=2` will display the second page.
+Tables have a "rows per page" limit and the table will only display results up to the limiy. When the data surpasses the
+limit, the data adapter will load a page of results selected using the 'page' attribute in the query string. For example
+if the table is named "users" then the querystring `?users[page]=2` will display the second page.
 
 The rows per page limit can also be selected using the querystring parameter "rows_per_page". For example
 `?users[page]=1&users[rows_per_page]=10` will display the first page of up to 10 results per page. There is a maximum
@@ -115,6 +115,148 @@ options can be enabled on the table builder:
 ```php
 $tableBuilder->setRowsPerPageOptions([10, 20, 50]);
 ```
+
+## <a name="ReusableTables"></a>Building Reusable Tables
+In most cases you will not want to build tables directly in your Controllers. This will violate the Single
+Responsibility Principle and also makes it difficult to reuse the same table configuration in multiple places. The
+library does not mandate any particular way of organizing your code. The recommended approach is with factory services
+that you can then inject into your Controllers.
+
+We can create a Table Builder Factory which will contain the configuration for our table's structure that can be reused
+in different parts of the application:
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\TableBuilder\TableBuilderFactory;
+
+use WArslett\TableBuilder\Column\TextColumn;
+use WArslett\TableBuilder\TableBuilderFactoryInterface;
+use WArslett\TableBuilder\TableBuilderInterface;
+use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
+
+final class UserTableBuilderFactory implements TableBuilderFactoryInterface
+{
+    private TableBuilderFactoryInterface $tableBuilderFactory;
+
+    public function __construct(TableBuilderFactoryInterface $tableBuilderFactory)
+    {
+        $this->tableBuilderFactory = $tableBuilderFactory;
+    }
+
+    public function createTableBuilder(): TableBuilderInterface
+    {
+        return $this->tableBuilderFactory->createTableBuilder()
+            ->setRowsPerPageOptions([10, 20, 50])
+            ->setDefaultRowsPerPage(10)
+            ->addColumn(TextColumn::withName('email')
+                ->setLabel('Email')
+                ->setSortToggle('email')
+                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('email')))
+            ->addColumn(DateTimeColumn::withName('last_login')
+                ->setLabel('Last Login')
+                ->setDateTimeFormat('Y-m-d H:i:s')
+                ->setSortToggle('last_login')
+                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('lastLogin')));
+    }
+}
+```
+In the above example we inject an instance of TableBuilderFactoryInterface which is also implemented by our class. This
+allows our Table Builder Factories to decorate each other so that our table structure can, if required be built up using
+a chain of decorators.
+
+Table Builder Factories allow us to reuse table structure throughout our application. We could now inject our Table
+Builder Factory into our Controller, and we could configure our data in our there. Alternatively we might want to factor
+this logic into a factory as well. In this case we would use a TableFactory like this:
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\TableBuilder\TableFactory;
+
+use Doctrine\ORM\EntityManagerInterface;
+use WArslett\TableBuilder\DataAdapter\DoctrineOrmAdapter;
+use WArslett\TableBuilder\Table;
+use WArslett\TableBuilder\TableBuilderFactoryInterface;
+
+class UserTableFactory
+{
+    private TableBuilderFactoryInterface $tableBuilderFactory;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(
+        TableBuilderFactoryInterface $tableBuilderFactory,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->tableBuilderFactory = $tableBuilderFactory;
+        $this->entityManager = $entityManager;
+    }
+
+    public function buildTable(string $name): Table
+    {
+        $tableBuilder = $this->tableBuilderFactory->createTableBuilder();
+    
+        // Build the table object
+        $table = $tableBuilder->buildTable($name);
+        
+        // Configure how data will be loaded into the table
+        $queryBuilder = $this->entityManager->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u');
+        
+        $dataAdapter = DoctrineOrmAdapter::withQueryBuilder($queryBuilder)
+            ->mapSortToggle('email', 'u.email')
+            ->mapSortToggle('last_login', 'u.lastLogin');
+        
+        $table->setDataAdapter($dataAdapter);
+        
+        return $table;
+    }
+}
+```
+Now our controller is very simple and is left with minimal responsibilities:
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use App\TableBuilder\TableFactory\UserTableFactory;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Twig;
+use WArslett\TableBuilder\RequestAdapter\SymfonyHttpAdapter;
+
+class UserTableController
+{
+    private UserTableFactory $userTableFactory;
+    private Twig\Environment $twigEnvironment;
+
+    public function __construct(
+        UserTableFactory $userTableFactory,
+        Twig\Environment $twigEnvironment;
+    ) {
+        $this->userTableFactory = $userTableFactory;
+        $this->twigEnvironment = $twigEnvironment;
+    }
+
+    public function __invoke(Request $request): Response
+    {
+        $table = $this->userTableFactory->buildTable('users');
+        $table->handleRequest(SymfonyHttpAdapter::withRequest($request));
+        
+        return new Response($this->twigEnvironment->render('table_page.html.twig', [
+          'table' => $table
+        ]));
+    }
+}
+```
+This approach keeps our classes small. Each class has minimal dependencies. Our responsibilities are nicely separated.
+You could choose to build your table structure in your Table Factory or do something else if you prefer.
+
 ## <a name="AdapterPattern"></a>Adapter Pattern
 Table Builder uses the adapter pattern in a few different ways. This makes it easy to extend and modify by implementing
 your own adapters. You can create your own Columns, Data Adapters, Value Adapters, Request Adapters, Route Generators
