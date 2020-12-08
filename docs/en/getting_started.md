@@ -7,34 +7,75 @@ or if you are using symfony `composer require warslett/table-builder-bundle wars
 ## <a name="BasicUsage"></a>Basic Usage
 Table Builder allows you to configure the way a table should be structured and how data should be loaded into it using
 PHP and then build the table using parameters from a request to perform sorting and pagination.
+
+Create a new Table Builder using a Table Builder Factory
 ``` php
+use WArslett\TableBuilder\TableBuilderFactory;
+
+// The table builder factory is a stateless service you can register in your service container
+$tableBuilderFactory = new TableBuilderFactory();
+$tableBuilder = $tableBuilderFactory->createTableBuilder()
+```
+
+We can configure pagination on our table builder like this:
+``` php
+$tableBuilder
+    ->setRowsPerPageOptions([10, 20, 50])
+    ->setDefaultRowsPerPage(10);
+```
+
+And we can add columns to our table builder like this:
+```php
+use WArslett\TableBuilder\Column\BooleanColumn;
 use WArslett\TableBuilder\Column\DateTimeColumn;
 use WArslett\TableBuilder\Column\TextColumn;
-use WArslett\TableBuilder\DataAdapter\DoctrineOrmAdapter;
-use WArslett\TableBuilder\TableBuilderFactory;
 use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
-// The table builder factory is a service you can register in your service container
-$tableBuilderFactory = new TableBuilderFactory();
+$tableBuilder->addColumn(TextColumn::withName('email')
+    ->setLabel('Email')
+    ->setSortToggle('email')
+    ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('email')));
+        
+$tableBuilder->addColumn(BooleanColumn::withName('is_active')
+    ->setLabel('Active')
+    ->setSortToggle('is_active')
+    ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('active')));
+        
+$tableBuilder->addColumn(DateTimeColumn::withName('last_login')
+    ->setLabel('Last Login')
+    ->setDateTimeFormat('Y-m-d H:i:s')
+    ->setSortToggle('last_login')
+    ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('lastLogin')));
+```
 
-// Configure the table structure with a range of out the box column types
-$tableBuilder = $tableBuilderFactory->createTableBuilder()
-    ->setRowsPerPageOptions([10, 20, 50])
-    ->setDefaultRowsPerPage(10)
-    ->addColumn(TextColumn::withName('email')
-        ->setLabel('Email')
-        ->setSortToggle('email')
-        ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('email')))
-    ->addColumn(DateTimeColumn::withName('last_login')
-        ->setLabel('Last Login')
-        ->setDateTimeFormat('Y-m-d H:i:s')
-        ->setSortToggle('last_login')
-        ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('lastLogin')));
+We can also add an Action Group Column which will build a group of actions for each row in the table (which can then be
+rendered as links or buttons):
+```php
+use WArslett\TableBuilder\Column\ActionGroupColumn;
 
-// Build the table object
+$tableBuilder->addColumn(ActionGroupColumn::withName('email')
+    ->setLabel('Actions')
+    ->addActionBuilder(ActionBuilder::withName('update')
+        ->setLabel('Update')
+        ->setRoute('user_update', [
+            'id' => PropertyAccessAdapter::withPropertyPath('id')
+        ]))
+    ->addActionBuilder(ActionBuilder::withName('delete')
+        ->setLabel('Delete')
+        ->setRoute('user_delete', [
+            'id' => PropertyAccessAdapter::withPropertyPath('id')
+        ])));
+```
+
+When we've finished configuring the structure of our table we can build the table object
+```php
 $table = $tableBuilder->buildTable('users');
+```
 
-// Configure how data will be loaded into the table
+Then we can configure how we want data to be loaded into the table with a data adapter:
+```php
+use WArslett\TableBuilder\DataAdapter\DoctrineOrmAdapter;
+
 $entityManager = ...
 $queryBuilder = $entityManager->createQueryBuilder()
     ->select('u')
@@ -42,21 +83,28 @@ $queryBuilder = $entityManager->createQueryBuilder()
 
 $dataAdapter = DoctrineOrmAdapter::withQueryBuilder($queryBuilder)
     ->mapSortToggle('email', 'u.email')
+    ->mapSortToggle('is_active', 'u.active')
     ->mapSortToggle('last_login', 'u.lastLogin');
 
 $table->setDataAdapter($dataAdapter);
+```
 
-// Uses parameters on the request to load data into the table with sorting and pagination
+Finally, our table can use parameters from a request to load a page of data:
+```php
+use WArslett\TableBuilder\RequestAdapter\SymfonyHttpAdapter;
+
 $table->handleRequest(SymfonyHttpAdapter::withRequest($request));
 ```
-Once the table has been built it can be rendered in a variety of ways. If you are using twig with the twig extension
-you can render in a template like so:
+
+Once the table has been built and data loaded it can be rendered in a variety of ways. If you are using twig with the
+twig extension you can render in a template like so:
 ```php
 $twigEnvironment = ...
 echo $twigEnvironment->render('table.html.twig', [
   'table' => $table;
 ]);
 ```
+
 The twig would look something like this:
 ``` twig
 {# table.html.twig #}
@@ -64,6 +112,7 @@ The twig would look something like this:
     {{ table(table) }}
 </div>
 ```
+
 If you are not using twig you can render the table as html just as well using the PhtmlRenderer.
 
 ## <a name="Sorting"></a>Sorting
