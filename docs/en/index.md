@@ -15,9 +15,9 @@
   * [ActionGroupColumn](./columns.md#ActionGroupColumn)
   * [Conditional Formatting](./columns.md#ConditionalFormatting)
   * [Implementing your own Columns](./columns.md#ImplementingColumns)
-* Data Adapters
-  * ArrayDataAdapter
-  * DoctrineOrmAdapter
+* [Data Adapters](./data_adapters.md)
+  * [ArrayDataAdapter](./data_adapters.md#ArrayDataAdapter)
+  * [DoctrineOrmAdapter](./data_adapters.md#DoctrineOrmAdapter)
 * Renderers
   * PhtmlRenderer
   * TwigRenderer
