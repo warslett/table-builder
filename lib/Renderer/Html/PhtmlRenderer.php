@@ -14,8 +14,8 @@ use WArslett\TableBuilder\TableHeading;
 
 final class PhtmlRenderer implements HtmlTableRendererInterface
 {
-    public const STANDARD_THEME_DIRECTORY_PATH = __DIR__ . '/../../../templates/phtml/table-builder/standard';
-    public const BOOTSTRAP4_THEME_DIRECTORY_PATH = __DIR__ . '/../../../templates/phtml/table-builder/bootstrap4';
+    public const STANDARD_THEME_DIRECTORY = __DIR__ . '/../../../templates/phtml/table-builder/standard';
+    public const BOOTSTRAP4_THEME_DIRECTORY = __DIR__ . '/../../../templates/phtml/table-builder/bootstrap4';
     private const RELATIVE_DEFAULT_CELL_VALUE_TEMPLATES = [
         ActionGroupColumn::class => "action_group_cell_value.phtml",
         BooleanColumn::class => "boolean_cell_value.phtml"
@@ -27,7 +27,7 @@ final class PhtmlRenderer implements HtmlTableRendererInterface
 
     public function __construct(
         ?RouteGeneratorAdapterInterface $routeGeneratorAdapter = null,
-        string $themeDirectoryPath = self::STANDARD_THEME_DIRECTORY_PATH
+        string $themeDirectoryPath = self::STANDARD_THEME_DIRECTORY
     ) {
         $this->routeGeneratorAdapter = $routeGeneratorAdapter ?? new SprintfAdapter();
         $this->themeDirectoryPath = $themeDirectoryPath;

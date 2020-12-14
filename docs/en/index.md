@@ -18,9 +18,9 @@
 * [Data Adapters](./data_adapters.md)
   * [ArrayDataAdapter](./data_adapters.md#ArrayDataAdapter)
   * [DoctrineOrmAdapter](./data_adapters.md#DoctrineOrmAdapter)
-* Renderers
-  * PhtmlRenderer
-  * TwigRenderer
+* [Renderers](./renderers.md)
+  * [PhtmlRenderer](./renderers.md#PhtmlRenderer)
+  * [TwigRenderer](./renderers.md#TwigRenderer)
 * Request Adapters
   * ArrayRequestAdapter
   * Psr7Adapter

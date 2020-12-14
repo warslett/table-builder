@@ -248,13 +248,13 @@ class PhtmlRendererIntegrationTest extends TestCase
         $table = $this->buildTable($this->getTableBuilder());
         $row = $table->getRows()[0];
         $cell = $row['foo'];
-        $twigRenderer = new PhtmlRenderer(new SprintfAdapter());
-        $twigRenderer->registerCellValueTemplate(
+        $renderer = new PhtmlRenderer(new SprintfAdapter());
+        $renderer->registerCellValueTemplate(
             TextColumn::class,
             __DIR__ . '/../../resources/phtml_renderer/test_templates/column_template.phtml'
         );
 
-        $output = $twigRenderer->renderTableCellValue($table, $cell);
+        $output = $renderer->renderTableCellValue($table, $cell);
 
         $this->assertSame('MY_TEMPLATEbarMY_TEMPLATE', trim($output));
     }

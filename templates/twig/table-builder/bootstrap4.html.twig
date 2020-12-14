@@ -27,7 +27,7 @@
     <table class="table">
         <thead>
             <tr>
-                {% for column_name, heading in table.headings %}
+                {% for heading in table.headings %}
                     {{ table_heading(table, heading) }}
                 {% endfor %}
             </tr>
