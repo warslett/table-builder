@@ -21,10 +21,10 @@
 * [Renderers](./renderers.md)
   * [PhtmlRenderer](./renderers.md#PhtmlRenderer)
   * [TwigRenderer](./renderers.md#TwigRenderer)
-* Request Adapters
-  * ArrayRequestAdapter
-  * Psr7Adapter
-  * SymfonyHttpAdapter
+* [Request Adapters](./request_adapters.md)
+  * [ArrayRequestAdapter](./request_adapters.md#ArrayRequestAdapter)
+  * [Psr7Adapter](./request_adapters.md#Psr7Adapter)
+  * [SymfonyHttpAdapter](./request_adapters.md#SymfonyHttpAdapter)
 * Route Generators
   * SprintfAdapter
   * SymfonyRoutingAdapter
