@@ -25,9 +25,9 @@
   * [ArrayRequestAdapter](./request_adapters.md#ArrayRequestAdapter)
   * [Psr7Adapter](./request_adapters.md#Psr7Adapter)
   * [SymfonyHttpAdapter](./request_adapters.md#SymfonyHttpAdapter)
-* Route Generators
-  * SprintfAdapter
-  * SymfonyRoutingAdapter
+* [Route Generators](./route_generators.md)
+  * [SprintfAdapter](./route_generators.md#SprintfAdapter)
+  * [SymfonyRoutingAdapter](./route_generators.md#SymfonyRoutingAdapter)
 * Value Adapters
   * CallbackAdapter
   * PropertyAdapter
