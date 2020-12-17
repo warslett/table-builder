@@ -28,6 +28,6 @@
 * [Route Generators](./route_generators.md)
   * [SprintfAdapter](./route_generators.md#SprintfAdapter)
   * [SymfonyRoutingAdapter](./route_generators.md#SymfonyRoutingAdapter)
-* Value Adapters
-  * CallbackAdapter
-  * PropertyAdapter
+* [Value Adapters](./value_adapters.md)
+  * [CallbackAdapter](./value_adapters.md#CallbackAdapter)
+  * [PropertyAccessAdapter](./value_adapters.md#PropertyAccessAdapter)
