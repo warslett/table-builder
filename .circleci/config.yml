@@ -8,12 +8,12 @@ jobs:
       - checkout
 
       - run:
-          name: "Pull PHP Image"
+          name: "Pull PHP 7.4 Image"
           command: "docker pull php:7.4-cli"
 
       - run:
           name: "Build Testing Image"
-          command: "docker build -t php ."
+          command: "docker build -t php:table-builder ."
 
       - run:
           name: "Install Composer Dependencies"
@@ -34,6 +34,14 @@ jobs:
       - run:
           name: "Verify Code Coverage"
           command: "bin/coverage-check clover.xml 100"
+
+      - run:
+          name: "Pull PHP 8.0 Image"
+          command: "docker pull php:8.0-cli"
+
+      - run:
+          name: "Run PHPUnit on PHP8"
+          command: "bin/php8 vendor/bin/phpunit"
 
       - store_test_results:
           path: ".circleci/test-results"

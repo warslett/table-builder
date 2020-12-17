@@ -13,7 +13,7 @@ If you are using symfony there is an optional bundle that will configure the ser
 `composer require warslett/table-builder warslett/table-builder-bundle`
 
 ## Requirements
-PHP 7.4
+PHP 7.4 or 8.0
 This package has no core composer dependencies however [some optional features have dependencies](#Dependencies).
 
 ## Documentation
