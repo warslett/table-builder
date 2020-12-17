@@ -84,6 +84,18 @@ class ActionBuilderTest extends TestCase
         $this->assertSame(['id' => $value], $action->getRouteParams());
     }
 
+    public function testBuildActionWithAttribute()
+    {
+        $extraClasses = ['btn-danger'];
+        $builder = ActionBuilder::withName('delete')
+            ->setAttribute('extra_classes', $extraClasses);
+
+        $action = $builder->buildAction([]);
+
+        $attribute = $action->getAttribute('extra_classes');
+        $this->assertSame($extraClasses, $attribute);
+    }
+
     /**
      * @param $value
      * @return ValueAdapterInterface&Mock

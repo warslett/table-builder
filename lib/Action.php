@@ -11,10 +11,12 @@ class Action implements JsonSerializable
     private string $label;
     private ?string $route = null;
     private array $routeParams = [];
+    private array $attributes;
 
-    public function __construct(string $label)
+    public function __construct(string $label, array $attributes = [])
     {
         $this->label = $label;
+        $this->attributes = $attributes;
     }
 
     /**
@@ -50,6 +52,16 @@ class Action implements JsonSerializable
     {
         $this->route = $route;
         $this->routeParams = $routeParams;
+    }
+
+    /**
+     * @param string $attribute
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getAttribute(string $attribute, $default = null)
+    {
+        return $this->attributes[$attribute] ?? $default;
     }
 
     /**

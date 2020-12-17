@@ -75,6 +75,20 @@ $column = ActionGroupColumn::withName('actions')
     ->setLabel('Actions')
     ->addActionBuilder($actionBuilder);
 ```
+
+You can also set attributes such as extra classes on action builders:
+```php
+use WArslett\TableBuilder\ActionBuilder;
+use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
+
+$actionBuilder = ActionBuilder::withName('delete')
+    ->setLabel('Delete')
+    ->setAttribute('extra_classes', ['btn-danger'])
+    ->setRoute('user_delete', [
+        'id' => PropertyAccessAdapter::withPropertyPath('id')
+    ]);
+```
+
 ActionGroupColumn includes a configuration method `addActionBuilder` which can be called multiple times to add multiple
 ActionBuilder instances to the group. The ActionBuilder class configures how the action will be built for each row. The
 configuration method `setRoute` on the ActionBuilder is used to set the route and route parameters for the action.

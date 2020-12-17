@@ -9,24 +9,19 @@ use WArslett\TableBuilder\ValueAdapter\ValueAdapterInterface;
 final class ActionBuilder implements ActionBuilderInterface
 {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private string $name;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private ?string $label = null;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private ?string $route = null;
 
-    /**
-     * @var array<mixed, ValueAdapterInterface>
-     */
+    /** @var array */
+    private array $attributes = [];
+
+    /** @var array<mixed, ValueAdapterInterface> */
     private array $routeParams = [];
 
     public function __construct(string $name)
@@ -65,12 +60,23 @@ final class ActionBuilder implements ActionBuilderInterface
     }
 
     /**
+     * @param string $attribute
+     * @param mixed $value
+     * @return $this
+     */
+    public function setAttribute(string $attribute, $value): self
+    {
+        $this->attributes[$attribute] = $value;
+        return $this;
+    }
+
+    /**
      * @param mixed $row
      * @return Action
      */
     public function buildAction($row): Action
     {
-        $action = new Action($this->label ?? $this->name);
+        $action = new Action($this->label ?? $this->name, $this->attributes);
 
         if (null !== $this->route) {
             $action->setRoute($this->route, array_map(

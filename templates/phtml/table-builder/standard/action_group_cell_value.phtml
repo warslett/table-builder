@@ -15,5 +15,6 @@ use WArslett\TableBuilder\TableCell;
 <?php foreach ($cell->getValue()->getActions() as $action) : ?>
     <a
         href="<?= null !== $action->getRoute() ? $this->renderTableRoute($action->getRoute(), $action->getRouteParams()) : '#' ?>"
+        class="<?= implode(' ', $action->getAttribute('extra_classes', [])); ?>"
     ><?= $action->getLabel() ?></a>
 <?php endforeach; ?>

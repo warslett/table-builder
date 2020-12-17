@@ -82,7 +82,10 @@
 
 {% block action_group_cell_value %}
     {% for action in cell.value.actions %}
-        <a href="{{ action.route is not null ? table_route(action.route, action.routeParams) : '#' }}">{{ action.label }}</a>
+        <a
+            href="{{ action.route is not null ? table_route(action.route, action.routeParams) : '#' }}"
+            class="{{ action.attribute('extra_classes', {})|join(' ') }}"
+        >{{ action.label }}</a>
     {% endfor %}
 {% endblock %}
 
