@@ -2,11 +2,14 @@
 
 ## <a name="Installation"></a>Installation
 `composer require warslett/table-builder`
-or if you are using symfony `composer require warslett/table-builder-bundle warslett/table-builder`
+
+If you are using symfony there is an optional bundle that will configure the services:
+
+`composer require warslett/table-builder-bundle warslett/table-builder`
 
 ## <a name="BasicUsage"></a>Basic Usage
-Table Builder allows you to configure the way a table should be structured and how data should be loaded into it using
-PHP and then build the table using parameters from a request to perform sorting and pagination.
+Table Builder allows you to configure the structure of a table and how data should be loaded into it and then build the
+table using parameters from a request to perform sorting and pagination.
 
 Create a new Table Builder using a Table Builder Factory
 ``` php
@@ -24,7 +27,7 @@ $tableBuilder
     ->setDefaultRowsPerPage(10);
 ```
 
-And we can add columns to our table builder like this:
+And we can add [columns](./columns.md) to our table builder like this:
 ```php
 use WArslett\TableBuilder\Column\BooleanColumn;
 use WArslett\TableBuilder\Column\DateTimeColumn;
@@ -48,8 +51,8 @@ $tableBuilder->addColumn(DateTimeColumn::withName('last_login')
     ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('lastLogin')));
 ```
 
-We can also add an Action Group Column which will build a group of actions for each row in the table (which can then be
-rendered as links or buttons):
+We can also add an [Action Group Column](./columns.md#ActionGroupColumn) which will build a group of actions for each
+row in the table (which can then be rendered as links or buttons):
 ```php
 use WArslett\TableBuilder\Column\ActionGroupColumn;
 
@@ -72,7 +75,7 @@ When we've finished configuring the structure of our table we can build the tabl
 $table = $tableBuilder->buildTable('users');
 ```
 
-Then we can configure how we want data to be loaded into the table with a data adapter:
+Then we can configure how we want data to be loaded into the table with a [data adapter](./data_adapters.md):
 ```php
 use WArslett\TableBuilder\DataAdapter\DoctrineOrmAdapter;
 
@@ -89,7 +92,7 @@ $dataAdapter = DoctrineOrmAdapter::withQueryBuilder($queryBuilder)
 $table->setDataAdapter($dataAdapter);
 ```
 
-Finally, our table can use parameters from a request to load a page of data:
+Finally, our table can use parameters from a [request](./request_adapters.md) to load a page of data:
 ```php
 use WArslett\TableBuilder\RequestAdapter\SymfonyHttpAdapter;
 
@@ -112,12 +115,14 @@ The twig would look something like this:
     {{ table(table) }}
 </div>
 ```
+[Read More](./renderers.md#TwigRenderer)
 
-If you are not using twig you can render the table as html just as well using the PhtmlRenderer.
+If you are not using twig you can render the table as html just as well using the
+[PhtmlRenderer](./renderers.md#PhtmlRenderer).
 
 ## <a name="Sorting"></a>Sorting
-Table results can be sorted using parameters on the query string of the request. TwigRenderer and PhtmlRenderer will
-display links in the table headings to toggle different sorts on or off.
+Table results can be sorted using parameters on the query string of the request. Html Renderers will display links in
+the table headings to toggle different sorts on or off.
 
 Columns that extend AbstractColumn include a configuration method `setSortToggle`. A sort toggle is a string that can
 be used to map a Column to configuration on the data adapter for sorting your data. First assign your column a sort
@@ -134,17 +139,17 @@ The ArrayDataAdapter maps Sort Toggles to closures which are then used in a usor
 ```php
 $dataAdapter->mapSortToggle('last_login', fn(User $a, User $b) => $a->getLastLogin() < $b->getLastLogin() ? -1 : 1));
 ```
-When the table is rendered by the TwigRenderer or PhtmlRenderer it will include a clickable toggle on the column heading
-to toggle the sort ascending or descending. The link will set the sort_column parameter on the querystring of the
-request which applies the corresponding sort toggle to the data adapter. For example the querystring
+When the table is rendered by an Html Renderer it will include a clickable toggle on the column heading to toggle the
+sort ascending or descending. The link will set the sort_column parameter on the querystring of the request which
+applies the corresponding sort toggle to the data adapter. For example the querystring
 `?users[sort_column]=email&users[sort_dir]=desc` will sort the results descending using the sort toggle for the column
 named "email".
 
 ## <a name="Pagination"></a>Pagination
-Table results are paginated using parameters on the query string. TwigRenderer and PhtmlRenderer will display page links
-below the table.
+Table results are paginated using parameters on the query string. Html Renderers will display page links below the
+table.
 
-Tables have a "rows per page" limit and the table will only display results up to the limiy. When the data surpasses the
+Tables have a "rows per page" limit and the table will only display results up to the limit. When the data surpasses the
 limit, the data adapter will load a page of results selected using the 'page' attribute in the query string. For example
 if the table is named "users" then the querystring `?users[page]=2` will display the second page.
 
@@ -159,8 +164,8 @@ builder:
 ```php
 $tableBuilder->setDefaultRowsPerPage(50);
 ```
-TwigRenderer and PhtmlRenderer can display a set of rows per page options as links above the table. Rows per page
-options can be enabled on the table builder:
+Html Renderers can display a set of rows per page options as links above the table. Rows per page options can be enabled
+on the table builder:
 ```php
 $tableBuilder->setRowsPerPageOptions([10, 20, 50]);
 ```
@@ -180,6 +185,7 @@ declare(strict_types=1);
 
 namespace App\TableBuilder\TableBuilderFactory;
 
+use WArslett\TableBuilder\Column\DateTimeColumn;
 use WArslett\TableBuilder\Column\TextColumn;
 use WArslett\TableBuilder\TableBuilderFactoryInterface;
 use WArslett\TableBuilder\TableBuilderInterface;
@@ -286,7 +292,7 @@ class UserTableController
 
     public function __construct(
         UserTableFactory $userTableFactory,
-        Twig\Environment $twigEnvironment;
+        Twig\Environment $twigEnvironment
     ) {
         $this->userTableFactory = $userTableFactory;
         $this->twigEnvironment = $twigEnvironment;
@@ -310,3 +316,5 @@ You could choose to build your table structure in your Table Factory or do somet
 Table Builder uses the adapter pattern in a few different ways. This makes it easy to extend and modify by implementing
 your own adapters. You can create your own Columns, Data Adapters, Value Adapters, Request Adapters, Route Generators
 and Renderers allowing you to do whatever you want with Table Builder without needing to change the core classes.
+
+[Next: Columns](./columns.md)

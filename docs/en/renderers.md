@@ -207,3 +207,5 @@ application.
 // GET /users/table
 return new JsonResponse($table);
 ```
+
+[Next: Request Adapters](./request_adapters.md)

@@ -37,3 +37,5 @@ use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 $actionBuilder = ActionBuilder::withName('delete')
     ->setRoute('user_delete', ['id' => PropertyAccessAdapter::withPropertyPath('id')]);
 ```
+
+[Next: Value Adapters](./value_adapters.md)

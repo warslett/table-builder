@@ -7,7 +7,9 @@ and sorting taken care of.
 
 ## Installation
 `composer require warslett/table-builder`
-or if you are using symfony there is an optional bundle that will configure the services
+
+If you are using symfony there is an optional bundle that will configure the services:
+
 `composer require warslett/table-builder warslett/table-builder-bundle`
 
 ## Requirements

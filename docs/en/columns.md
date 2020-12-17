@@ -280,3 +280,5 @@ and our twig template becomes:
 {# templates/table-builder/image-cell-value.html.twig #}
 <img src="{{ cell.value.url }}" alt="{{ cell.value.altText }}" />
 ```
+
+[Next: Data Adapters](./data_adapters.md)

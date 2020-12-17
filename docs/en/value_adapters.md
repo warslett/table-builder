@@ -36,3 +36,5 @@ use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 $adapter = PropertyAccessAdapter::withPropertyPath('name');
 ```
+
+[Contents](./index.md)

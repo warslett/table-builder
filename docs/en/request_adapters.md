@@ -39,3 +39,5 @@ $adapter = new SymfonyHttpAdapter($request);
 $table = ...
 $table->handleRequest($adapter);
 ```
+
+[Next: Route Generators](./route_generators.md)
