@@ -2,7 +2,7 @@ FROM php:7.4-cli
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp
-ENV COMPOSER_VERSION 1.10.7
+ENV COMPOSER_VERSION 2.0.4
 
 RUN apt-get update \
     && apt-get install -y git libzip-dev unzip \
