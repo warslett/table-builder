@@ -96,7 +96,7 @@ use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 $actionBuilder = ActionBuilder::withName('delete')
     ->setLabel('Delete')
-    ->setCondition(fn(User $user) => $this->authorizationChecker->isGranted('delete' $user))
+    ->setCondition(fn(User $user) => $this->authorizationChecker->isGranted('delete', $user))
     ->setRoute('user_delete', [
         'id' => PropertyAccessAdapter::withPropertyPath('id')
     ]);

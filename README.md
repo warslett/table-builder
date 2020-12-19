@@ -17,7 +17,7 @@ PHP 7.4 or 8.0
 This package has no core composer dependencies however [some optional features have dependencies](#Dependencies).
 
 ## Documentation
-Full documentation available [here](docs/en/index.md).
+Full documentation available [here](https://github.com/warslett/table-builder/blob/master/docs/en/index.md).
 
 ## Overview
 
