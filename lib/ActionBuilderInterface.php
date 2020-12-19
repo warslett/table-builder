@@ -14,6 +14,12 @@ interface ActionBuilderInterface
 
     /**
      * @param mixed $row
+     * @return bool
+     */
+    public function isAllowedFor($row): bool;
+
+    /**
+     * @param mixed $row
      * @return Action
      */
     public function buildAction($row): Action;

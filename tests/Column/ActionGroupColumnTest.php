@@ -74,7 +74,7 @@ class ActionGroupColumnTest extends TestCase
         $actionName = 'foo';
         $action = new Action('Foo');
         $actionGroupColumn = ActionGroupColumn::withName('my_action_group')
-            ->addActionBuilder($this->mockActionBuilder($actionName, $action))
+            ->addActionBuilder($this->mockActionBuilder($actionName, true, $action))
         ;
         $cell = $actionGroupColumn->buildTableCell([]);
 
@@ -92,11 +92,32 @@ class ActionGroupColumnTest extends TestCase
      * @throws NoValueAdapterException
      * @throws ValueException
      */
+    public function testBuildTableCellActionBuilderConditionDisallowedExcludesAction()
+    {
+        $actionName = 'foo';
+        $action = new Action('Foo');
+        $actionGroupColumn = ActionGroupColumn::withName('my_action_group')
+            ->addActionBuilder($this->mockActionBuilder($actionName, false, $action))
+        ;
+        $cell = $actionGroupColumn->buildTableCell([]);
+
+        /** @var ActionGroup $value */
+        $value = $cell->getValue();
+        $actions = $value->getActions();
+
+        $this->assertEmpty($actions);
+    }
+
+    /**
+     * @return void
+     * @throws NoValueAdapterException
+     * @throws ValueException
+     */
     public function testBuildTableCellTwoActionBuilderBuildsTwoAction()
     {
         $actionGroupColumn = ActionGroupColumn::withName('my_action_group')
-            ->addActionBuilder($this->mockActionBuilder('foo', new Action('Foo')))
-            ->addActionBuilder($this->mockActionBuilder('bar', new Action('Bar')))
+            ->addActionBuilder($this->mockActionBuilder('foo', true, new Action('Foo')))
+            ->addActionBuilder($this->mockActionBuilder('bar', true, new Action('Bar')))
         ;
         $cell = $actionGroupColumn->buildTableCell([]);
 
@@ -109,13 +130,15 @@ class ActionGroupColumnTest extends TestCase
 
     /**
      * @param string $actionName
+     * @param bool $isAllowed
      * @param Action $action
      * @return ActionBuilderInterface&Mock
      */
-    private function mockActionBuilder(string $actionName, Action $action): ActionBuilderInterface
+    private function mockActionBuilder(string $actionName, bool $isAllowed, Action $action): ActionBuilderInterface
     {
         $actionBuilder = m::mock(ActionBuilderInterface::class);
         $actionBuilder->shouldReceive('getName')->andReturn($actionName);
+        $actionBuilder->shouldReceive('isAllowedFor')->andReturn($isAllowed);
         $actionBuilder->shouldReceive('buildAction')->andReturn($action);
         return $actionBuilder;
     }

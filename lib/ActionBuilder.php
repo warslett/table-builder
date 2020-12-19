@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder;
 
+use Closure;
 use WArslett\TableBuilder\ValueAdapter\ValueAdapterInterface;
 
 final class ActionBuilder implements ActionBuilderInterface
@@ -14,6 +15,9 @@ final class ActionBuilder implements ActionBuilderInterface
 
     /** @var string|null */
     private ?string $label = null;
+
+    /** @var Closure|null */
+    private ?Closure $condition = null;
 
     /** @var string|null */
     private ?string $route = null;
@@ -44,6 +48,25 @@ final class ActionBuilder implements ActionBuilderInterface
     public function setLabel(string $label): ActionBuilder
     {
         $this->label = $label;
+        return $this;
+    }
+
+    /**
+     * @param $row
+     * @return bool
+     */
+    public function isAllowedFor($row): bool
+    {
+        return null === $this->condition ? true : ($this->condition)($row);
+    }
+
+    /**
+     * @param Closure $condition
+     * @return $this
+     */
+    public function setCondition(Closure $condition): self
+    {
+        $this->condition = $condition;
         return $this;
     }
 

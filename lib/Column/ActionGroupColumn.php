@@ -31,9 +31,12 @@ final class ActionGroupColumn extends AbstractColumn
      */
     protected function getCellValue($row): ActionGroup
     {
-        return new ActionGroup(array_map(
-            fn(ActionBuilderInterface $actionBuilder) => $actionBuilder->buildAction($row),
-            $this->actionBuilders
-        ));
+        $actionGroupActions = [];
+        foreach ($this->actionBuilders as $actionName => $actionBuilder) {
+            if ($actionBuilder->isAllowedFor($row)) {
+                $actionGroupActions[$actionName] = $actionBuilder->buildAction($row);
+            }
+        }
+        return new ActionGroup($actionGroupActions);
     }
 }

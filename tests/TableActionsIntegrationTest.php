@@ -6,6 +6,7 @@ namespace WArslett\TableBuilder\Tests;
 
 use WArslett\TableBuilder\Action;
 use WArslett\TableBuilder\ActionBuilder;
+use WArslett\TableBuilder\ActionGroup;
 use WArslett\TableBuilder\Column\ActionGroupColumn;
 use WArslett\TableBuilder\Column\TextColumn;
 use WArslett\TableBuilder\Exception\DataAdapterException;
@@ -35,11 +36,14 @@ class TableActionsIntegrationTest extends TestCase
         $actionLabel = "Delete";
         $actionRoute = 'my_route';
         $paramName = 'route_id';
+        $attributeKey = 'foo';
+        $attributeValue = 'bar';
         $paramValue = 123;
         $table = $tableBuilderFactory->createTableBuilder()
             ->addColumn(ActionGroupColumn::withName($columnName)
                 ->addActionBuilder(ActionBuilder::withName($actionName)
                     ->setLabel($actionLabel)
+                    ->setAttribute($attributeKey, $attributeValue)
                     ->setRoute($actionRoute, [
                         $paramName => PropertyAccessAdapter::withPropertyPath('[id]')
                     ])))
@@ -49,13 +53,68 @@ class TableActionsIntegrationTest extends TestCase
             ]))
             ->handleRequest(ArrayRequestAdapter::withArray([]))
         ;
-        $actions = $table->getRows()[0][$columnName]->getValue()->getActions();
+        /** @var ActionGroup $actionGroup */
+        $actionGroup = $table->getRows()[0][$columnName]->getValue();
+        $actions = $actionGroup->getActions();
 
         $this->assertArrayHasKey($actionName, $actions);
         /** @var Action $action */
         $action = $actions[$actionName];
         $this->assertSame($actionLabel, $action->getLabel());
+        $this->assertSame($attributeValue, $action->getAttribute($attributeKey));
         $this->assertSame($actionRoute, $action->getRoute());
         $this->assertSame([$paramName => $paramValue], $action->getRouteParams());
+    }
+
+    /**
+     * @return void
+     * @throws NoDataAdapterException
+     * @throws DataAdapterException
+     * @throws SortToggleException
+     */
+    public function testActionGroupActionConditionFalseExcludesAction(): void
+    {
+        $tableBuilderFactory = new TableBuilderFactory();
+        $table = $tableBuilderFactory->createTableBuilder()
+            ->addColumn(ActionGroupColumn::withName('actions')
+                ->addActionBuilder(ActionBuilder::withName('delete')
+                    ->setCondition(fn($row) => false)))
+            ->buildTable('user_table')
+            ->setDataAdapter(ArrayDataAdapter::withArray([
+                []
+            ]))
+            ->handleRequest(ArrayRequestAdapter::withArray([]))
+        ;
+        /** @var ActionGroup $actionGroup */
+        $actionGroup = $table->getRows()[0]['actions']->getValue();
+        $actions = $actionGroup->getActions();
+
+        $this->assertEmpty($actions);
+    }
+
+    /**
+     * @return void
+     * @throws NoDataAdapterException
+     * @throws DataAdapterException
+     * @throws SortToggleException
+     */
+    public function testActionGroupActionConditionTrueIncludesAction(): void
+    {
+        $tableBuilderFactory = new TableBuilderFactory();
+        $table = $tableBuilderFactory->createTableBuilder()
+            ->addColumn(ActionGroupColumn::withName('actions')
+                ->addActionBuilder(ActionBuilder::withName('delete')
+                    ->setCondition(fn($row) => true)))
+            ->buildTable('user_table')
+            ->setDataAdapter(ArrayDataAdapter::withArray([
+                []
+            ]))
+            ->handleRequest(ArrayRequestAdapter::withArray([]))
+        ;
+        /** @var ActionGroup $actionGroup */
+        $actionGroup = $table->getRows()[0]['actions']->getValue();
+        $actions = $actionGroup->getActions();
+
+        $this->assertArrayHasKey('delete', $actions);
     }
 }

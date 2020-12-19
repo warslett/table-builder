@@ -83,8 +83,6 @@ For example, with the TwigRendererExtension registered you can render the table 
 Or if you aren't using twig you can use the PhtmlRenderer which uses plain old php templates and has 0 third party
 dependencies:
 ``` php
-<?php
-
 use WArslett\TableBuilder\Renderer\Html\PhtmlRenderer;
 
 $renderer = new PhtmlRenderer();

@@ -89,6 +89,19 @@ $actionBuilder = ActionBuilder::withName('delete')
     ]);
 ```
 
+You can set a condition so that the action can be excluded from the group if a condition is not met:
+```php
+use WArslett\TableBuilder\ActionBuilder;
+use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
+
+$actionBuilder = ActionBuilder::withName('delete')
+    ->setLabel('Delete')
+    ->setCondition(fn(User $user) => $this->authorizationChecker->isGranted('delete' $user))
+    ->setRoute('user_delete', [
+        'id' => PropertyAccessAdapter::withPropertyPath('id')
+    ]);
+```
+
 ActionGroupColumn includes a configuration method `addActionBuilder` which can be called multiple times to add multiple
 ActionBuilder instances to the group. The ActionBuilder class configures how the action will be built for each row. The
 configuration method `setRoute` on the ActionBuilder is used to set the route and route parameters for the action.

@@ -96,6 +96,35 @@ class ActionBuilderTest extends TestCase
         $this->assertSame($extraClasses, $attribute);
     }
 
+    public function testBuildActionWithFalseConditionIsDisallowed()
+    {
+        $builder = ActionBuilder::withName('delete')
+            ->setCondition(fn($row) => false);
+
+        $isAllowed = $builder->isAllowedFor([]);
+
+        $this->assertFalse($isAllowed);
+    }
+
+    public function testBuildActionWithTrueConditionIsAllowed()
+    {
+        $builder = ActionBuilder::withName('delete')
+            ->setCondition(fn($row) => true);
+
+        $isAllowed = $builder->isAllowedFor([]);
+
+        $this->assertTrue($isAllowed);
+    }
+
+    public function testBuildActionNoConditionIsAllowed()
+    {
+        $builder = ActionBuilder::withName('delete');
+
+        $isAllowed = $builder->isAllowedFor([]);
+
+        $this->assertTrue($isAllowed);
+    }
+
     /**
      * @param $value
      * @return ValueAdapterInterface&Mock
