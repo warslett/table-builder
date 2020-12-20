@@ -21,6 +21,7 @@
 * [Renderers](./renderers/index.md)
   * [PhtmlRenderer](./renderers/phtml_renderer.md)
   * [TwigRenderer](./renderers/twig_renderer.md)
+  * [CsvRenderer](./renderers/csv_renderer.md)
   * [Single Page Applications](./renderers/single_page_applications.md)
 * [Request Adapters](./request_adapters.md)
   * [ArrayRequestAdapter](./request_adapters.md#ArrayRequestAdapter)

@@ -159,15 +159,24 @@ rows per page limit which is 100 by default. You can configure the maximum limit
 ```php
 $tableBuilder->setMaxRowsPerPage(200);
 ```
+
 The default rows per page if no query string parameter is provided is 20 which can also be overridden on the table
 builder:
 ```php
 $tableBuilder->setDefaultRowsPerPage(50);
 ```
+
 Html Renderers can display a set of rows per page options as links above the table. Rows per page options can be enabled
 on the table builder:
 ```php
 $tableBuilder->setRowsPerPageOptions([10, 20, 50]);
+```
+
+You can allow unlimited rows per page:
+```php
+$tableBuilder
+    ->setMaxRowsPerPage(INF)
+    ->setDefaultRowsPerPage(INF);
 ```
 
 ## <a name="ReusableTables"></a>Building Reusable Tables

@@ -4,4 +4,5 @@ interface [HtmlTableRendererInterface](../../../lib/Renderer/Html/HtmlTableRende
 
 * [PhtmlRenderer](./phtml_renderer.md)
 * [TwigRenderer](./twig_renderer.md)
+* [CsvRenderer](./csv_renderer.md)
 * [Single Page Applications](./single_page_applications.md)

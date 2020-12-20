@@ -32,7 +32,7 @@ use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 class TwigRendererIntegrationTest extends TestCase
 {
-    private const EXPECTATION_RESOURCES_DIR = __DIR__ . "/../../resources/expectations/";
+    private const EXPECTATION_RESOURCES_DIR = __DIR__ . "/../../resources/expectations/html/";
 
     public function getTestData(): array
     {
