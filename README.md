@@ -1,4 +1,7 @@
-# Table Builder [![Build Status](https://circleci.com/gh/warslett/table-builder.png?style=shield)](https://circleci.com/gh/warslett/table-builder)
+# Table Builder
+[![Build Status](https://circleci.com/gh/warslett/table-builder.png?style=shield)](https://circleci.com/gh/warslett/table-builder)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fwarslett%2Ftable-builder%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/warslett/table-builder/master)
+
 **THIS PACKAGE IS CURRENTLY UNDER DEVELOPMENT**
 
 Table builder provides table abstraction, table building and table rendering. Allowing you to configure your tables,

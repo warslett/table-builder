@@ -43,8 +43,15 @@ jobs:
           name: "Run PHPUnit on PHP8"
           command: "bin/php8 vendor/bin/phpunit"
 
+      - run:
+          name: "Run Infection PHP (Mutation Testing)"
+          command: "bin/infection --min-msi=85"
+
       - store_test_results:
           path: ".circleci/test-results"
 
       - store_artifacts:
           path: clover.xml
+
+      - store_artifacts:
+          path: infection.log

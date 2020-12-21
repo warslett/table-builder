@@ -1,0 +1,15 @@
+{
+  "source": {
+    "directories": [
+      "lib"
+    ]
+  },
+  "timeout": 10,
+  "logs": {
+    "text": "infection.log",
+    "badge": {
+        "branch": "master"
+    }
+  },
+  "testFramework":"phpunit"
+}
