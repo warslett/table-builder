@@ -1,6 +1,8 @@
 # Table Builder
 [![Build Status](https://circleci.com/gh/warslett/table-builder.png?style=shield)](https://circleci.com/gh/warslett/table-builder)
+[![codecov](https://codecov.io/gh/warslett/table-builder/branch/master/graph/badge.svg?token=TLPUHTMP2E)](https://codecov.io/gh/warslett/table-builder)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fwarslett%2Ftable-builder%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/warslett/table-builder/master)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 **THIS PACKAGE IS CURRENTLY UNDER DEVELOPMENT**
 

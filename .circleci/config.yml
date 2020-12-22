@@ -55,3 +55,7 @@ jobs:
 
       - store_artifacts:
           path: infection.log
+
+      - run:
+          name: "Send Report to Codecov"
+          command: "bash <(curl -s https://codecov.io/bash)"
