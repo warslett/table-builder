@@ -94,6 +94,10 @@ $renderer = new PhtmlRenderer();
 echo $renderer->renderTable($table);
 ```
 
+Both of the above renderers are themeable and are available with a standard theme and bootstrap4 theme out the box.
+
+![rendered table](https://github.com/warslett/table-builder/raw/master/docs/img/example.png "Rendered Html Table")
+
 You can also render tables as CSV documents:
 ```php
 use League\Csv\Writer;
@@ -102,8 +106,6 @@ use WArslett\TableBuilder\Renderer\Csv\CsvRenderer;
 $csvRenderer = new CsvRenderer();
 $csvRenderer->renderTable($table, Writer::createFromPath('/tmp/mycsv.csv'));
 ```
-
-Both of the above renderers are themeable and are available with a standard theme and bootstrap4 theme out the box.
 
 ### Single Page Applications
 Tables also implement JsonSerializable so they can be encoded as json in a response and consumed by a single page

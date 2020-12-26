@@ -23,7 +23,7 @@ class DateTimeColumnTest extends TestCase
      */
     public function testBuildTableCellNoValueAdapterThrowsException()
     {
-        $actionGroupColumn = DateTimeColumn::withName('my_action_group');
+        $actionGroupColumn = DateTimeColumn::withName('my_date');
 
         $this->expectException(NoValueAdapterException::class);
 
@@ -37,7 +37,7 @@ class DateTimeColumnTest extends TestCase
      */
     public function testBuildTableCellSetsRenderingTypeOnTableCell()
     {
-        $actionGroupColumn = DateTimeColumn::withName('my_action_group')
+        $actionGroupColumn = DateTimeColumn::withName('my_date')
             ->setValueAdapter($this->mockValueAdapter(new DateTime()));
         $cell = $actionGroupColumn->buildTableCell([]);
         $this->assertSame(DateTimeColumn::class, $cell->getRenderingType());
@@ -52,7 +52,7 @@ class DateTimeColumnTest extends TestCase
     {
         $row = ['foo' => 'bar'];
         $valueAdapter = $this->mockValueAdapter(new DateTime());
-        $actionGroupColumn = DateTimeColumn::withName('my_action_group')
+        $actionGroupColumn = DateTimeColumn::withName('my_date')
             ->setValueAdapter($valueAdapter);
 
         $actionGroupColumn->buildTableCell($row);
@@ -65,10 +65,25 @@ class DateTimeColumnTest extends TestCase
      * @throws NoValueAdapterException
      * @throws ValueException
      */
+    public function testBuildTableCellValueNullReturnsNull()
+    {
+        $actionGroupColumn = DateTimeColumn::withName('my_date')
+            ->setValueAdapter($this->mockValueAdapter(null));
+
+        $cell = $actionGroupColumn->buildTableCell([]);
+
+        $this->assertNull($cell->getValue());
+    }
+
+    /**
+     * @return void
+     * @throws NoValueAdapterException
+     * @throws ValueException
+     */
     public function testBuildTableCellValueNotDateTimeThrowsException()
     {
         $value = 'foo';
-        $actionGroupColumn = DateTimeColumn::withName('my_action_group')
+        $actionGroupColumn = DateTimeColumn::withName('my_date')
             ->setDateTimeFormat('d/m/Y H:i')
             ->setValueAdapter($this->mockValueAdapter($value));
 
@@ -85,7 +100,7 @@ class DateTimeColumnTest extends TestCase
     public function testBuildTableCellSetsValueOnCell()
     {
         $value = new DateTime("1990-01-01 00:00:00");
-        $actionGroupColumn = DateTimeColumn::withName('my_action_group')
+        $actionGroupColumn = DateTimeColumn::withName('my_date')
             ->setDateTimeFormat('d/m/Y H:i')
             ->setValueAdapter($this->mockValueAdapter($value));
 
@@ -111,7 +126,7 @@ class DateTimeColumnTest extends TestCase
     public function testBuildTableHeadingSetsLabelOnHeading()
     {
         $label = 'My Label';
-        $actionGroupColumn = DateTimeColumn::withName('my_action_group')->setLabel($label);
+        $actionGroupColumn = DateTimeColumn::withName('my_date')->setLabel($label);
         $heading = $actionGroupColumn->buildTableHeading();
         $this->assertSame($label, $heading->getLabel());
     }

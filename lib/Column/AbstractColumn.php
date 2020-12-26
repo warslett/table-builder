@@ -102,7 +102,7 @@ abstract class AbstractColumn implements ColumnInterface
 
     /**
      * @param mixed $row
-     * @return T
+     * @return T|null
      * @throws NoValueAdapterException
      */
     abstract protected function getCellValue($row);

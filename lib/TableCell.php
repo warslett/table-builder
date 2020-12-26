@@ -38,9 +38,9 @@ class TableCell implements JsonSerializable
            always fall back to rendering as a string. From PHP 8 we will be able to replace this with a union type
            typehint incorporating Stringable interface */
         if (
-            false === is_scalar($value)
+            $value !== null
+            && false === is_scalar($value)
             && false === method_exists($value, '__toString')
-            && $value !== null
         ) {
             throw new ValueException("Failed constructing TableCell with value that cannot be cast to string");
         }

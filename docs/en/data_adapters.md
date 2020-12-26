@@ -51,4 +51,4 @@ The data can be sorted by mapping an order by clause to a sort toggle.
 $dataAdapter->mapSortToggle('sort_name', 'u.name');
 ```
 
-[Next: Renderers](./renderers.md)
+[Next: Renderers](./renderers/index.md)

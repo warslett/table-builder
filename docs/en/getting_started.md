@@ -115,7 +115,10 @@ The twig would look something like this:
     {{ table(table) }}
 </div>
 ```
+
 [Read More](./renderers.md#TwigRenderer)
+
+![rendered table](https://github.com/warslett/table-builder/raw/master/docs/img/example.png "Rendered Html Table")
 
 If you are not using twig you can render the table as html just as well using the
 [PhtmlRenderer](./renderers.md#PhtmlRenderer).
