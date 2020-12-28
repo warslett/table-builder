@@ -51,7 +51,7 @@ class TableParametersIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setDefaultRowsPerPage(5)
+            ->defaultRowsPerPage(5)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([]))
             ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => [
@@ -80,7 +80,7 @@ class TableParametersIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setDefaultRowsPerPage(5)
+            ->defaultRowsPerPage(5)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([]))
             ->handleRequest(ArrayRequestAdapter::withArray(['foo' => 'bar']))
@@ -106,7 +106,7 @@ class TableParametersIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setDefaultRowsPerPage(10)
+            ->defaultRowsPerPage(10)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([]))
             ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => 'foo']))

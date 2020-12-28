@@ -127,12 +127,12 @@ class CsvRendererIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         return $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName('foo')
-                ->setLabel('Foo')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
-            ->addColumn(TextColumn::withName('bar')
-                ->setLabel('Bar')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[bar]')));
+            ->add(TextColumn::withName('foo')
+                ->label('Foo')
+                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
+            ->add(TextColumn::withName('bar')
+                ->label('Bar')
+                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[bar]')));
     }
 
 

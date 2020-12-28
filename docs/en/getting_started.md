@@ -23,8 +23,8 @@ $tableBuilder = $tableBuilderFactory->createTableBuilder()
 We can configure pagination on our table builder like this:
 ``` php
 $tableBuilder
-    ->setRowsPerPageOptions([10, 20, 50])
-    ->setDefaultRowsPerPage(10);
+    ->rowsPerPageOptions([10, 20, 50])
+    ->defaultRowsPerPage(10);
 ```
 
 And we can add [columns](./columns.md) to our table builder like this:
@@ -32,23 +32,22 @@ And we can add [columns](./columns.md) to our table builder like this:
 use WArslett\TableBuilder\Column\BooleanColumn;
 use WArslett\TableBuilder\Column\DateTimeColumn;
 use WArslett\TableBuilder\Column\TextColumn;
-use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
-$tableBuilder->addColumn(TextColumn::withName('email')
-    ->setLabel('Email')
-    ->setSortToggle('email')
-    ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('email')));
+$tableBuilder->add(TextColumn::withName('email')
+    ->label('Email')
+    ->property('email')
+    ->sortable());
         
-$tableBuilder->addColumn(BooleanColumn::withName('is_active')
-    ->setLabel('Active')
-    ->setSortToggle('is_active')
-    ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('active')));
+$tableBuilder->add(BooleanColumn::withName('is_active')
+    ->label('Active')
+    ->property('active')
+    ->sortable());
         
-$tableBuilder->addColumn(DateTimeColumn::withName('last_login')
-    ->setLabel('Last Login')
-    ->setDateTimeFormat('Y-m-d H:i:s')
-    ->setSortToggle('last_login')
-    ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('lastLogin')));
+$tableBuilder->add(DateTimeColumn::withName('last_login')
+    ->label('Last Login')
+    ->property('lastLogin')
+    ->format('Y-m-d H:i:s')
+    ->sortable());
 ```
 
 We can also add an [Action Group Column](./columns.md#ActionGroupColumn) which will build a group of actions for each
@@ -56,17 +55,17 @@ row in the table (which can then be rendered as links or buttons):
 ```php
 use WArslett\TableBuilder\Column\ActionGroupColumn;
 
-$tableBuilder->addColumn(ActionGroupColumn::withName('email')
-    ->setLabel('Actions')
-    ->addActionBuilder(ActionBuilder::withName('update')
-        ->setLabel('Update')
-        ->setRoute('user_update', [
-            'id' => PropertyAccessAdapter::withPropertyPath('id')
+$tableBuilder->add(ActionGroupColumn::withName('email')
+    ->label('Actions')
+    ->add(ActionBuilder::withName('update')
+        ->label('Update')
+        ->route('user_update', [
+            'id' => 'id'
         ]))
-    ->addActionBuilder(ActionBuilder::withName('delete')
-        ->setLabel('Delete')
-        ->setRoute('user_delete', [
-            'id' => PropertyAccessAdapter::withPropertyPath('id')
+    ->add(ActionBuilder::withName('delete')
+        ->label('Delete')
+        ->route('user_delete', [
+            'id' => 'id'
         ])));
 ```
 
@@ -92,11 +91,19 @@ $dataAdapter = DoctrineOrmAdapter::withQueryBuilder($queryBuilder)
 $table->setDataAdapter($dataAdapter);
 ```
 
-Finally, our table can use parameters from a [request](./request_adapters.md) to load a page of data:
+Finally, our table can use parameters from a request to load a page of data:
 ```php
-use WArslett\TableBuilder\RequestAdapter\SymfonyHttpAdapter;
+$table->handleSymfonyRequest($request);
+```
 
-$table->handleRequest(SymfonyHttpAdapter::withRequest($request));
+Or alternatively using a Psr7 Request:
+```php
+$table->handlePsr7Request($request);
+```
+
+Or just using an array of parameters
+```php
+$table->handleParameters($_GET);
 ```
 
 Once the table has been built and data loaded it can be rendered in a variety of ways. If you are using twig with the
@@ -127,12 +134,19 @@ If you are not using twig you can render the table as html just as well using th
 Table results can be sorted using parameters on the query string of the request. Html Renderers will display links in
 the table headings to toggle different sorts on or off.
 
-Columns that extend AbstractColumn include a configuration method `setSortToggle`. A sort toggle is a string that can
+Columns that extend AbstractColumn include a configuration method `sortToggle`. A sort toggle is a string that can
 be used to map a Column to configuration on the data adapter for sorting your data. First assign your column a sort
 toggle to enable sorting on that column.
 ```php
-$column->setSortToggle('sort_name');
+$column->sortToggle('sort_name');
 ```
+
+Alternatively you can call the configuration method `sortable` which will set the sortToggle for the column to the
+columns name:
+```php
+$column->sortable();
+```
+
 Then map the sort toggle on your data adapter. Different data adapters map sort toggles in different ways. For example
 DoctrineOrmAdapter maps sort toggles to a field in the query which will then be used in the "order by" clause:
 ```php
@@ -160,26 +174,26 @@ The rows per page limit can also be selected using the querystring parameter "ro
 `?users[page]=1&users[rows_per_page]=10` will display the first page of up to 10 results per page. There is a maximum
 rows per page limit which is 100 by default. You can configure the maximum limit for the table builder like this:
 ```php
-$tableBuilder->setMaxRowsPerPage(200);
+$tableBuilder->maxRowsPerPage(200);
 ```
 
 The default rows per page if no query string parameter is provided is 20 which can also be overridden on the table
 builder:
 ```php
-$tableBuilder->setDefaultRowsPerPage(50);
+$tableBuilder->defaultRowsPerPage(50);
 ```
 
 Html Renderers can display a set of rows per page options as links above the table. Rows per page options can be enabled
 on the table builder:
 ```php
-$tableBuilder->setRowsPerPageOptions([10, 20, 50]);
+$tableBuilder->rowsPerPageOptions([10, 20, 50]);
 ```
 
 You can allow unlimited rows per page:
 ```php
 $tableBuilder
-    ->setMaxRowsPerPage(INF)
-    ->setDefaultRowsPerPage(INF);
+    ->maxRowsPerPage(INF)
+    ->defaultRowsPerPage(INF);
 ```
 
 ## <a name="ReusableTables"></a>Building Reusable Tables
@@ -201,7 +215,6 @@ use WArslett\TableBuilder\Column\DateTimeColumn;
 use WArslett\TableBuilder\Column\TextColumn;
 use WArslett\TableBuilder\TableBuilderFactoryInterface;
 use WArslett\TableBuilder\TableBuilderInterface;
-use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 final class UserTableBuilderFactory implements TableBuilderFactoryInterface
 {
@@ -215,17 +228,17 @@ final class UserTableBuilderFactory implements TableBuilderFactoryInterface
     public function createTableBuilder(): TableBuilderInterface
     {
         return $this->tableBuilderFactory->createTableBuilder()
-            ->setRowsPerPageOptions([10, 20, 50])
-            ->setDefaultRowsPerPage(10)
-            ->addColumn(TextColumn::withName('email')
-                ->setLabel('Email')
-                ->setSortToggle('email')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('email')))
-            ->addColumn(DateTimeColumn::withName('last_login')
-                ->setLabel('Last Login')
-                ->setDateTimeFormat('Y-m-d H:i:s')
-                ->setSortToggle('last_login')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('lastLogin')));
+            ->rowsPerPageOptions([10, 20, 50])
+            ->defaultRowsPerPage(10)
+            ->add(TextColumn::withName('email')
+                ->label('Email')
+                ->property('email')
+                ->sortable())
+            ->add(DateTimeColumn::withName('last_login')
+                ->label('Last Login')
+                ->property('lastLogin')
+                ->format('Y-m-d H:i:s')
+                ->sortable());
     }
 }
 ```
@@ -295,7 +308,6 @@ use App\TableBuilder\TableFactory\UserTableFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig;
-use WArslett\TableBuilder\RequestAdapter\SymfonyHttpAdapter;
 
 class UserTableController
 {
@@ -313,7 +325,7 @@ class UserTableController
     public function __invoke(Request $request): Response
     {
         $table = $this->userTableFactory->buildTable('users');
-        $table->handleRequest(SymfonyHttpAdapter::withRequest($request));
+        $table->handleSymfonyRequest($request);
         
         return new Response($this->twigEnvironment->render('table_page.html.twig', [
           'table' => $table

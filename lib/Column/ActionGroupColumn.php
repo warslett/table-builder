@@ -19,7 +19,7 @@ final class ActionGroupColumn extends AbstractColumn
      * @param ActionBuilderInterface $actionBuilder
      * @return $this
      */
-    public function addActionBuilder(ActionBuilderInterface $actionBuilder): self
+    public function add(ActionBuilderInterface $actionBuilder): self
     {
         $this->actionBuilders[$actionBuilder->getName()] = $actionBuilder;
         return $this;

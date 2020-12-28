@@ -31,9 +31,9 @@ class TableSortingIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName('foo_column')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
-                ->setSortToggle('foo_toggle'))
+            ->add(TextColumn::withName('foo_column')
+                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
+                ->sortToggle('foo_toggle'))
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 3],
@@ -63,9 +63,9 @@ class TableSortingIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName('foo_column')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
-                ->setSortToggle('foo_toggle'))
+            ->add(TextColumn::withName('foo_column')
+                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
+                ->sortToggle('foo_toggle'))
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 3],
@@ -101,9 +101,9 @@ class TableSortingIntegrationTest extends TestCase
         $this->expectException(SortToggleException::class);
 
         $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName('foo_column')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
-                ->setSortToggle('foo_toggle'))
+            ->add(TextColumn::withName('foo_column')
+                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
+                ->sortToggle('foo_toggle'))
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([]))
         ;

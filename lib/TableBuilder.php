@@ -24,7 +24,7 @@ final class TableBuilder implements TableBuilderInterface
      * @param ColumnInterface $column
      * @return $this
      */
-    public function addColumn(ColumnInterface $column): self
+    public function add(ColumnInterface $column): self
     {
         $this->columns[$column->getName()] = $column;
         return $this;
@@ -34,7 +34,7 @@ final class TableBuilder implements TableBuilderInterface
      * @param int $defaultRowsPerPage
      * @return $this
      */
-    public function setDefaultRowsPerPage(int $defaultRowsPerPage): self
+    public function defaultRowsPerPage(int $defaultRowsPerPage): self
     {
         $this->defaultRowsPerPage = $defaultRowsPerPage;
         return $this;
@@ -44,7 +44,7 @@ final class TableBuilder implements TableBuilderInterface
      * @param int $maxRowsPerPage
      * @return $this
      */
-    public function setMaxRowsPerPage(int $maxRowsPerPage): self
+    public function maxRowsPerPage(int $maxRowsPerPage): self
     {
         $this->maxRowsPerPage = $maxRowsPerPage;
         return $this;
@@ -54,7 +54,7 @@ final class TableBuilder implements TableBuilderInterface
      * @param array<int> $rowsPerPageOptions
      * @return $this
      */
-    public function setRowsPerPageOptions(array $rowsPerPageOptions): self
+    public function rowsPerPageOptions(array $rowsPerPageOptions): self
     {
         $this->rowsPerPageOptions = $rowsPerPageOptions;
         return $this;

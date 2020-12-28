@@ -160,11 +160,11 @@ class TwigRendererIntegrationTest extends TestCase
     public function testRenderTableCellValueActionGroupColumnRenderingType(string $template)
     {
         $builder = $this->getTableBuilder()
-            ->addColumn(ActionGroupColumn::withName('actions')
-                ->setLabel('Actions')
-                ->addActionBuilder(ActionBuilder::withName('delete')
-                    ->setLabel('Delete')
-                    ->setRoute('/delete/%s', [PropertyAccessAdapter::withPropertyPath('[foo]')])));
+            ->add(ActionGroupColumn::withName('actions')
+                ->label('Actions')
+                ->add(ActionBuilder::withName('delete')
+                    ->label('Delete')
+                    ->route('/delete/%s', [PropertyAccessAdapter::withPropertyPath('[foo]')])));
 
         $table = $this->buildTable($builder);
         $row = $table->getRows()[0];
@@ -186,9 +186,9 @@ class TwigRendererIntegrationTest extends TestCase
     public function testRenderTableCellValueBooleanColumnRenderingType(string $template)
     {
         $builder = $this->getTableBuilder()
-            ->addColumn(BooleanColumn::withName('boolean')
-                ->setLabel('Boolean')
-                ->setValueAdapter(CallbackAdapter::withCallback(fn($row): bool => false)));
+            ->add(BooleanColumn::withName('boolean')
+                ->label('Boolean')
+                ->valueAdapter(CallbackAdapter::withCallback(fn($row): bool => false)));
 
         $table = $this->buildTable($builder);
         $row = $table->getRows()[0];
@@ -329,12 +329,12 @@ class TwigRendererIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         return $tableBuilderFactory->createTableBuilder()
-            ->setRowsPerPageOptions([2, 10, 20])
-            ->setDefaultRowsPerPage(2)
-            ->addColumn(TextColumn::withName('foo')
-                ->setLabel('Foo')
-                ->setSortToggle('foo')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')));
+            ->rowsPerPageOptions([2, 10, 20])
+            ->defaultRowsPerPage(2)
+            ->add(TextColumn::withName('foo')
+                ->label('Foo')
+                ->sortToggle('foo')
+                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')));
     }
 
     /**

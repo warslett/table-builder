@@ -22,11 +22,11 @@ class BooleanColumnTest extends TestCase
      */
     public function testBuildTableCellNoValueAdapterThrowsException()
     {
-        $actionGroupColumn = BooleanColumn::withName('my_action_group');
+        $column = BooleanColumn::withName('my_action_group');
 
         $this->expectException(NoValueAdapterException::class);
 
-        $actionGroupColumn->buildTableCell([]);
+        $column->buildTableCell([]);
     }
 
     /**
@@ -36,9 +36,9 @@ class BooleanColumnTest extends TestCase
      */
     public function testBuildTableCellSetsRenderingTypeOnTableCell()
     {
-        $actionGroupColumn = BooleanColumn::withName('my_action_group')
-            ->setValueAdapter($this->mockValueAdapter(false));
-        $cell = $actionGroupColumn->buildTableCell([]);
+        $column = BooleanColumn::withName('my_action_group')
+            ->valueAdapter($this->mockValueAdapter(false));
+        $cell = $column->buildTableCell([]);
         $this->assertSame(BooleanColumn::class, $cell->getRenderingType());
     }
 
@@ -51,12 +51,12 @@ class BooleanColumnTest extends TestCase
     {
         $row = ['foo' => 'bar'];
         $valueAdapter = $this->mockValueAdapter('foo');
-        $actionGroupColumn = BooleanColumn::withName('my_action_group')
-            ->setValueAdapter($valueAdapter);
+        $column = BooleanColumn::withName('my_action_group')
+            ->valueAdapter($valueAdapter);
 
         $this->expectException(ValueException::class);
 
-        $actionGroupColumn->buildTableCell($row);
+        $column->buildTableCell($row);
     }
 
     /**
@@ -68,10 +68,10 @@ class BooleanColumnTest extends TestCase
     {
         $row = ['foo' => 'bar'];
         $valueAdapter = $this->mockValueAdapter(false);
-        $actionGroupColumn = BooleanColumn::withName('my_action_group')
-            ->setValueAdapter($valueAdapter);
+        $column = BooleanColumn::withName('my_action_group')
+            ->valueAdapter($valueAdapter);
 
-        $actionGroupColumn->buildTableCell($row);
+        $column->buildTableCell($row);
 
         $valueAdapter->shouldHaveReceived('getValue')->once()->with($row);
     }
@@ -84,10 +84,10 @@ class BooleanColumnTest extends TestCase
     public function testBuildTableCellSetsValueOnCell()
     {
         $value = false;
-        $actionGroupColumn = BooleanColumn::withName('my_action_group')
-            ->setValueAdapter($this->mockValueAdapter($value));
+        $column = BooleanColumn::withName('my_action_group')
+            ->valueAdapter($this->mockValueAdapter($value));
 
-        $cell = $actionGroupColumn->buildTableCell([]);
+        $cell = $column->buildTableCell([]);
 
         $this->assertSame($value, $cell->getValue());
     }
@@ -98,8 +98,8 @@ class BooleanColumnTest extends TestCase
     public function testBuildTableHeadingSetsNameOnHeading()
     {
         $name = 'my_column';
-        $actionGroupColumn = BooleanColumn::withName($name);
-        $heading = $actionGroupColumn->buildTableHeading();
+        $column = BooleanColumn::withName($name);
+        $heading = $column->buildTableHeading();
         $this->assertSame($name, $heading->getName());
     }
 
@@ -109,9 +109,38 @@ class BooleanColumnTest extends TestCase
     public function testBuildTableHeadingSetsLabelOnHeading()
     {
         $label = 'My Label';
-        $actionGroupColumn = BooleanColumn::withName('my_action_group')->setLabel($label);
-        $heading = $actionGroupColumn->buildTableHeading();
+        $column = BooleanColumn::withName('my_action_group')->label($label);
+        $heading = $column->buildTableHeading();
         $this->assertSame($label, $heading->getLabel());
+    }
+
+    public function testSortableSortToggleSetDoesNothing()
+    {
+        $column = BooleanColumn::withName('my_name');
+        $column->sortToggle('foo_bar');
+
+        $column->sortable();
+
+        $this->assertSame('foo_bar', $column->getSortToggle());
+    }
+
+    public function testSortableSortToggleNotSetSetsSortToggleToName()
+    {
+        $column = BooleanColumn::withName('my_name');
+
+        $column->sortable();
+
+        $this->assertSame('my_name', $column->getSortToggle());
+    }
+
+    public function testSortableFalseSortToggleSetSetsSortToggleToNull()
+    {
+        $column = BooleanColumn::withName('my_name');
+        $column->sortToggle('foo_bar');
+
+        $column->sortable(false);
+
+        $this->assertNull($column->getSortToggle());
     }
 
     /**

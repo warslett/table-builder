@@ -23,11 +23,11 @@ class DateTimeColumnTest extends TestCase
      */
     public function testBuildTableCellNoValueAdapterThrowsException()
     {
-        $actionGroupColumn = DateTimeColumn::withName('my_date');
+        $column = DateTimeColumn::withName('my_date');
 
         $this->expectException(NoValueAdapterException::class);
 
-        $actionGroupColumn->buildTableCell([]);
+        $column->buildTableCell([]);
     }
 
     /**
@@ -37,9 +37,9 @@ class DateTimeColumnTest extends TestCase
      */
     public function testBuildTableCellSetsRenderingTypeOnTableCell()
     {
-        $actionGroupColumn = DateTimeColumn::withName('my_date')
-            ->setValueAdapter($this->mockValueAdapter(new DateTime()));
-        $cell = $actionGroupColumn->buildTableCell([]);
+        $column = DateTimeColumn::withName('my_date')
+            ->valueAdapter($this->mockValueAdapter(new DateTime()));
+        $cell = $column->buildTableCell([]);
         $this->assertSame(DateTimeColumn::class, $cell->getRenderingType());
     }
 
@@ -52,10 +52,10 @@ class DateTimeColumnTest extends TestCase
     {
         $row = ['foo' => 'bar'];
         $valueAdapter = $this->mockValueAdapter(new DateTime());
-        $actionGroupColumn = DateTimeColumn::withName('my_date')
-            ->setValueAdapter($valueAdapter);
+        $column = DateTimeColumn::withName('my_date')
+            ->valueAdapter($valueAdapter);
 
-        $actionGroupColumn->buildTableCell($row);
+        $column->buildTableCell($row);
 
         $valueAdapter->shouldHaveReceived('getValue')->once()->with($row);
     }
@@ -67,10 +67,10 @@ class DateTimeColumnTest extends TestCase
      */
     public function testBuildTableCellValueNullReturnsNull()
     {
-        $actionGroupColumn = DateTimeColumn::withName('my_date')
-            ->setValueAdapter($this->mockValueAdapter(null));
+        $column = DateTimeColumn::withName('my_date')
+            ->valueAdapter($this->mockValueAdapter(null));
 
-        $cell = $actionGroupColumn->buildTableCell([]);
+        $cell = $column->buildTableCell([]);
 
         $this->assertNull($cell->getValue());
     }
@@ -83,13 +83,13 @@ class DateTimeColumnTest extends TestCase
     public function testBuildTableCellValueNotDateTimeThrowsException()
     {
         $value = 'foo';
-        $actionGroupColumn = DateTimeColumn::withName('my_date')
-            ->setDateTimeFormat('d/m/Y H:i')
-            ->setValueAdapter($this->mockValueAdapter($value));
+        $column = DateTimeColumn::withName('my_date')
+            ->format('d/m/Y H:i')
+            ->valueAdapter($this->mockValueAdapter($value));
 
         $this->expectException(ValueException::class);
 
-        $actionGroupColumn->buildTableCell([]);
+        $column->buildTableCell([]);
     }
 
     /**
@@ -100,11 +100,11 @@ class DateTimeColumnTest extends TestCase
     public function testBuildTableCellSetsValueOnCell()
     {
         $value = new DateTime("1990-01-01 00:00:00");
-        $actionGroupColumn = DateTimeColumn::withName('my_date')
-            ->setDateTimeFormat('d/m/Y H:i')
-            ->setValueAdapter($this->mockValueAdapter($value));
+        $column = DateTimeColumn::withName('my_date')
+            ->format('d/m/Y H:i')
+            ->valueAdapter($this->mockValueAdapter($value));
 
-        $cell = $actionGroupColumn->buildTableCell([]);
+        $cell = $column->buildTableCell([]);
 
         $this->assertSame('01/01/1990 00:00', $cell->getValue());
     }
@@ -115,8 +115,8 @@ class DateTimeColumnTest extends TestCase
     public function testBuildTableHeadingSetsNameOnHeading()
     {
         $name = 'my_column';
-        $actionGroupColumn = DateTimeColumn::withName($name);
-        $heading = $actionGroupColumn->buildTableHeading();
+        $column = DateTimeColumn::withName($name);
+        $heading = $column->buildTableHeading();
         $this->assertSame($name, $heading->getName());
     }
 
@@ -126,9 +126,38 @@ class DateTimeColumnTest extends TestCase
     public function testBuildTableHeadingSetsLabelOnHeading()
     {
         $label = 'My Label';
-        $actionGroupColumn = DateTimeColumn::withName('my_date')->setLabel($label);
-        $heading = $actionGroupColumn->buildTableHeading();
+        $column = DateTimeColumn::withName('my_date')->label($label);
+        $heading = $column->buildTableHeading();
         $this->assertSame($label, $heading->getLabel());
+    }
+
+    public function testSortableSortToggleSetDoesNothing()
+    {
+        $column = DateTimeColumn::withName('my_name');
+        $column->sortToggle('foo_bar');
+
+        $column->sortable();
+
+        $this->assertSame('foo_bar', $column->getSortToggle());
+    }
+
+    public function testSortableSortToggleNotSetSetsSortToggleToName()
+    {
+        $column = DateTimeColumn::withName('my_name');
+
+        $column->sortable();
+
+        $this->assertSame('my_name', $column->getSortToggle());
+    }
+
+    public function testSortableFalseSortToggleSetSetsSortToggleToNull()
+    {
+        $column = DateTimeColumn::withName('my_name');
+        $column->sortToggle('foo_bar');
+
+        $column->sortable(false);
+
+        $this->assertNull($column->getSortToggle());
     }
 
     /**

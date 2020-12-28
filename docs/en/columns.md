@@ -3,24 +3,24 @@ Column objects are used to configure the column structure of a table and also to
 Column classes implement `WArslett\TableBuilder\Column\ColumnInterface` and can be added to a Table Builder instance
 like this:
 ```php
-$tableBuilder->addColumn($column);
+$tableBuilder->add($column);
 ```
 All Table Builder column types extend `WArslett\TableBuilder\Column\AbstractColumn` which includes configuration methods
-`setLabel`, `setSortToggle` and `afterBuildCell`.
+`label`, `sortable`, `sortToggle` and `afterBuildCell`.
 
 Some columns use the trait `WArslett\TableBuilder\ValueAdapter\ValueAdapterTrait` which includes the configuration
-method `setValueAdapter`. Value Adapters provide an abstract way of getting the value of a cell from a row for a column.
+method `valueAdapter` `property` and `callback`. Value Adapters provide an abstract way of getting the value of a cell
+from a row for a column. [Read more](value_adapters.md).
 
 ## <a name="TextColumn"></a>TextColumn
 Text Column is used for just rendering a value as text. Cell values in Text Columns must be castable as strings.
 ```php
 use WArslett\TableBuilder\Column\TextColumn;
-use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 $column = TextColumn::withName('my_text_column')
-    ->setLabel('My Column Label Heading')
-    ->setSortToggle('my_sort_toggle')
-    ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('foo'));
+    ->label('My Column Label Heading')
+    ->property('foo')
+    ->sortable();
 ```
 The above example would take the value of the property `foo` for each row and cast it to a string as the value for each
 cell in the column. If a cell value resolved by the ValueAdapter cannot be cast as a string a ValueException will be
@@ -30,15 +30,14 @@ thrown.
 DateTime Column is used for rendering an instance of a DateTime object with a given format.
 ```php
 use WArslett\TableBuilder\Column\DateTimeColumn;
-use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 $column = DateTimeColumn::withName('my_datetime_column')
-    ->setLabel('My Column Label Heading')
-    ->setDateTimeFormat('Y-m-d H:i:s')
-    ->setSortToggle('my_sort_toggle')
-    ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('foo'));
+    ->label('My Column Label Heading')
+    ->property('myDateProperty');
+    ->format('Y-m-d H:i:s')
+    ->sortable()
 ```
-DateTimeColumn includes the configuration method setDateTimeFormat which takes a
+DateTimeColumn includes the configuration method format which takes a
 [php date format string](https://www.php.net/manual/en/datetime.format.php). If no format is provided it will default to
 the format 'Y-m-d H:i:s'. If the cell value is not a DateTime then a ValueException will be thrown.
 
@@ -46,12 +45,11 @@ the format 'Y-m-d H:i:s'. If the cell value is not a DateTime then a ValueExcept
 Boolean Column is used for rendering boolean values.
 ```php
 use WArslett\TableBuilder\Column\BooleanColumn;
-use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
-$column = BooleanColumn::withName('my_text_column')
-    ->setLabel('My Column Label Heading')
-    ->setSortToggle('my_sort_toggle')
-    ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('foo'));
+$column = BooleanColumn::withName('my_boolean_column')
+    ->label('My Column Label Heading')
+    ->property('myBooleanProperty')
+    ->sortable();
 ```
 Renderers will normally default to casting table cell values as strings in which case cell values for this column would
 be rendered as a 1 or a 0. TwigRenderer and PhtmlRenderer however will render the value using html entities `&#10004;`
@@ -63,51 +61,42 @@ Action Group Column is used for rendering a group of actions that can be rendere
 ```php
 use WArslett\TableBuilder\ActionBuilder;
 use WArslett\TableBuilder\Column\ActionGroupColumn;
-use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 $actionBuilder = ActionBuilder::withName('update')
-    ->setLabel('Update')
-    ->setRoute('user_update', [
-        'id' => PropertyAccessAdapter::withPropertyPath('id')
-    ]);
+    ->label('Update')
+    ->route('user_update', ['id' => 'id']);
 
 $column = ActionGroupColumn::withName('actions')
-    ->setLabel('Actions')
-    ->addActionBuilder($actionBuilder);
+    ->label('Actions')
+    ->add($actionBuilder);
 ```
 
 You can also set attributes such as extra classes on action builders:
 ```php
 use WArslett\TableBuilder\ActionBuilder;
-use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 $actionBuilder = ActionBuilder::withName('delete')
-    ->setLabel('Delete')
-    ->setAttribute('extra_classes', ['btn-danger'])
-    ->setRoute('user_delete', [
-        'id' => PropertyAccessAdapter::withPropertyPath('id')
-    ]);
+    ->label('Delete')
+    ->attribute('extra_classes', ['btn-danger'])
+    ->route('user_delete', ['id' => 'id']);
 ```
 
 You can set a condition so that the action can be excluded from the group if a condition is not met:
 ```php
 use WArslett\TableBuilder\ActionBuilder;
-use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 $actionBuilder = ActionBuilder::withName('delete')
-    ->setLabel('Delete')
-    ->setCondition(fn(User $user) => $this->authorizationChecker->isGranted('delete', $user))
-    ->setRoute('user_delete', [
-        'id' => PropertyAccessAdapter::withPropertyPath('id')
-    ]);
+    ->label('Delete')
+    ->condition(fn(User $user) => $this->authorizationChecker->isGranted('delete', $user))
+    ->route('user_delete', ['id' => 'id']);
 ```
 
-ActionGroupColumn includes a configuration method `addActionBuilder` which can be called multiple times to add multiple
+ActionGroupColumn includes a configuration method `add` which can be called multiple times to add multiple
 ActionBuilder instances to the group. The ActionBuilder class configures how the action will be built for each row. The
-configuration method `setRoute` on the ActionBuilder is used to set the route and route parameters for the action.
+configuration method `route` on the ActionBuilder is used to set the route and route parameters for the action.
 
-The route parameters are a key value pair array where the value is an instance of ValueAdapterInterface which is used to
-resolve the parameters for each row.
+The route parameters are a key value pair array where the value is used to retrieve the route parameter from the data.
+It must either be a string, which will be treated as a property path, a closure or an instance of ValueAdapter.
 
 `WArslett\TableBuilder\RouteGeneratorAdapter\RouteGeneratorAdapterInterface` provides an abstract way of generating
 urls from routes and route params which can be used by Renderers. If you are using symfony routing then
@@ -116,9 +105,7 @@ urls from routes and route params which can be used by Renderers. If you are usi
 If you are not using symfony routing then the `WArslett\TableBuilder\RouteGeneratorAdapter\SprintfAdapter` is also
 available which will allow you to configure routes like this:
 ```php
-$actionBuilder->setRoute('/users/%d/update', [
-    PropertyAccessAdapter::withPropertyPath('id')
-]);
+$actionBuilder->route('/users/%d/update', ['id']);
 ```
 Route Generator Adapters are normally injected into the constructor of the renderer. If you are using the symfony bundle
 with the TwigRenderer it will do this for you automatically.
@@ -188,9 +175,9 @@ final class ImageColumn extends AbstractColumn
 ```
 Now we can add our new column to a table builder:
 ```php
-$tableBuilder->addColumn(ImageColumn::withName('my_text_column')
-    ->setLabel('Profile Image')
-    ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('profileImageUrl')));
+$tableBuilder->add(ImageColumn::withName('my_text_column')
+    ->label('Profile Image')
+    ->property('profileImageUrl'));
 ```
 If we were to render this table now with the Twig Renderer it would default to casting the value as a string and so it
 would just display the url as text in the table cell. In order to display the cell value as an actual image we would
@@ -302,6 +289,7 @@ final class ImageColumn extends AbstractColumn
     }
 }
 ```
+
 and our twig template becomes:
 ```twig
 {# templates/table-builder/image-cell-value.html.twig #}

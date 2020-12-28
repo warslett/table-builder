@@ -40,11 +40,11 @@ class TableActionsIntegrationTest extends TestCase
         $attributeValue = 'bar';
         $paramValue = 123;
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(ActionGroupColumn::withName($columnName)
-                ->addActionBuilder(ActionBuilder::withName($actionName)
-                    ->setLabel($actionLabel)
-                    ->setAttribute($attributeKey, $attributeValue)
-                    ->setRoute($actionRoute, [
+            ->add(ActionGroupColumn::withName($columnName)
+                ->add(ActionBuilder::withName($actionName)
+                    ->label($actionLabel)
+                    ->attribute($attributeKey, $attributeValue)
+                    ->route($actionRoute, [
                         $paramName => PropertyAccessAdapter::withPropertyPath('[id]')
                     ])))
             ->buildTable('user_table')
@@ -76,9 +76,9 @@ class TableActionsIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(ActionGroupColumn::withName('actions')
-                ->addActionBuilder(ActionBuilder::withName('delete')
-                    ->setCondition(fn($row) => false)))
+            ->add(ActionGroupColumn::withName('actions')
+                ->add(ActionBuilder::withName('delete')
+                    ->condition(fn($row) => false)))
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 []
@@ -102,9 +102,9 @@ class TableActionsIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(ActionGroupColumn::withName('actions')
-                ->addActionBuilder(ActionBuilder::withName('delete')
-                    ->setCondition(fn($row) => true)))
+            ->add(ActionGroupColumn::withName('actions')
+                ->add(ActionBuilder::withName('delete')
+                    ->condition(fn($row) => true)))
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 []

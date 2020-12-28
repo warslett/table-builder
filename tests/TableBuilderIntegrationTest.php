@@ -96,7 +96,7 @@ class TableBuilderIntegrationTest extends TestCase
         $tableBuilderFactory = new TableBuilderFactory();
         $columnName = 'foo';
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName($columnName))
+            ->add(TextColumn::withName($columnName))
             ->buildTable('user_table')
         ;
 
@@ -114,7 +114,7 @@ class TableBuilderIntegrationTest extends TestCase
         $columnName = 'foo';
 
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName($columnName))
+            ->add(TextColumn::withName($columnName))
             ->buildTable('user_table')
         ;
 
@@ -132,7 +132,7 @@ class TableBuilderIntegrationTest extends TestCase
         $columnLabel = 'Foo Heading';
 
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName($columnName)->setLabel($columnLabel))
+            ->add(TextColumn::withName($columnName)->label($columnLabel))
             ->buildTable('user_table')
         ;
 
@@ -149,7 +149,7 @@ class TableBuilderIntegrationTest extends TestCase
         $columnName = 'foo';
 
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName($columnName))
+            ->add(TextColumn::withName($columnName))
             ->buildTable('user_table')
         ;
 
@@ -170,7 +170,7 @@ class TableBuilderIntegrationTest extends TestCase
         $this->expectException(NoValueAdapterException::class);
 
         $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName('foo'))
+            ->add(TextColumn::withName('foo'))
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar']
@@ -189,9 +189,9 @@ class TableBuilderIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName('foo')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
-            ->setDefaultRowsPerPage(1)
+            ->add(TextColumn::withName('foo')
+                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
+            ->defaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar', 'baz' => 'qux']

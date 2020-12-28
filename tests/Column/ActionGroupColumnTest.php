@@ -24,8 +24,8 @@ class ActionGroupColumnTest extends TestCase
      */
     public function testBuildTableCellSetsRenderingTypeOnTableCell()
     {
-        $actionGroupColumn = ActionGroupColumn::withName('my_action_group');
-        $cell = $actionGroupColumn->buildTableCell([]);
+        $column = ActionGroupColumn::withName('my_action_group');
+        $cell = $column->buildTableCell([]);
         $this->assertSame(ActionGroupColumn::class, $cell->getRenderingType());
     }
 
@@ -35,8 +35,8 @@ class ActionGroupColumnTest extends TestCase
     public function testBuildTableHeadingSetsLabelOnHeading()
     {
         $label = 'My Label';
-        $actionGroupColumn = ActionGroupColumn::withName('my_action_group')->setLabel($label);
-        $heading = $actionGroupColumn->buildTableHeading();
+        $column = ActionGroupColumn::withName('my_action_group')->label($label);
+        $heading = $column->buildTableHeading();
         $this->assertSame($label, $heading->getLabel());
     }
 
@@ -46,8 +46,8 @@ class ActionGroupColumnTest extends TestCase
     public function testBuildTableCellSetsNameOnHeading()
     {
         $name = 'my_column';
-        $actionGroupColumn = ActionGroupColumn::withName($name);
-        $heading = $actionGroupColumn->buildTableHeading();
+        $column = ActionGroupColumn::withName($name);
+        $heading = $column->buildTableHeading();
         $this->assertSame($name, $heading->getName());
     }
 
@@ -58,8 +58,8 @@ class ActionGroupColumnTest extends TestCase
      */
     public function testBuildTableCellSetsValueToActionGroup()
     {
-        $actionGroupColumn = ActionGroupColumn::withName('my_action_group');
-        $cell = $actionGroupColumn->buildTableCell([]);
+        $column = ActionGroupColumn::withName('my_action_group');
+        $cell = $column->buildTableCell([]);
         $value = $cell->getValue();
         $this->assertInstanceOf(ActionGroup::class, $value);
     }
@@ -73,10 +73,10 @@ class ActionGroupColumnTest extends TestCase
     {
         $actionName = 'foo';
         $action = new Action('Foo');
-        $actionGroupColumn = ActionGroupColumn::withName('my_action_group')
-            ->addActionBuilder($this->mockActionBuilder($actionName, true, $action))
+        $column = ActionGroupColumn::withName('my_action_group')
+            ->add($this->mockActionBuilder($actionName, true, $action))
         ;
-        $cell = $actionGroupColumn->buildTableCell([]);
+        $cell = $column->buildTableCell([]);
 
         /** @var ActionGroup $value */
         $value = $cell->getValue();
@@ -96,10 +96,10 @@ class ActionGroupColumnTest extends TestCase
     {
         $actionName = 'foo';
         $action = new Action('Foo');
-        $actionGroupColumn = ActionGroupColumn::withName('my_action_group')
-            ->addActionBuilder($this->mockActionBuilder($actionName, false, $action))
+        $column = ActionGroupColumn::withName('my_action_group')
+            ->add($this->mockActionBuilder($actionName, false, $action))
         ;
-        $cell = $actionGroupColumn->buildTableCell([]);
+        $cell = $column->buildTableCell([]);
 
         /** @var ActionGroup $value */
         $value = $cell->getValue();
@@ -115,17 +115,46 @@ class ActionGroupColumnTest extends TestCase
      */
     public function testBuildTableCellTwoActionBuilderBuildsTwoAction()
     {
-        $actionGroupColumn = ActionGroupColumn::withName('my_action_group')
-            ->addActionBuilder($this->mockActionBuilder('foo', true, new Action('Foo')))
-            ->addActionBuilder($this->mockActionBuilder('bar', true, new Action('Bar')))
+        $column = ActionGroupColumn::withName('my_action_group')
+            ->add($this->mockActionBuilder('foo', true, new Action('Foo')))
+            ->add($this->mockActionBuilder('bar', true, new Action('Bar')))
         ;
-        $cell = $actionGroupColumn->buildTableCell([]);
+        $cell = $column->buildTableCell([]);
 
         /** @var ActionGroup $value */
         $value = $cell->getValue();
         $actions = $value->getActions();
 
         $this->assertSame(2, count($actions));
+    }
+
+    public function testSortableSortToggleSetDoesNothing()
+    {
+        $column = ActionGroupColumn::withName('my_name');
+        $column->sortToggle('foo_bar');
+
+        $column->sortable();
+
+        $this->assertSame('foo_bar', $column->getSortToggle());
+    }
+
+    public function testSortableSortToggleNotSetSetsSortToggleToName()
+    {
+        $column = ActionGroupColumn::withName('my_name');
+
+        $column->sortable();
+
+        $this->assertSame('my_name', $column->getSortToggle());
+    }
+
+    public function testSortableFalseSortToggleSetSetsSortToggleToNull()
+    {
+        $column = ActionGroupColumn::withName('my_name');
+        $column->sortToggle('foo_bar');
+
+        $column->sortable(false);
+
+        $this->assertNull($column->getSortToggle());
     }
 
     /**

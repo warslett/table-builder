@@ -13,25 +13,25 @@ interface TableBuilderInterface
      * @param ColumnInterface $column
      * @return $this
      */
-    public function addColumn(ColumnInterface $column): self;
+    public function add(ColumnInterface $column): self;
 
     /**
      * @param int $defaultRowsPerPage
      * @return $this
      */
-    public function setDefaultRowsPerPage(int $defaultRowsPerPage): self;
+    public function defaultRowsPerPage(int $defaultRowsPerPage): self;
 
     /**
      * @param int $maxRowsPerPage
      * @return $this
      */
-    public function setMaxRowsPerPage(int $maxRowsPerPage): self;
+    public function maxRowsPerPage(int $maxRowsPerPage): self;
 
     /**
      * @param array<int> $rowsPerPageOptions
      * @return $this
      */
-    public function setRowsPerPageOptions(array $rowsPerPageOptions): self;
+    public function rowsPerPageOptions(array $rowsPerPageOptions): self;
 
     /**
      * @param string $name

@@ -33,29 +33,26 @@ request adapters or implement your own.
 ``` php
 // Configure the table structure with a range of out the box column types
 $tableBuilder = $this->tableBuilderFactory->createTableBuilder()
-    ->setRowsPerPageOptions([10, 20, 50])
-    ->setDefaultRowsPerPage(10)
-    ->addColumn(TextColumn::withName('email')
-        ->setLabel('Email')
-        ->setSortToggle('email')
-        ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('email')))
-    ->addColumn(DateTimeColumn::withName('last_login')
-        ->setLabel('Last Login')
-        ->setDateTimeFormat('Y-m-d H:i:s')
-        ->setSortToggle('last_login')
-        ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('lastLogin')))
-    ->addColumn(ActionGroupColumn::withName('actions')
-        ->setLabel('Actions')
-        ->addActionBuilder(ActionBuilder::withName('update')
-            ->setLabel('Update')
-            ->setRoute('user_update', [
-                'id' => PropertyAccessAdapter::withPropertyPath('id')
-            ]))
-        ->addActionBuilder(ActionBuilder::withName('delete')
-            ->setLabel('Delete')
-            ->setRoute('user_delete', [
-                'id' => PropertyAccessAdapter::withPropertyPath('id')
-            ])));
+    ->rowsPerPageOptions([10, 20, 50])
+    ->defaultRowsPerPage(10)
+    ->add(TextColumn::withName('email')
+        ->label('Email')
+        ->property('email')
+        ->sortable())
+    ->add(DateTimeColumn::withName('last_login')
+        ->label('Last Login')
+        ->property('lastLogin')
+        ->format('Y-m-d H:i:s')
+        ->sortable())
+    ->add(ActionGroupColumn::withName('actions')
+        ->label('Actions')
+        ->add(ActionBuilder::withName('update')
+            ->label('Update')
+            ->route('user_update', ['id' => 'id'])) // map 'id' parameter to property path 'id'
+        ->add(ActionBuilder::withName('delete')
+            ->label('Delete')
+            ->route('user_delete', ['id' => 'id'])
+            ->attribute('extra_classes', ['btn-danger'])));
 
 // Build the table object
 $table = $tableBuilder->buildTable('users');
@@ -72,7 +69,10 @@ $dataAdapter = DoctrineOrmAdapter::withQueryBuilder($queryBuilder)
 $table->setDataAdapter($dataAdapter);
 
 // Uses parameters on the request to load data into the table with sorting and pagination
-$table->handleRequest(SymfonyHttpAdapter::withRequest($request));
+$table->handleSymfonyRequest($request);
+
+// OR with a Psr7 Request
+$table->handlePsr7Request($request);
 ```
 
 ### Table Rendering
@@ -118,9 +118,9 @@ return new JsonResponse($table);
 
 ## <a name="Dependencies"></a>Dependencies
 Table builder has no core dependencies however some optional features have dependencies.
+* CsvRenderer and related classes depends on `league/csv`
 * TwigRenderer and related classes depends on `twig/twig`
 * DoctrineORMAdapter data adapter depends on `doctrine/orm`
-* PropertyAccessAdapter value adapter depends on `symfony/property-access`
 * SymfonyHttpAdapter response adapter depends on `symfony/http-foundation`
 * Psr7Adapter response adapter depends on `psr/http-message`
 * SymfonyRoutingAdapter route generator adapter depends on `symfony/routing`

@@ -20,6 +20,7 @@ use WArslett\TableBuilder\TableHeading;
                 <?php if ($table->getSortColumnName() === $heading->getName() && false === $table->isSortedDescending()) : ?>
                     <a
                         href="?<?= http_build_query($table->getParams(['sort_column' => null, 'sort_dir' => null]), '', '&amp;') ?>"
+                        class="text-secondary"
                     >&#11205;</a>
                 <?php else : ?>
                     <a
@@ -30,6 +31,7 @@ use WArslett\TableBuilder\TableHeading;
                 <?php if ($table->getSortColumnName() === $heading->getName() && $table->isSortedDescending()) : ?>
                     <a
                         href="?<?= http_build_query($table->getParams(['sort_column' => null, 'sort_dir' => null]), '', '&amp;') ?>"
+                        class="text-secondary"
                     >&#11206;</a>
                 <?php else : ?>
                     <a

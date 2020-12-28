@@ -13,10 +13,9 @@ echo $routeGenerator->renderRoute('/user/%d/delete', [123]); // outputs /user/12
 If you are using SprintfAdapter you would configure your routes like this
 ```php
 use WArslett\TableBuilder\ActionBuilder;
-use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 $actionBuilder = ActionBuilder::withName('delete')
-    ->setRoute('/user/%d/delete', [PropertyAccessAdapter::withPropertyPath('id')]);
+    ->route('/user/%d/delete', ['id']);
 ```
 
 ## <a name="SymfonyRoutingAdapter"></a>SymfonyRoutingAdapter
@@ -32,10 +31,9 @@ echo $routeGenerator->renderRoute('user_delete', ['id' => 123]); // outputs /use
 If you are using SymfonyRoutingAdapter you would configure your routes like this
 ```php
 use WArslett\TableBuilder\ActionBuilder;
-use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 
 $actionBuilder = ActionBuilder::withName('delete')
-    ->setRoute('user_delete', ['id' => PropertyAccessAdapter::withPropertyPath('id')]);
+    ->route('user_delete', ['id' => 'id']);
 ```
 
 [Next: Value Adapters](./value_adapters.md)

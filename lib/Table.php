@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace WArslett\TableBuilder;
 
 use JsonSerializable;
+use Psr\Http\Message\RequestInterface as Psr7RequestInterface;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use WArslett\TableBuilder\Column\ColumnInterface;
 use WArslett\TableBuilder\DataAdapter\DataAdapterInterface;
 use WArslett\TableBuilder\Exception\DataAdapterException;
 use WArslett\TableBuilder\Exception\NoDataAdapterException;
 use WArslett\TableBuilder\Exception\SortToggleException;
+use WArslett\TableBuilder\RequestAdapter\ArrayRequestAdapter;
+use WArslett\TableBuilder\RequestAdapter\Psr7Adapter;
 use WArslett\TableBuilder\RequestAdapter\RequestAdapterInterface;
+use WArslett\TableBuilder\RequestAdapter\SymfonyHttpAdapter;
 
 class Table implements JsonSerializable
 {
@@ -93,7 +98,7 @@ class Table implements JsonSerializable
             if (null !== $sortToggle && false === $dataAdapter->canSort($sortToggle)) {
                 throw new SortToggleException(sprintf(
                     "The data adapter cannot sort using the toggle \"%s\" which is set on the column \"%s\". "
-                        . "Did you forget some config?",
+                    . "Did you forget some config?",
                     $sortToggle,
                     $column->getName()
                 ));
@@ -141,6 +146,42 @@ class Table implements JsonSerializable
         }, $this->dataAdapter->getPage($this->pageNumber, $this->rowsPerPage, $sortToggle, $this->isSortedDescending));
 
         return $this;
+    }
+
+    /**
+     * @codeCoverageIgnore - just an adapter
+     * @param array $parameters
+     * @return $this
+     * @throws DataAdapterException
+     * @throws NoDataAdapterException
+     */
+    public function handleParameters(array $parameters): self
+    {
+        return $this->handleRequest(ArrayRequestAdapter::withArray($parameters));
+    }
+
+    /**
+     * @codeCoverageIgnore - just an adapter
+     * @param Psr7RequestInterface $request
+     * @return $this
+     * @throws DataAdapterException
+     * @throws NoDataAdapterException
+     */
+    public function handlePsr7Request(Psr7RequestInterface $request): self
+    {
+        return $this->handleRequest(Psr7Adapter::withRequest($request));
+    }
+
+    /**
+     * @codeCoverageIgnore - just an adapter
+     * @param SymfonyRequest $request
+     * @return $this
+     * @throws DataAdapterException
+     * @throws NoDataAdapterException
+     */
+    public function handleSymfonyRequest(SymfonyRequest $request): self
+    {
+        return $this->handleRequest(SymfonyHttpAdapter::withRequest($request));
     }
 
     /**

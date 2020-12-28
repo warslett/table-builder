@@ -22,11 +22,11 @@ class TextColumnTest extends TestCase
      */
     public function testBuildTableCellNoValueAdapterThrowsException()
     {
-        $actionGroupColumn = TextColumn::withName('my_action_group');
+        $column = TextColumn::withName('my_action_group');
 
         $this->expectException(NoValueAdapterException::class);
 
-        $actionGroupColumn->buildTableCell([]);
+        $column->buildTableCell([]);
     }
 
     /**
@@ -36,9 +36,9 @@ class TextColumnTest extends TestCase
      */
     public function testBuildTableCellSetsRenderingTypeOnTableCell()
     {
-        $actionGroupColumn = TextColumn::withName('my_action_group')
-            ->setValueAdapter($this->mockValueAdapter('foo'));
-        $cell = $actionGroupColumn->buildTableCell([]);
+        $column = TextColumn::withName('my_action_group')
+            ->valueAdapter($this->mockValueAdapter('foo'));
+        $cell = $column->buildTableCell([]);
         $this->assertSame(TextColumn::class, $cell->getRenderingType());
     }
 
@@ -51,10 +51,10 @@ class TextColumnTest extends TestCase
     {
         $row = ['foo' => 'bar'];
         $valueAdapter = $this->mockValueAdapter('foo');
-        $actionGroupColumn = TextColumn::withName('my_action_group')
-            ->setValueAdapter($valueAdapter);
+        $column = TextColumn::withName('my_action_group')
+            ->valueAdapter($valueAdapter);
 
-        $actionGroupColumn->buildTableCell($row);
+        $column->buildTableCell($row);
 
         $valueAdapter->shouldHaveReceived('getValue')->once()->with($row);
     }
@@ -67,12 +67,41 @@ class TextColumnTest extends TestCase
     public function testBuildTableCellSetsValueOnCell()
     {
         $value = 'foo';
-        $actionGroupColumn = TextColumn::withName('my_action_group')
-            ->setValueAdapter($this->mockValueAdapter($value));
+        $column = TextColumn::withName('my_action_group')
+            ->valueAdapter($this->mockValueAdapter($value));
 
-        $cell = $actionGroupColumn->buildTableCell([]);
+        $cell = $column->buildTableCell([]);
 
         $this->assertSame($value, $cell->getValue());
+    }
+
+    public function testSortableSortToggleSetDoesNothing()
+    {
+        $column = TextColumn::withName('my_name');
+        $column->sortToggle('foo_bar');
+
+        $column->sortable();
+
+        $this->assertSame('foo_bar', $column->getSortToggle());
+    }
+
+    public function testSortableSortToggleNotSetSetsSortToggleToName()
+    {
+        $column = TextColumn::withName('my_name');
+
+        $column->sortable();
+
+        $this->assertSame('my_name', $column->getSortToggle());
+    }
+
+    public function testSortableFalseSortToggleSetSetsSortToggleToNull()
+    {
+        $column = TextColumn::withName('my_name');
+        $column->sortToggle('foo_bar');
+
+        $column->sortable(false);
+
+        $this->assertNull($column->getSortToggle());
     }
 
     /**
@@ -81,8 +110,8 @@ class TextColumnTest extends TestCase
     public function testBuildTableHeadingSetsNameOnHeading()
     {
         $name = 'my_column';
-        $actionGroupColumn = TextColumn::withName($name);
-        $heading = $actionGroupColumn->buildTableHeading();
+        $column = TextColumn::withName($name);
+        $heading = $column->buildTableHeading();
         $this->assertSame($name, $heading->getName());
     }
 
@@ -92,8 +121,8 @@ class TextColumnTest extends TestCase
     public function testBuildTableHeadingSetsLabelOnHeading()
     {
         $label = 'My Label';
-        $actionGroupColumn = TextColumn::withName('my_action_group')->setLabel($label);
-        $heading = $actionGroupColumn->buildTableHeading();
+        $column = TextColumn::withName('my_action_group')->label($label);
+        $heading = $column->buildTableHeading();
         $this->assertSame($label, $heading->getLabel());
     }
 

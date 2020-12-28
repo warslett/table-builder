@@ -7,4 +7,4 @@ application.
 return new JsonResponse($table);
 ```
 
-[Next: Request Adapters](../request_adapters.md)
+[Next: Route Generators](../route_generators.md)

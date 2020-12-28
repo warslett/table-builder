@@ -28,7 +28,7 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setDefaultRowsPerPage(1)
+            ->defaultRowsPerPage(1)
             ->buildTable('user_table')
         ;
 
@@ -45,7 +45,7 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setDefaultRowsPerPage(1)
+            ->defaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar'],
@@ -70,7 +70,7 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setDefaultRowsPerPage(1)
+            ->defaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([]))
             ->handleRequest(ArrayRequestAdapter::withArray([]))
@@ -89,7 +89,7 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setDefaultRowsPerPage(1)
+            ->defaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar'],
@@ -111,7 +111,7 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setDefaultRowsPerPage(1)
+            ->defaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar'],
@@ -134,9 +134,9 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName('foo')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
-            ->setDefaultRowsPerPage(1)
+            ->add(TextColumn::withName('foo')
+                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
+            ->defaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar'],
@@ -159,9 +159,9 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName('foo')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
-            ->setDefaultRowsPerPage(1)
+            ->add(TextColumn::withName('foo')
+                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
+            ->defaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar'],
@@ -184,7 +184,7 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setDefaultRowsPerPage(2)
+            ->defaultRowsPerPage(2)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar'],
@@ -208,7 +208,7 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setDefaultRowsPerPage(1)
+            ->defaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar'],
@@ -232,7 +232,7 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setDefaultRowsPerPage(2)
+            ->defaultRowsPerPage(2)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar'],
@@ -255,7 +255,7 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setDefaultRowsPerPage(2)
+            ->defaultRowsPerPage(2)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar'],
@@ -279,7 +279,7 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setMaxRowsPerPage(2)
+            ->maxRowsPerPage(2)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar'],
@@ -295,12 +295,12 @@ class TablePaginationIntegrationTest extends TestCase
     /**
      * @return void
      */
-    public function testSetRowsPerPageOptions(): void
+    public function testRowsPerPageOptions(): void
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $rowsPerPageOptions = [10, 20, 50];
         $table = $tableBuilderFactory->createTableBuilder()
-            ->setRowsPerPageOptions($rowsPerPageOptions)
+            ->rowsPerPageOptions($rowsPerPageOptions)
             ->buildTable('user_table')
         ;
 

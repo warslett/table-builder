@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace WArslett\TableBuilder;
 
 use Closure;
+use WArslett\TableBuilder\Exception\ValueAdapterException;
+use WArslett\TableBuilder\ValueAdapter\CallbackAdapter;
+use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 use WArslett\TableBuilder\ValueAdapter\ValueAdapterInterface;
 
 final class ActionBuilder implements ActionBuilderInterface
@@ -45,7 +48,7 @@ final class ActionBuilder implements ActionBuilderInterface
      * @param string $label
      * @return ActionBuilder
      */
-    public function setLabel(string $label): ActionBuilder
+    public function label(string $label): ActionBuilder
     {
         $this->label = $label;
         return $this;
@@ -64,21 +67,43 @@ final class ActionBuilder implements ActionBuilderInterface
      * @param Closure $condition
      * @return $this
      */
-    public function setCondition(Closure $condition): self
+    public function condition(Closure $condition): self
     {
         $this->condition = $condition;
         return $this;
     }
 
     /**
+     * @psalm-suppress RedundantConditionGivenDocblockType - docblock type is only enforced in function
      * @param string $route
-     * @param array<mixed, ValueAdapterInterface> $routeParams
+     * @param array<mixed, ValueAdapterInterface|string|Closure> $routeParams - A map of route parameters to the
+     *                                                                          corresponding property of the row.
+     *                                                                          Either a property path as a string, a
+     *                                                                          Closure or an implementation of
+     *                                                                          ValueAdapter
      * @return $this
+     * @throws ValueAdapterException
      */
-    public function setRoute(string $route, array $routeParams = []): self
+    public function route(string $route, array $routeParams = []): self
     {
         $this->route = $route;
-        $this->routeParams = $routeParams;
+
+        $this->routeParams = array_map(function ($parameter): ValueAdapterInterface {
+            if ($parameter instanceof ValueAdapterInterface) {
+                return $parameter;
+            }
+
+            if (is_string($parameter)) {
+                return PropertyAccessAdapter::withPropertyPath($parameter);
+            }
+
+            if ($parameter instanceof Closure) {
+                return CallbackAdapter::withCallback($parameter);
+            }
+
+            throw new ValueAdapterException("Each parameter in a route must be either a property path, a "
+                . "callback or an implementation of ValueAdapterInterface");
+        }, $routeParams);
         return $this;
     }
 
@@ -87,7 +112,7 @@ final class ActionBuilder implements ActionBuilderInterface
      * @param mixed $value
      * @return $this
      */
-    public function setAttribute(string $attribute, $value): self
+    public function attribute(string $attribute, $value): self
     {
         $this->attributes[$attribute] = $value;
         return $this;

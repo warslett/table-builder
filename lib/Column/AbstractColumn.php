@@ -41,7 +41,7 @@ abstract class AbstractColumn implements ColumnInterface
      * @param string|null $label
      * @return $this
      */
-    public function setLabel(?string $label): self
+    public function label(?string $label): self
     {
         $this->label = $label;
         return $this;
@@ -59,9 +59,24 @@ abstract class AbstractColumn implements ColumnInterface
      * @param string|null $sortToggle
      * @return $this
      */
-    public function setSortToggle(?string $sortToggle): self
+    public function sortToggle(?string $sortToggle): self
     {
         $this->sortToggle = $sortToggle;
+        return $this;
+    }
+
+    /**
+     * @param bool $isSortable
+     * @return $this
+     */
+    public function sortable(bool $isSortable = true): self
+    {
+        if (false === $isSortable) {
+            $this->sortToggle = null;
+        } elseif ($this->sortToggle === null) {
+            $this->sortToggle = $this->name;
+        }
+
         return $this;
     }
 

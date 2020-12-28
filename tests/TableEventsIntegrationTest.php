@@ -27,8 +27,8 @@ class TableEventsIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName('foo')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
+            ->add(TextColumn::withName('foo')
+                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
                 ->afterBuildCell(function (TableCell $cell) {
                     if ($cell->getValue() > 5) {
                         $cell->setAttribute('extra_classes', ['text-red']);
@@ -57,8 +57,8 @@ class TableEventsIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName('foo')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
+            ->add(TextColumn::withName('foo')
+                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]'))
                 ->afterBuildCell(function (TableCell $cell) {
                     $cell->setValue(ucwords($cell->getValue()));
                 }))

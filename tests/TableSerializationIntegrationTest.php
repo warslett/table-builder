@@ -84,7 +84,7 @@ class TableSerializationIntegrationTest extends TestCase
         $columnName = 'foo';
         $columnLabel = 'Foo Label';
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName($columnName)->setLabel($columnLabel))
+            ->add(TextColumn::withName($columnName)->label($columnLabel))
             ->buildTable('user_table')
         ;
 
@@ -118,8 +118,8 @@ class TableSerializationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(TextColumn::withName('foo')
-                ->setValueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
+            ->add(TextColumn::withName('foo')
+                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar', 'baz' => 'qux']
@@ -171,10 +171,10 @@ class TableSerializationIntegrationTest extends TestCase
         $paramName = 'route_id';
         $paramValue = 123;
         $table = $tableBuilderFactory->createTableBuilder()
-            ->addColumn(ActionGroupColumn::withName($columnName)
-                ->addActionBuilder(ActionBuilder::withName($actionName)
-                    ->setLabel($actionLabel)
-                    ->setRoute($actionRoute, [
+            ->add(ActionGroupColumn::withName($columnName)
+                ->add(ActionBuilder::withName($actionName)
+                    ->label($actionLabel)
+                    ->route($actionRoute, [
                         $paramName => PropertyAccessAdapter::withPropertyPath('[id]')
                     ])))
             ->buildTable('user_table')

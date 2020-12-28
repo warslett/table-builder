@@ -23,7 +23,7 @@ final class DateTimeColumn extends AbstractColumn
      * @param string $dateTimeFormat
      * @return $this
      */
-    public function setDateTimeFormat(string $dateTimeFormat): self
+    public function format(string $dateTimeFormat): self
     {
         $this->dateTimeFormat = $dateTimeFormat;
         return $this;
