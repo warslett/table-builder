@@ -7,19 +7,19 @@
 **THIS PACKAGE IS CURRENTLY UNDER DEVELOPMENT**
 
 Table builder provides table abstraction, table building and table rendering. Allowing you to configure your tables,
-load your data into them and then render them in a variety of ways with common table functionality such as pagination
-and sorting taken care of.
+load your data into them and then render them in a variety of ways. The package can help you implement functionality
+common to most table actions in CRUD applications including pagination, sorting, row actions, conditional formatting,
+and exporting the table to csv.
 
 ## Installation
 `composer require warslett/table-builder`
 
 If you are using symfony there is an optional bundle that will configure the services:
 
-`composer require warslett/table-builder warslett/table-builder-bundle`
+`composer require warslett/table-builder-bundle warslett/table-builder`
 
 ## Requirements
-PHP 7.4 or 8.0
-This package has no core composer dependencies however [some optional features have dependencies](#Dependencies).
+PHP 7.4 or 8.0.
 
 ## Documentation
 Full documentation available [here](https://github.com/warslett/table-builder/blob/master/docs/en/index.md).
@@ -117,7 +117,7 @@ return new JsonResponse($table);
 ```
 
 ## <a name="Dependencies"></a>Dependencies
-Table builder has no core dependencies however some optional features have dependencies.
+Table builder has minimal core dependencies however some optional features have additional dependencies.
 * CsvRenderer and related classes depends on `league/csv`
 * TwigRenderer and related classes depends on `twig/twig`
 * DoctrineORMAdapter data adapter depends on `doctrine/orm`
