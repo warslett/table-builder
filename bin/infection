@@ -11,5 +11,6 @@ docker run -it --rm -v $PWD:/usr/src/app \
   -e CIRCLE_PROJECT_REPONAME \
   -e CIRCLE_REPOSITORY_URL \
   -e STRYKER_DASHBOARD_API_KEY \
-  -w /usr/src/app php:table-builder \
+  -w /usr/src/app \
+  php:table-builder \
   vendor/bin/infection "$@"

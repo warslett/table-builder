@@ -1,3 +1,14 @@
 #!/usr/bin/env sh
 
-docker run -it --rm -v $PWD:/usr/src/app -w /usr/src/app php:table-builder php vendor/bin/psalm "$@"
+docker run -it --rm -v $PWD:/usr/src/app \
+  -e CIRCLECI \
+  -e CI_PULL_REQUEST \
+  -e CIRCLE_BUILD_NUM \
+  -e CIRCLE_BUILD_URL \
+  -e CIRCLE_SHA1 \
+  -e CIRCLE_BRANCH \
+  -e CIRCLE_PROJECT_USERNAME \
+  -e CIRCLE_PROJECT_REPONAME \
+  -e CIRCLE_REPOSITORY_URL \
+  -w /usr/src/app \
+  php:table-builder php vendor/bin/psalm "$@"
