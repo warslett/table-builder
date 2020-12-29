@@ -25,7 +25,7 @@ final class DoctrineOrmAdapter implements DataAdapterInterface
      * @param int $rowsPerPage
      * @param string|null $sortToggle
      * @param bool $isSortedDescending
-     * @return array
+     * @return array<mixed>
      */
     public function getPage(
         int $pageNumber,
@@ -35,7 +35,7 @@ final class DoctrineOrmAdapter implements DataAdapterInterface
     ): array {
         $queryBuilder = clone($this->queryBuilder);
 
-        if (null !== $sortToggle && isset($this->sortToggleMapping[$sortToggle])) {
+        if (isset($this->sortToggleMapping[$sortToggle])) {
             $queryBuilder->orderBy($this->sortToggleMapping[$sortToggle], $isSortedDescending ? 'DESC' : 'ASC');
         }
 
@@ -63,7 +63,6 @@ final class DoctrineOrmAdapter implements DataAdapterInterface
             throw new DataAdapterException("Query Builder should have exactly one from part");
         }
 
-        /** @var ORM\Query\Expr\From $from */
         $from = $fromParts[0];
 
         return (int) $queryBuilder

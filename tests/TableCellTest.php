@@ -17,4 +17,25 @@ class TableCellTest extends TestCase
 
         new TableCell('foo', 'bar', new stdClass());
     }
+
+    public function testGetAttributeDoesntExistReturnsDefault()
+    {
+        $cell = new TableCell('foo', 'bar', 'value');
+        $default = 'quux';
+
+        $attribute = $cell->getAttribute('qux', $default);
+
+        $this->assertSame($default, $attribute);
+    }
+
+    public function testGetAttributeExistsReturnsAttribute()
+    {
+        $cell = new TableCell('foo', 'bar', 'value');
+        $value = 'quuz';
+        $cell->setAttribute('qux', $value);
+
+        $attribute = $cell->getAttribute('qux', 'quux');
+
+        $this->assertSame($value, $attribute);
+    }
 }

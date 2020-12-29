@@ -25,7 +25,7 @@ jobs:
 
       - run:
           name: "Run Psalm (PHP Static Analysis)"
-          command: "bin/psalm"
+          command: "bin/psalm --shepherd --stats"
 
       - run:
           name: "Run PHPUnit (Unit Tests)"
@@ -45,7 +45,7 @@ jobs:
 
       - run:
           name: "Run Infection PHP (Mutation Testing)"
-          command: "bin/infection --min-msi=85"
+          command: "bin/infection --min-msi=95"
 
       - store_test_results:
           path: ".circleci/test-results"

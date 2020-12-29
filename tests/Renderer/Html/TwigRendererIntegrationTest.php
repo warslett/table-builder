@@ -234,7 +234,7 @@ class TwigRendererIntegrationTest extends TestCase
 
         $output = $twigRenderer->renderTableCellValue($table, $cell);
 
-        $this->assertSame('MY_BLOCKbarMY_BLOCK', $output);
+        $this->assertSame('MY_BLOCKuser_table:barMY_BLOCK', $output);
     }
 
     /**
@@ -249,9 +249,9 @@ class TwigRendererIntegrationTest extends TestCase
         $twigRenderer = $this->buildRenderer('table-builder/bootstrap4.html.twig');
         $twigRenderer->registerCellValueTemplate(TextColumn::class, 'column_template.html.twig');
 
-        $output = $twigRenderer->renderTableCellValue($table, $cell);
+        $output = trim($twigRenderer->renderTableCellValue($table, $cell));
 
-        $this->assertSame('MY_TEMPLATEbarMY_TEMPLATE', $output);
+        $this->assertSame('MY_TEMPLATEuser_table:barMY_TEMPLATE', $output);
     }
 
     /**
@@ -267,9 +267,9 @@ class TwigRendererIntegrationTest extends TestCase
         $twigRenderer->registerCellValueBlock(TextColumn::class, 'my_cell_value_block');
         $twigRenderer->registerCellValueTemplate(TextColumn::class, 'column_template.html.twig');
 
-        $output = $twigRenderer->renderTableCellValue($table, $cell);
+        $output = trim($twigRenderer->renderTableCellValue($table, $cell));
 
-        $this->assertSame('MY_TEMPLATEbarMY_TEMPLATE', $output);
+        $this->assertSame('MY_TEMPLATEuser_table:barMY_TEMPLATE', $output);
     }
 
     /**

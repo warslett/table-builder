@@ -9,7 +9,7 @@ interface RouteGeneratorAdapterInterface
 
     /**
      * @param string $route
-     * @param array $params
+     * @param array<int|string, int|string> $params
      * @return string
      */
     public function renderRoute(string $route, array $params = []): string;

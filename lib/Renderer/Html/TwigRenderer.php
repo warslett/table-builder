@@ -94,7 +94,7 @@ final class TwigRenderer implements HtmlTableRendererInterface
 
     /**
      * @param Table $table
-     * @param array $row
+     * @param array<TableCell> $row
      * @return string
      * @throws Throwable
      */
@@ -149,7 +149,7 @@ final class TwigRenderer implements HtmlTableRendererInterface
 
     /**
      * @param string $route
-     * @param array $params
+     * @param array<int|string, int|string> $params
      * @return string
      */
     public function renderTableRoute(string $route, array $params = []): string

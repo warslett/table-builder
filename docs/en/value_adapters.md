@@ -34,8 +34,7 @@ $column->callback(fn($user) => $user->getName());
 ```
 
 ## <a name="PropertyAccessAdapter"></a>Property Access Adapter
-Property Access Adapter is dependent on `symfony/property-access` and allows you to select the value using a Symfony
-Property Access property path.
+Property Access Adapter allows you to select the value using a Symfony Property Access property path.
 ```php
 use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 

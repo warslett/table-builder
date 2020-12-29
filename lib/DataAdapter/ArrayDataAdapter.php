@@ -14,6 +14,9 @@ final class ArrayDataAdapter implements DataAdapterInterface
     /** @var array<string, Closure> */
     private array $sortToggleMapping = [];
 
+    /**
+     * @param array $array<mixed>
+     */
     public function __construct(array $array)
     {
         $this->array = $array;
@@ -24,7 +27,7 @@ final class ArrayDataAdapter implements DataAdapterInterface
      * @param int $rowsPerPage
      * @param string|null $sortToggle
      * @param bool $isSortedDescending
-     * @return array
+     * @return array<mixed>
      */
     public function getPage(
         int $pageNumber,
@@ -34,7 +37,7 @@ final class ArrayDataAdapter implements DataAdapterInterface
     ): array {
         $array = $this->array;
 
-        if (null !== $sortToggle && isset($this->sortToggleMapping[$sortToggle])) {
+        if (isset($this->sortToggleMapping[$sortToggle])) {
             $callable = $this->sortToggleMapping[$sortToggle];
             usort($array, function ($a, $b) use ($callable, $isSortedDescending) {
                 $result = $callable($a, $b);
@@ -53,6 +56,10 @@ final class ArrayDataAdapter implements DataAdapterInterface
         return count($this->array);
     }
 
+    /**
+     * @param string $sortToggle
+     * @return bool
+     */
     public function canSort(string $sortToggle): bool
     {
         return isset($this->sortToggleMapping[$sortToggle]);
@@ -70,7 +77,7 @@ final class ArrayDataAdapter implements DataAdapterInterface
     }
 
     /**
-     * @param array $array
+     * @param array<mixed> $array
      * @return $this
      */
     public static function withArray(array $array): self

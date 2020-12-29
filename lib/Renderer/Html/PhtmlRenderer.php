@@ -21,8 +21,13 @@ final class PhtmlRenderer implements HtmlTableRendererInterface
         BooleanColumn::class => "boolean_cell_value.phtml"
     ];
 
+    /** @var RouteGeneratorAdapterInterface */
     private RouteGeneratorAdapterInterface $routeGeneratorAdapter;
+
+    /** @var string */
     private string $themeDirectoryPath;
+
+    /** @var array<string, string> */
     private array $cellValueTemplates;
 
     public function __construct(
@@ -129,7 +134,7 @@ final class PhtmlRenderer implements HtmlTableRendererInterface
 
     /**
      * @param string $route
-     * @param array $params
+     * @param array<int|string, int|string> $params
      * @return string
      */
     public function renderTableRoute(string $route, array $params = []): string
@@ -159,7 +164,7 @@ final class PhtmlRenderer implements HtmlTableRendererInterface
     /**
      * @psalm-suppress UnresolvableInclude - unresolvable include is template
      * @param string $template
-     * @param array $params
+     * @param array<string, mixed> $params
      * @return string
      */
     private function renderTemplate(string $template, array $params = []): string

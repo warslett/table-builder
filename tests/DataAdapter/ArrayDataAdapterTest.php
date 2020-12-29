@@ -18,9 +18,9 @@ class ArrayDataAdapterTest extends TestCase
             ['foo' => 'qux'],
         ]);
 
-        $data = $dataAdapter->getPage(1, 1);
+        $data = $dataAdapter->getPage(2, 2);
 
-        $this->assertSame([['foo' => 'bar']], $data);
+        $this->assertSame([['foo' => 'qux']], $data);
     }
 
     public function testGetPageSortsResults()

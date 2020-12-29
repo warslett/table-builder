@@ -6,6 +6,7 @@ namespace WArslett\TableBuilder\Tests\Renderer\Html;
 
 use Exception;
 use SimpleXMLElement;
+use Symfony\Component\Routing\Router;
 use Throwable;
 use WArslett\TableBuilder\ActionBuilder;
 use WArslett\TableBuilder\Column\ActionGroupColumn;
@@ -256,7 +257,7 @@ class PhtmlRendererIntegrationTest extends TestCase
 
         $output = $renderer->renderTableCellValue($table, $cell);
 
-        $this->assertSame('MY_TEMPLATEbarMY_TEMPLATE', trim($output));
+        $this->assertSame('MY_TEMPLATEuser_table:barMY_TEMPLATE', trim($output));
     }
 
     /**
@@ -283,7 +284,7 @@ class PhtmlRendererIntegrationTest extends TestCase
      * @return void
      * @throws Throwable
      */
-    public function testRenderTableRoute()
+    public function testRenderTableRouteSprintfAdapter()
     {
         $renderer = new PhtmlRenderer(new SprintfAdapter());
 

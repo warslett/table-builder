@@ -66,7 +66,7 @@ interface HtmlTableRendererInterface
     /**
      * Render a table route with params as a url
      * @param string $route
-     * @param array $params
+     * @param array<int|string, int|string> $params
      * @return string
      */
     public function renderTableRoute(string $route, array $params = []): string;

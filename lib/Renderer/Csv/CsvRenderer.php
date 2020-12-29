@@ -45,7 +45,7 @@ class CsvRenderer
                     return $transformedValue;
                 }
 
-                return (string) $cell->getValue();
+                return $cell->getValue();
             }, $row));
         }
     }
@@ -54,7 +54,7 @@ class CsvRenderer
      * @param bool $includeHeader
      * @return $this
      */
-    public function includeHeader(bool $includeHeader = true): self
+    public function includeHeader(bool $includeHeader): self
     {
         $this->includeHeader = $includeHeader;
         return $this;

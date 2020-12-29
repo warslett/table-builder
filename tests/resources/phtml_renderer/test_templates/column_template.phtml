@@ -11,4 +11,4 @@ use WArslett\TableBuilder\TableCell;
  */
 ?>
 
-MY_TEMPLATE<?= $cell->getValue() ?>MY_TEMPLATE
+MY_TEMPLATE<?= $table->getName() . ":" . $cell->getValue() ?>MY_TEMPLATE

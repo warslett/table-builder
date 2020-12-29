@@ -4,16 +4,11 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder\Tests;
 
-use WArslett\TableBuilder\Action;
-use WArslett\TableBuilder\ActionBuilder;
-use WArslett\TableBuilder\Column\ActionGroupColumn;
 use WArslett\TableBuilder\Column\TextColumn;
 use WArslett\TableBuilder\Exception\DataAdapterException;
 use WArslett\TableBuilder\Exception\SortToggleException;
-use WArslett\TableBuilder\RequestAdapter\RequestAdapterInterface;
 use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 use WArslett\TableBuilder\DataAdapter\ArrayDataAdapter;
-use WArslett\TableBuilder\Exception\NoValueAdapterException;
 use WArslett\TableBuilder\Exception\NoDataAdapterException;
 use WArslett\TableBuilder\RequestAdapter\ArrayRequestAdapter;
 use WArslett\TableBuilder\TableBuilderFactory;
@@ -89,11 +84,13 @@ class TablePaginationIntegrationTest extends TestCase
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->defaultRowsPerPage(1)
+            ->defaultRowsPerPage(3)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar'],
-                ['foo' => 'baz']
+                ['foo' => 'baz'],
+                ['foo' => 'qux'],
+                ['foo' => 'quux']
             ]))
             ->handleRequest(ArrayRequestAdapter::withArray([]))
         ;
@@ -142,7 +139,7 @@ class TablePaginationIntegrationTest extends TestCase
                 ['foo' => 'bar'],
                 ['foo' => 'baz']
             ]))
-            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['page' => 1]]))
+            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['page' => '1']]))
         ;
 
         $this->assertArrayHasKey(0, $table->getRows());
@@ -167,7 +164,7 @@ class TablePaginationIntegrationTest extends TestCase
                 ['foo' => 'bar'],
                 ['foo' => 'baz']
             ]))
-            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['page' => 2]]))
+            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['page' => '2']]))
         ;
 
         $this->assertArrayHasKey(0, $table->getRows());
@@ -191,7 +188,7 @@ class TablePaginationIntegrationTest extends TestCase
                 ['foo' => 'baz'],
                 ['foo' => 'qux']
             ]))
-            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['page' => 1]]))
+            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['page' => '1']]))
         ;
 
         $this->assertArrayHasKey(0, $table->getRows());
@@ -215,7 +212,7 @@ class TablePaginationIntegrationTest extends TestCase
                 ['foo' => 'baz'],
                 ['foo' => 'qux']
             ]))
-            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['page' => 2]]))
+            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['page' => '2']]))
         ;
 
         $this->assertArrayHasKey(0, $table->getRows());
@@ -239,7 +236,7 @@ class TablePaginationIntegrationTest extends TestCase
                 ['foo' => 'baz'],
                 ['foo' => 'qux']
             ]))
-            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['rows_per_page' => 1]]))
+            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['rows_per_page' => '1']]))
         ;
 
         $this->assertSame(1, $table->getRowsPerPage());
@@ -262,7 +259,7 @@ class TablePaginationIntegrationTest extends TestCase
                 ['foo' => 'baz'],
                 ['foo' => 'qux']
             ]))
-            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['rows_per_page' => 1]]))
+            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['rows_per_page' => '1']]))
         ;
 
         $this->assertArrayHasKey(0, $table->getRows());
@@ -286,7 +283,7 @@ class TablePaginationIntegrationTest extends TestCase
                 ['foo' => 'baz'],
                 ['foo' => 'qux']
             ]))
-            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['rows_per_page' => 3]]))
+            ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['rows_per_page' => '3']]))
         ;
 
         $this->assertSame(2, $table->getRowsPerPage());

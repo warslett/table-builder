@@ -33,9 +33,9 @@ use WArslett\TableBuilder\Column\DateTimeColumn;
 
 $column = DateTimeColumn::withName('my_datetime_column')
     ->label('My Column Label Heading')
-    ->property('myDateProperty');
+    ->property('myDateProperty')
     ->format('Y-m-d H:i:s')
-    ->sortable()
+    ->sortable();
 ```
 DateTimeColumn includes the configuration method format which takes a
 [php date format string](https://www.php.net/manual/en/datetime.format.php). If no format is provided it will default to

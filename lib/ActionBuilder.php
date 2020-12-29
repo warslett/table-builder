@@ -76,11 +76,9 @@ final class ActionBuilder implements ActionBuilderInterface
     /**
      * @psalm-suppress RedundantConditionGivenDocblockType - docblock type is only enforced in function
      * @param string $route
-     * @param array<mixed, ValueAdapterInterface|string|Closure> $routeParams - A map of route parameters to the
-     *                                                                          corresponding property of the row.
-     *                                                                          Either a property path as a string, a
-     *                                                                          Closure or an implementation of
-     *                                                                          ValueAdapter
+     * @param array<int|string, ValueAdapterInterface|string|Closure> $routeParams - A map of route parameters to the
+     *     corresponding property of the row. Either a property path as a string, a Closure or an implementation of
+     *     ValueAdapter
      * @return $this
      * @throws ValueAdapterException
      */

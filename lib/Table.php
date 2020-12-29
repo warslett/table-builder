@@ -185,8 +185,10 @@ class Table implements JsonSerializable
     }
 
     /**
-     * @param array $merge - an array of params to merge into the table params for this table
-     * @return array - the query params of the current request merged with any provided table params
+     * @param array $merge - an array of params to merge into the table
+     *     params for this table
+     * @return array - the query params of the current request merged with
+     *     any provided table params
      */
     public function getParams(array $merge = []): array
     {

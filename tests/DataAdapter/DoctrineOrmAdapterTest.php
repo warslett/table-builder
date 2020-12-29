@@ -34,6 +34,21 @@ class DoctrineOrmAdapterTest extends TestCase
         $query->shouldHaveReceived('setMaxResults')->once()->with($rowsPerPage);
     }
 
+    public function testGetPageDoesNotAlterOriginalQuery(): void
+    {
+        $query = $this->mockQueryWithResult();
+        $entityManager = $this->mockEntityManager($query);
+        $queryBuilder = new QueryBuilder($entityManager);
+        $queryBuilder->select('u')->from('User', 'u');
+        $dql = $queryBuilder->getDQL();
+        $adapter = DoctrineOrmAdapter::withQueryBuilder($queryBuilder)
+            ->mapSortToggle('foo', 'bar');
+
+        $adapter->getPage(1, 10, 'foo');
+
+        $this->assertSame($dql, $queryBuilder->getDQL());
+    }
+
     public function testGetPageWithSortToggleSetsOrderByOnQuery(): void
     {
         $query = $this->mockQueryWithResult();
@@ -75,6 +90,29 @@ class DoctrineOrmAdapterTest extends TestCase
         $actual = $adapter->getPage($pageNumber, $rowsPerPage);
 
         $this->assertSame($result, $actual);
+    }
+
+    /**
+     * @return void
+     * @throws DataAdapterException
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function testCountDoesNotAlterOriginalQuery(): void
+    {
+        $entityManager = $this->mockEntityManager(
+            $this->mockQueryWithSingleScalarResult('2'),
+            $this->mockExpressionBuilder('count(u)')
+        );
+        $queryBuilder = new QueryBuilder($entityManager);
+        $queryBuilder->select('u')->from('User', 'u');
+        $dql = $queryBuilder->getDQL();
+        $adapter = DoctrineOrmAdapter::withQueryBuilder($queryBuilder)
+            ->mapSortToggle('foo', 'bar');
+
+        $adapter->countTotalRows();
+
+        $this->assertSame($dql, $queryBuilder->getDQL());
     }
 
     /**

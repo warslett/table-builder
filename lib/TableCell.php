@@ -18,7 +18,7 @@ class TableCell implements JsonSerializable
     /** @var string */
     private string $renderingType;
 
-    /** @var mixed */
+    /** @var T|null */
     private $value;
 
     /** @var array<string, mixed> */
@@ -58,7 +58,7 @@ class TableCell implements JsonSerializable
     }
 
     /**
-     * @return T
+     * @return T|null
      */
     public function getValue()
     {
@@ -66,7 +66,7 @@ class TableCell implements JsonSerializable
     }
 
     /**
-     * @param T $value
+     * @param T|null $value
      */
     public function setValue($value): void
     {

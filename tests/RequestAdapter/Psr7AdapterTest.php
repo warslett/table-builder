@@ -16,7 +16,7 @@ class Psr7AdapterTest extends TestCase
 
     public function testGetParameters()
     {
-        $queryString = 'table%5Bpage%5D=2&table%5Brows_per_page%5D=2&table%5Bsort_column%5D=name';
+        $queryString = 'table%5Bpage%5D=2&table%5Brows_per_page%5D=2&table%5Bsort_column%5D=name&unrelated_attr=foo';
         $adapter = Psr7Adapter::withRequest($this->mockRequest($queryString));
 
         $actual = $adapter->getParameters();
@@ -26,7 +26,8 @@ class Psr7AdapterTest extends TestCase
                 'page' => '2',
                 'rows_per_page' => '2',
                 'sort_column' => 'name'
-            ]
+            ],
+            'unrelated_attr' => 'foo'
         ], $actual);
     }
 

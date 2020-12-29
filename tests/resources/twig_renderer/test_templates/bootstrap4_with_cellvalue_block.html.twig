@@ -1,3 +1,3 @@
 {% extends 'table-builder/bootstrap4.html.twig' %}
 
-{% block my_cell_value_block %}MY_BLOCK{{ cell.value }}MY_BLOCK{% endblock %}
+{% block my_cell_value_block %}MY_BLOCK{{ table.name }}:{{ cell.value }}MY_BLOCK{% endblock %}
