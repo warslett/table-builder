@@ -14,15 +14,25 @@ use WArslett\TableBuilder\ValueAdapter\ValueAdapterInterface;
 class ActionBuilderTest extends TestCase
 {
 
-    public function testBuildActionNoLabelSetsNameAsLabel()
+    public function testBuildNoLabelSetsTitleCaseNameAsLabel()
     {
-        $name = 'foo';
-        $builder = new ActionBuilder($name);
+        $builder = ActionBuilder::withName('foo_bar');
 
         $action = $builder->buildAction([]);
         $label = $action->getLabel();
 
-        $this->assertSame($name, $label);
+        $this->assertSame('Foo Bar', $label);
+    }
+
+    public function testBuildNoLabelNameIsNotConvertableSetsNameAsLabel()
+    {
+        $columnName = hex2bin('afb1e7f88c26d7b7cb81aa9632c02ca8');
+        $builder = ActionBuilder::withName($columnName);
+
+        $action = $builder->buildAction([]);
+        $label = $action->getLabel();
+
+        $this->assertSame($columnName, $label);
     }
 
     public function testBuildActionWithLabelSetsLabel()

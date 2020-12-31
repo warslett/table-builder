@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace WArslett\TableBuilder\ValueAdapter;
 
 use Closure;
+use WArslett\TableBuilder\Column\AbstractColumn;
 use WArslett\TableBuilder\Exception\NoValueAdapterException;
 
+/**
+ * @psalm-require-extends \WArslett\TableBuilder\Column\AbstractColumn
+ */
 trait ValueAdapterTrait
 {
     private ?ValueAdapterInterface $valueAdapter = null;
@@ -62,5 +66,17 @@ trait ValueAdapterTrait
                 sprintf("Cannot handle request until value adapter has been set for %s", $this->name)
             );
         }
+    }
+
+    /**
+     * @param string $property
+     * @return static
+     */
+    public static function withProperty(string $property): self
+    {
+        /** @var static $column */
+        $column = self::withName($property);
+        $column->property($property);
+        return $column;
     }
 }

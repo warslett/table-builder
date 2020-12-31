@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace WArslett\TableBuilder\Column;
 
 use Closure;
+use Jawira\CaseConverter\CaseConverterException;
+use Jawira\CaseConverter\Convert;
 use WArslett\TableBuilder\Exception\NoValueAdapterException;
 use WArslett\TableBuilder\Exception\ValueException;
 use WArslett\TableBuilder\TableCell;
@@ -128,6 +130,15 @@ abstract class AbstractColumn implements ColumnInterface
      */
     public static function withName(string $name): self
     {
-        return new static($name);
+        $column = new static($name);
+
+        try {
+            $converter = new Convert($name);
+            $column->label = $converter->toTitle();
+        } catch (CaseConverterException $e) {
+            $column->label = $name;
+        }
+
+        return $column;
     }
 }

@@ -134,7 +134,7 @@ class TableSerializationIntegrationTest extends TestCase
             'headings' => [
                 'foo' => [
                     'name' => 'foo',
-                    'label' => 'foo',
+                    'label' => 'Foo',
                     'is_sortable' => false
                 ]
             ],
@@ -191,7 +191,7 @@ class TableSerializationIntegrationTest extends TestCase
             'headings' => [
                 'actions' => [
                     'name' => 'actions',
-                    'label' => 'actions',
+                    'label' => 'Actions',
                     'is_sortable' => false
                 ]
             ],

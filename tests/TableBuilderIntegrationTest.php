@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace WArslett\TableBuilder\Tests;
 
-use WArslett\TableBuilder\Action;
-use WArslett\TableBuilder\ActionBuilder;
-use WArslett\TableBuilder\Column\ActionGroupColumn;
+use stdClass;
 use WArslett\TableBuilder\Column\TextColumn;
 use WArslett\TableBuilder\Exception\DataAdapterException;
 use WArslett\TableBuilder\Exception\SortToggleException;
-use WArslett\TableBuilder\RequestAdapter\RequestAdapterInterface;
-use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
 use WArslett\TableBuilder\DataAdapter\ArrayDataAdapter;
 use WArslett\TableBuilder\Exception\NoValueAdapterException;
 use WArslett\TableBuilder\Exception\NoDataAdapterException;
@@ -143,10 +139,27 @@ class TableBuilderIntegrationTest extends TestCase
     /**
      * @return void
      */
-    public function testNoColumnLabelNameIsIncludedOnHeading(): void
+    public function testNoColumnLabelNameIsIncludedOnHeadingConvertsNameToTitleCase(): void
     {
         $tableBuilderFactory = new TableBuilderFactory();
-        $columnName = 'foo';
+        $columnName = 'foo_bar';
+
+        $table = $tableBuilderFactory->createTableBuilder()
+            ->add(TextColumn::withName($columnName))
+            ->buildTable('user_table')
+        ;
+
+        $headings = $table->getHeadings();
+        $this->assertSame('Foo Bar', $headings[$columnName]->getLabel());
+    }
+
+    /**
+     * @return void
+     */
+    public function testNoColumnLabelNameIsNonConvertableSetsLabelToColumnName(): void
+    {
+        $tableBuilderFactory = new TableBuilderFactory();
+        $columnName = hex2bin('afb1e7f88c26d7b7cb81aa9632c02ca8');
 
         $table = $tableBuilderFactory->createTableBuilder()
             ->add(TextColumn::withName($columnName))
@@ -175,7 +188,7 @@ class TableBuilderIntegrationTest extends TestCase
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar']
             ]))
-            ->handleRequest(ArrayRequestAdapter::withArray([]))
+            ->handleParameters([])
         ;
     }
 
@@ -185,18 +198,95 @@ class TableBuilderIntegrationTest extends TestCase
      * @throws DataAdapterException
      * @throws SortToggleException
      */
-    public function testOneRowOfDataOneColumnMapsRowToCell(): void
+    public function testOneRowOfArrayDataOneColumnWithPropertyAdapterMapsRowToCell(): void
     {
         $tableBuilderFactory = new TableBuilderFactory();
         $table = $tableBuilderFactory->createTableBuilder()
-            ->add(TextColumn::withName('foo')
-                ->valueAdapter(PropertyAccessAdapter::withPropertyPath('[foo]')))
+            ->add(TextColumn::withName('foo')->property('[foo]'))
             ->defaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 ['foo' => 'bar', 'baz' => 'qux']
             ]))
-            ->handleRequest(ArrayRequestAdapter::withArray([]))
+            ->handleParameters([])
+        ;
+
+        $rows = $table->getRows();
+        $this->assertArrayHasKey(0, $rows);
+        $this->assertSame(TextColumn::class, $rows[0]['foo']->getRenderingType());
+        $this->assertSame('bar', $rows[0]['foo']->getValue());
+    }
+
+    /**
+     * @return void
+     * @throws NoDataAdapterException
+     * @throws DataAdapterException
+     * @throws SortToggleException
+     */
+    public function testOneRowOfObjectDataOneColumnWithPropertyAdapterMapsRowToCell(): void
+    {
+        $tableBuilderFactory = new TableBuilderFactory();
+        $object = new stdClass();
+        $object->foo = 'bar';
+        $object->baz = 'qux';
+        $table = $tableBuilderFactory->createTableBuilder()
+            ->add(TextColumn::withName('foo')->property('foo'))
+            ->defaultRowsPerPage(1)
+            ->buildTable('user_table')
+            ->setDataAdapter(ArrayDataAdapter::withArray([$object]))
+            ->handleParameters([])
+        ;
+
+        $rows = $table->getRows();
+        $this->assertArrayHasKey(0, $rows);
+        $this->assertSame(TextColumn::class, $rows[0]['foo']->getRenderingType());
+        $this->assertSame('bar', $rows[0]['foo']->getValue());
+    }
+
+    /**
+     * @return void
+     * @throws NoDataAdapterException
+     * @throws DataAdapterException
+     * @throws SortToggleException
+     */
+    public function testOneRowOfObjectDataOneColumnWithPropertyMapsRowToCellWithNameAsProperty(): void
+    {
+        $tableBuilderFactory = new TableBuilderFactory();
+        $object = new stdClass();
+        $object->foo = 'bar';
+        $object->baz = 'qux';
+        $table = $tableBuilderFactory->createTableBuilder()
+            ->add(TextColumn::withProperty('foo'))
+            ->defaultRowsPerPage(1)
+            ->buildTable('user_table')
+            ->setDataAdapter(ArrayDataAdapter::withArray([$object]))
+            ->handleParameters([])
+        ;
+
+        $rows = $table->getRows();
+        $this->assertArrayHasKey(0, $rows);
+        $this->assertSame(TextColumn::class, $rows[0]['foo']->getRenderingType());
+        $this->assertSame('bar', $rows[0]['foo']->getValue());
+    }
+
+    /**
+     * @return void
+     * @throws NoDataAdapterException
+     * @throws DataAdapterException
+     * @throws SortToggleException
+     */
+    public function testOneRowOfObjectDataOneColumnWithCallbackAdapterMapsRowToCell(): void
+    {
+        $tableBuilderFactory = new TableBuilderFactory();
+        $object = new stdClass();
+        $object->foo = 'bar';
+        $object->baz = 'qux';
+        $table = $tableBuilderFactory->createTableBuilder()
+            ->add(TextColumn::withName('foo')->callback(fn($row) => $row->foo))
+            ->defaultRowsPerPage(1)
+            ->buildTable('user_table')
+            ->setDataAdapter(ArrayDataAdapter::withArray([$object]))
+            ->handleParameters([])
         ;
 
         $rows = $table->getRows();

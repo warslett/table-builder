@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace WArslett\TableBuilder;
 
 use Closure;
+use Jawira\CaseConverter\CaseConverterException;
+use Jawira\CaseConverter\Convert;
 use WArslett\TableBuilder\Exception\ValueAdapterException;
 use WArslett\TableBuilder\ValueAdapter\CallbackAdapter;
 use WArslett\TableBuilder\ValueAdapter\PropertyAccessAdapter;
@@ -31,7 +33,11 @@ final class ActionBuilder implements ActionBuilderInterface
     /** @var array<mixed, ValueAdapterInterface> */
     private array $routeParams = [];
 
-    public function __construct(string $name)
+    /**
+     * Private construct (use static named constructors for concretions)
+     * @param string $name
+     */
+    private function __construct(string $name)
     {
         $this->name = $name;
     }
@@ -55,7 +61,7 @@ final class ActionBuilder implements ActionBuilderInterface
     }
 
     /**
-     * @param $row
+     * @param mixed $row
      * @return bool
      */
     public function isAllowedFor($row): bool
@@ -140,6 +146,15 @@ final class ActionBuilder implements ActionBuilderInterface
      */
     public static function withName(string $name): self
     {
-        return new self($name);
+        $builder = new self($name);
+
+        try {
+            $converter = new Convert($name);
+            $builder->label = $converter->toTitle();
+        } catch (CaseConverterException $e) {
+            $builder->label = $name;
+        }
+
+        return $builder;
     }
 }

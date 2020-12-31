@@ -33,20 +33,44 @@ use WArslett\TableBuilder\Column\BooleanColumn;
 use WArslett\TableBuilder\Column\DateTimeColumn;
 use WArslett\TableBuilder\Column\TextColumn;
 
+$tableBuilder->add(TextColumn::withProperty('email')
+    ->sortable());
+        
+$tableBuilder->add(BooleanColumn::withProperty('active')
+    ->sortable());
+        
+$tableBuilder->add(DateTimeColumn::withProperty('last_login')
+    ->format('g:ia jS M Y')
+    ->sortable());
+```
+
+You can define a column with an explicit label otherwise the label is derived from the column name:
+```php
+use WArslett\TableBuilder\Column\TextColumn;
+
+$tableBuilder->add(TextColumn::withProperty('email')
+    ->label('User's Email')
+    ->sortable());
+```
+
+The `withProperty` constructor sets both the name and property to the same given value. Alternatively you can use the
+`withName` constructor which only sets the name and then you can set the property separately using the `property`
+configuration method.
+```php
+use WArslett\TableBuilder\Column\TextColumn;
+
 $tableBuilder->add(TextColumn::withName('email')
-    ->label('Email')
     ->property('email')
     ->sortable());
-        
-$tableBuilder->add(BooleanColumn::withName('is_active')
-    ->label('Active')
-    ->property('active')
-    ->sortable());
-        
-$tableBuilder->add(DateTimeColumn::withName('last_login')
-    ->label('Last Login')
-    ->property('lastLogin')
-    ->format('Y-m-d H:i:s')
+```
+
+Alternatively you can define a column with a callback instead of a property path:
+```php
+use WArslett\TableBuilder\Column\TextColumn;
+use App\Entity\User;
+
+$tableBuilder->add(TextColumn::withName('email')
+    ->callaback(fn(User $user) => $user->getEmail())
     ->sortable());
 ```
 
@@ -56,14 +80,13 @@ row in the table (which can then be rendered as links or buttons):
 use WArslett\TableBuilder\Column\ActionGroupColumn;
 
 $tableBuilder->add(ActionGroupColumn::withName('email')
-    ->label('Actions')
     ->add(ActionBuilder::withName('update')
-        ->label('Update')
         ->route('user_update', [
             'id' => 'id'
         ]))
     ->add(ActionBuilder::withName('delete')
-        ->label('Delete')
+        ->label('DELETE!')
+        ->attribute('extra_classes', ['btn-danger'])
         ->route('user_delete', [
             'id' => 'id'
         ])));
@@ -85,7 +108,7 @@ $queryBuilder = $entityManager->createQueryBuilder()
 
 $dataAdapter = DoctrineOrmAdapter::withQueryBuilder($queryBuilder)
     ->mapSortToggle('email', 'u.email')
-    ->mapSortToggle('is_active', 'u.active')
+    ->mapSortToggle('active', 'u.active')
     ->mapSortToggle('last_login', 'u.lastLogin');
 
 $table->setDataAdapter($dataAdapter);
@@ -230,14 +253,10 @@ final class UserTableBuilderFactory implements TableBuilderFactoryInterface
         return $this->tableBuilderFactory->createTableBuilder()
             ->rowsPerPageOptions([10, 20, 50])
             ->defaultRowsPerPage(10)
-            ->add(TextColumn::withName('email')
-                ->label('Email')
-                ->property('email')
+            ->add(TextColumn::withProperty('email')
                 ->sortable())
-            ->add(DateTimeColumn::withName('last_login')
-                ->label('Last Login')
-                ->property('lastLogin')
-                ->format('Y-m-d H:i:s')
+            ->add(DateTimeColumn::withProperty('last_login')
+                ->format('g:ia jS M Y')
                 ->sortable());
     }
 }

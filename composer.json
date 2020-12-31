@@ -11,7 +11,8 @@
     ],
     "require": {
         "ext-json": "*",
-        "symfony/property-access": ">4"
+        "symfony/property-access": ">4",
+        "jawira/case-converter": "^3.4"
     },
     "require-dev": {
         "ext-simplexml": "*",
