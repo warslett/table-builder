@@ -20,9 +20,9 @@ use WArslett\TableBuilder\Column\TextColumn;
 
 $column = TextColumn::withName('email');
 ```
-The above example would take the value of the property `foo` for each row and cast it to a string as the value for each
-cell in the column. If a cell value resolved by the ValueAdapter cannot be cast as a string a ValueException will be
-thrown.
+The above example would take the value of the property `email` for each row and cast it to a string as the value for
+each cell in the column. If a cell value resolved by the ValueAdapter cannot be cast as a string a ValueException will
+be thrown.
 
 ## <a name="DateTimeColumn"></a>DateTimeColumn
 DateTime Column is used for rendering an instance of a DateTime object with a given format.
