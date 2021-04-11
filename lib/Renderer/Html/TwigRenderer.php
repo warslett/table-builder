@@ -22,15 +22,26 @@ final class TwigRenderer implements HtmlTableRendererInterface
     public const STANDARD_THEME_PATH = 'table-builder/standard.html.twig';
     public const BOOTSTRAP4_THEME_PATH = 'table-builder/bootstrap4.html.twig';
 
-    private Environment $environment;
-    private RouteGeneratorAdapterInterface $routeGeneratorAdapter;
-    private string $themeTemplatePath;
-    private ?TemplateWrapper $template = null;
-    private array $cellValueBlocks = [
+    /** @var Environment */
+    private $environment;
+
+    /** @var RouteGeneratorAdapterInterface */
+    private $routeGeneratorAdapter;
+
+    /** @var string */
+    private $themeTemplatePath;
+
+    /** @var TemplateWrapper|null */
+    private $template = null;
+
+    /** @var array<string, string> */
+    private $cellValueBlocks = [
         ActionGroupColumn::class => 'action_group_cell_value',
         BooleanColumn::class => 'boolean_cell_value'
     ];
-    private array $cellValueTemplates = [];
+
+    /** @var array<string, string> */
+    private $cellValueTemplates = [];
 
     public function __construct(
         Environment $environment,

@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class SymfonyHttpAdapter implements RequestAdapterInterface
 {
-    private Request $request;
+    private $request;
 
     public function __construct(Request $request)
     {

@@ -102,7 +102,9 @@ class ActionBuilderTest extends TestCase
         $row = new stdClass();
         $builder = ActionBuilder::withName('foo');
         $value = 123;
-        $builder->route($route, ['id' => fn() => $value]);
+        $builder->route($route, ['id' => function () use ($value) {
+            return $value;
+        }]);
 
         $action = $builder->buildAction($row);
 
@@ -148,7 +150,9 @@ class ActionBuilderTest extends TestCase
     public function testBuildActionWithFalseConditionIsDisallowed()
     {
         $builder = ActionBuilder::withName('delete')
-            ->condition(fn($row) => false);
+            ->condition(function ($row) {
+                return false;
+            });
 
         $isAllowed = $builder->isAllowedFor([]);
 
@@ -158,7 +162,9 @@ class ActionBuilderTest extends TestCase
     public function testBuildActionWithTrueConditionIsAllowed()
     {
         $builder = ActionBuilder::withName('delete')
-            ->condition(fn($row) => true);
+            ->condition(function ($row) {
+                return true;
+            });
 
         $isAllowed = $builder->isAllowedFor([]);
 

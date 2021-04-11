@@ -12,7 +12,9 @@ class CallbackAdapterTest extends TestCase
     public function testGetValueGetsValueFromCallback()
     {
         $value = 'foo';
-        $adapter = CallbackAdapter::withCallback(fn($row) => $value);
+        $adapter = CallbackAdapter::withCallback(function ($row) use ($value) {
+            return $value;
+        });
 
         $actual = $adapter->getValue(['bar' => 'baz']);
 

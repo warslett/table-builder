@@ -224,7 +224,9 @@ class PhtmlRendererIntegrationTest extends TestCase
         $builder = $this->getTableBuilder()
             ->add(BooleanColumn::withName('boolean')
                 ->label('Boolean')
-                ->valueAdapter(CallbackAdapter::withCallback(fn($row): bool => false)));
+                ->valueAdapter(CallbackAdapter::withCallback(function ($row): bool {
+                    return false;
+                })));
 
         $table = $this->buildTable($builder);
         $row = $table->getRows()[0];
@@ -309,7 +311,9 @@ class PhtmlRendererIntegrationTest extends TestCase
                     ['foo' => 'baz'],
                     ['foo' => 'qux']
                 ])
-                ->mapSortToggle('foo', fn($a, $b) => 0)
+                ->mapSortToggle('foo', function ($a, $b) {
+                    return 0;
+                })
             )
             ->handleRequest(ArrayRequestAdapter::withArray([]));
     }

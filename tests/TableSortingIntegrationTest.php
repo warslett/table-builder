@@ -40,7 +40,9 @@ class TableSortingIntegrationTest extends TestCase
                 ['foo' => 4],
                 ['foo' => 2],
                 ['foo' => 1],
-            ])->mapSortToggle('foo_toggle', fn($a, $b) => $a['foo'] < $b['foo'] ? -1 : 1))
+            ])->mapSortToggle('foo_toggle', function ($a, $b) {
+                return $a['foo'] < $b['foo'] ? -1 : 1;
+            }))
             ->handleRequest(ArrayRequestAdapter::withArray(['user_table' => ['sort_column' => 'foo_column']]))
         ;
 

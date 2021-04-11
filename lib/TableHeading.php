@@ -8,9 +8,9 @@ use JsonSerializable;
 
 class TableHeading implements JsonSerializable
 {
-    private string $name;
-    private string $label;
-    private bool $isSortable;
+    private $name;
+    private $label;
+    private $isSortable;
 
     public function __construct(string $name, string $label, bool $isSortable)
     {

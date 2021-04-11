@@ -16,22 +16,22 @@ final class ActionBuilder implements ActionBuilderInterface
 {
 
     /** @var string */
-    private string $name;
+    private $name;
 
     /** @var string|null */
-    private ?string $label = null;
+    private $label = null;
 
     /** @var Closure|null */
-    private ?Closure $condition = null;
+    private $condition = null;
 
     /** @var string|null */
-    private ?string $route = null;
+    private $route = null;
 
     /** @var array */
-    private array $attributes = [];
+    private $attributes = [];
 
     /** @var array<mixed, ValueAdapterInterface> */
-    private array $routeParams = [];
+    private $routeParams = [];
 
     /**
      * Private construct (use static named constructors for concretions)
@@ -132,7 +132,9 @@ final class ActionBuilder implements ActionBuilderInterface
 
         if (null !== $this->route) {
             $action->setRoute($this->route, array_map(
-                fn(ValueAdapterInterface $valueAdapter) => $valueAdapter->getValue($row),
+                function (ValueAdapterInterface $valueAdapter) use ($row) {
+                    return $valueAdapter->getValue($row);
+                },
                 $this->routeParams
             ));
         }

@@ -9,22 +9,22 @@ use WArslett\TableBuilder\Column\ColumnInterface;
 final class TableBuilder implements TableBuilderInterface
 {
     /** @var ColumnInterface[] */
-    private array $columns = [];
+    private $columns = [];
 
     /** @var int */
-    private int $defaultRowsPerPage = Table::DEFAULT_ROWS_PER_PAGE;
+    private $defaultRowsPerPage = Table::DEFAULT_ROWS_PER_PAGE;
 
     /** @var int */
-    private int $maxRowsPerPage = Table::DEFAULT_MAX_ROWS_PER_PAGE;
+    private $maxRowsPerPage = Table::DEFAULT_MAX_ROWS_PER_PAGE;
 
     /** @var array<int> */
-    private array $rowsPerPageOptions = [];
+    private $rowsPerPageOptions = [];
 
     /**
      * @param ColumnInterface $column
      * @return $this
      */
-    public function add(ColumnInterface $column): self
+    public function add(ColumnInterface $column): TableBuilderInterface
     {
         $this->columns[$column->getName()] = $column;
         return $this;
@@ -34,7 +34,7 @@ final class TableBuilder implements TableBuilderInterface
      * @param int $defaultRowsPerPage
      * @return $this
      */
-    public function defaultRowsPerPage(int $defaultRowsPerPage): self
+    public function defaultRowsPerPage(int $defaultRowsPerPage): TableBuilderInterface
     {
         $this->defaultRowsPerPage = $defaultRowsPerPage;
         return $this;
@@ -44,7 +44,7 @@ final class TableBuilder implements TableBuilderInterface
      * @param int $maxRowsPerPage
      * @return $this
      */
-    public function maxRowsPerPage(int $maxRowsPerPage): self
+    public function maxRowsPerPage(int $maxRowsPerPage): TableBuilderInterface
     {
         $this->maxRowsPerPage = $maxRowsPerPage;
         return $this;
@@ -54,7 +54,7 @@ final class TableBuilder implements TableBuilderInterface
      * @param array<int> $rowsPerPageOptions
      * @return $this
      */
-    public function rowsPerPageOptions(array $rowsPerPageOptions): self
+    public function rowsPerPageOptions(array $rowsPerPageOptions): TableBuilderInterface
     {
         $this->rowsPerPageOptions = $rowsPerPageOptions;
         return $this;

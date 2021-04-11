@@ -6,7 +6,7 @@ namespace WArslett\TableBuilder\RequestAdapter;
 
 final class ArrayRequestAdapter implements RequestAdapterInterface
 {
-    private array $array;
+    private $array;
 
     public function __construct(array $array)
     {

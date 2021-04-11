@@ -78,7 +78,9 @@ class TableActionsIntegrationTest extends TestCase
         $table = $tableBuilderFactory->createTableBuilder()
             ->add(ActionGroupColumn::withName('actions')
                 ->add(ActionBuilder::withName('delete')
-                    ->condition(fn($row) => false)))
+                    ->condition(function ($row) {
+                        return false;
+                    })))
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 []
@@ -104,7 +106,9 @@ class TableActionsIntegrationTest extends TestCase
         $table = $tableBuilderFactory->createTableBuilder()
             ->add(ActionGroupColumn::withName('actions')
                 ->add(ActionBuilder::withName('delete')
-                    ->condition(fn($row) => true)))
+                    ->condition(function ($row) {
+                        return true;
+                    })))
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([
                 []

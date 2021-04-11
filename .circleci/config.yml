@@ -8,8 +8,8 @@ jobs:
       - checkout
 
       - run:
-          name: "Pull PHP 7.4 Image"
-          command: "docker pull php:7.4-cli"
+          name: "Pull PHP 7.3 Image"
+          command: "docker pull php:7.3-cli"
 
       - run:
           name: "Build Testing Image"
@@ -34,18 +34,6 @@ jobs:
       - run:
           name: "Verify Code Coverage"
           command: "bin/coverage-check clover.xml 100"
-
-      - run:
-          name: "Pull PHP 8.0 Image"
-          command: "docker pull php:8.0-cli"
-
-      - run:
-          name: "Run PHPUnit on PHP8"
-          command: "bin/php8 vendor/bin/phpunit"
-
-      - run:
-          name: "Run Infection PHP (Mutation Testing)"
-          command: "bin/infection --min-msi=95"
 
       - store_test_results:
           path: ".circleci/test-results"

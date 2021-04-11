@@ -10,7 +10,7 @@ use WArslett\TableBuilder\Renderer\Html\HtmlTableRendererInterface;
 
 final class TableRendererExtension extends AbstractExtension
 {
-    private HtmlTableRendererInterface $htmlTableRenderer;
+    private $htmlTableRenderer;
 
     public function __construct(HtmlTableRendererInterface $htmlTableRenderer)
     {

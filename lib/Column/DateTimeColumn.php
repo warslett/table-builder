@@ -17,7 +17,7 @@ final class DateTimeColumn extends AbstractColumn
     use ValueAdapterTrait;
 
     /** @var string */
-    private string $dateTimeFormat = 'Y-m-d H:i:s';
+    private $dateTimeFormat = 'Y-m-d H:i:s';
 
     /**
      * @param string $dateTimeFormat

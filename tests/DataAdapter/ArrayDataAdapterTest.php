@@ -30,7 +30,9 @@ class ArrayDataAdapterTest extends TestCase
             ['foo' => 1],
             ['foo' => 2],
             ['foo' => 4],
-        ])->mapSortToggle('foo', fn($a, $b) => $a['foo'] < $b['foo'] ? -1 : 1);
+        ])->mapSortToggle('foo', function ($a, $b) {
+            return $a['foo'] < $b['foo'] ? -1 : 1;
+        });
 
         $data = $dataAdapter->getPage(1, 4, 'foo');
 
@@ -49,7 +51,9 @@ class ArrayDataAdapterTest extends TestCase
             ['foo' => 1],
             ['foo' => 2],
             ['foo' => 4],
-        ])->mapSortToggle('foo', fn($a, $b) => $a['foo'] < $b['foo'] ? -1 : 1);
+        ])->mapSortToggle('foo', function ($a, $b) {
+            return $a['foo'] < $b['foo'] ? -1 : 1;
+        });
 
         $data = $dataAdapter->getPage(1, 4, 'foo', true);
 
@@ -84,7 +88,9 @@ class ArrayDataAdapterTest extends TestCase
 
     public function testCanSortMappedSortToggleIsTrue()
     {
-        $dataAdapter = ArrayDataAdapter::withArray([])->mapSortToggle('foo', fn($a, $b) => 0);
+        $dataAdapter = ArrayDataAdapter::withArray([])->mapSortToggle('foo', function ($a, $b) {
+            return 0;
+        });
 
         $this->assertTrue($dataAdapter->canSort('foo'));
     }

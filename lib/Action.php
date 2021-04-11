@@ -8,10 +8,17 @@ use JsonSerializable;
 
 class Action implements JsonSerializable
 {
-    private string $label;
-    private ?string $route = null;
-    private array $routeParams = [];
-    private array $attributes;
+    /** @var string */
+    private $label;
+
+    /** @var string|null */
+    private $route = null;
+
+    /** @var array */
+    private $routeParams = [];
+
+    /** @var array */
+    private $attributes;
 
     public function __construct(string $label, array $attributes = [])
     {

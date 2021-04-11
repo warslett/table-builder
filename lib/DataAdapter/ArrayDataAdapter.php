@@ -9,10 +9,10 @@ use Closure;
 final class ArrayDataAdapter implements DataAdapterInterface
 {
     /** @var array */
-    private array $array;
+    private $array;
 
     /** @var array<string, Closure> */
-    private array $sortToggleMapping = [];
+    private $sortToggleMapping = [];
 
     /**
      * @param array $array<mixed>

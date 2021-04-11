@@ -8,7 +8,7 @@ use Closure;
 
 final class CallbackAdapter implements ValueAdapterInterface
 {
-    private Closure $callback;
+    private $callback;
 
     public function __construct(Closure $callback)
     {

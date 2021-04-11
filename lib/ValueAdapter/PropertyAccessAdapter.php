@@ -9,8 +9,11 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 final class PropertyAccessAdapter implements ValueAdapterInterface
 {
-    private string $propertyPath;
-    private PropertyAccessor $propertyAccessor;
+    /** @var string */
+    private $propertyPath;
+
+    /** @var PropertyAccessor */
+    private $propertyAccessor;
 
     public function __construct(string $propertyPath, ?PropertyAccessor $propertyAccessor = null)
     {

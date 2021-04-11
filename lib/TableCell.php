@@ -13,16 +13,16 @@ use WArslett\TableBuilder\Exception\ValueException;
 class TableCell implements JsonSerializable
 {
     /** @var string */
-    private string $name;
+    private $name;
 
     /** @var string */
-    private string $renderingType;
+    private $renderingType;
 
     /** @var T|null */
     private $value;
 
     /** @var array<string, mixed> */
-    private array $attributes = [];
+    private $attributes = [];
 
     /**
      * @param string $name

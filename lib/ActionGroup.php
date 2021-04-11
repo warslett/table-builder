@@ -12,7 +12,7 @@ class ActionGroup implements JsonSerializable
     /**
      * @var array<string, Action>
      */
-    private array $actions;
+    private $actions;
 
     /**
      * @param array<string, Action> $actions

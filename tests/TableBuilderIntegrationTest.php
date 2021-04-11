@@ -282,7 +282,9 @@ class TableBuilderIntegrationTest extends TestCase
         $object->foo = 'bar';
         $object->baz = 'qux';
         $table = $tableBuilderFactory->createTableBuilder()
-            ->add(TextColumn::withName('foo')->callback(fn($row) => $row->foo))
+            ->add(TextColumn::withName('foo')->callback(function ($row) {
+                return $row->foo;
+            }))
             ->defaultRowsPerPage(1)
             ->buildTable('user_table')
             ->setDataAdapter(ArrayDataAdapter::withArray([$object]))

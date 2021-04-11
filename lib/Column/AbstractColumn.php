@@ -17,10 +17,17 @@ use WArslett\TableBuilder\TableHeading;
  */
 abstract class AbstractColumn implements ColumnInterface
 {
-    protected string $name;
-    protected ?string $label = null;
-    protected ?string $sortToggle = null;
-    protected ?Closure $afterBuildCell = null;
+    /** @var string */
+    protected $name;
+
+    /** @var string|null */
+    protected $label = null;
+
+    /** @var string|null */
+    protected $sortToggle = null;
+
+    /** @var Closure|null */
+    protected $afterBuildCell = null;
 
     /**
      * Final protected construct (use static named constructors for concretions)

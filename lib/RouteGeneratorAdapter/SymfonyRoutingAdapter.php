@@ -8,7 +8,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 final class SymfonyRoutingAdapter implements RouteGeneratorAdapterInterface
 {
-    private RouterInterface $router;
+    private $router;
 
     public function __construct(RouterInterface $router)
     {

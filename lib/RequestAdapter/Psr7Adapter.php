@@ -8,7 +8,7 @@ use Psr\Http\Message\RequestInterface;
 
 final class Psr7Adapter implements RequestAdapterInterface
 {
-    private RequestInterface $request;
+    private $request;
 
     public function __construct(RequestInterface $request)
     {

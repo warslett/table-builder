@@ -23,43 +23,43 @@ class Table implements JsonSerializable
     public const DEFAULT_MAX_ROWS_PER_PAGE = 100;
 
     /** @var string */
-    private string $name;
+    private $name;
 
     /** @var array<string, ColumnInterface> */
-    private array $columns;
+    private $columns;
 
     /** @var int */
-    private int $rowsPerPage;
+    private $rowsPerPage;
 
     /** @var int */
-    private int $maxRowsPerPage;
+    private $maxRowsPerPage;
 
     /** @var array<string, TableHeading> */
-    private array $headings = [];
+    private $headings = [];
 
     /** @var DataAdapterInterface|null  */
-    private ?DataAdapterInterface $dataAdapter = null;
+    private $dataAdapter = null;
 
     /** @var array - the query params of the handled request */
-    private array $params = [];
+    private $params = [];
 
     /** @var array<array<string, TableCell>> */
-    private array $rows = [];
+    private $rows = [];
 
     /** @var int */
-    private int $totalRows = 0;
+    private $totalRows = 0;
 
     /** @var int */
-    private int $pageNumber = 0;
+    private $pageNumber = 0;
 
     /** @var string|null */
-    private ?string $sortColumnName = null;
+    private $sortColumnName = null;
 
     /** @var bool */
-    private bool $isSortedDescending = false;
+    private $isSortedDescending = false;
 
     /** @var array<int> */
-    private array $rowsPerPageOptions;
+    private $rowsPerPageOptions;
 
     public function __construct(
         string $name,

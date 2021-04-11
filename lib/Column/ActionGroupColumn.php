@@ -13,7 +13,7 @@ use WArslett\TableBuilder\ActionGroup;
 final class ActionGroupColumn extends AbstractColumn
 {
     /** @var array<string, ActionBuilderInterface> */
-    private array $actionBuilders = [];
+    private $actionBuilders = [];
 
     /**
      * @param ActionBuilderInterface $actionBuilder

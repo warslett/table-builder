@@ -13,7 +13,8 @@ use WArslett\TableBuilder\Exception\NoValueAdapterException;
  */
 trait ValueAdapterTrait
 {
-    private ?ValueAdapterInterface $valueAdapter = null;
+    /** @var ValueAdapterInterface|null */
+    private $valueAdapter = null;
 
     /**
      * Sets the value adapter for the column which is any class that implements ValueAdapterInterface and can retrieve

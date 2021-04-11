@@ -22,13 +22,13 @@ final class PhtmlRenderer implements HtmlTableRendererInterface
     ];
 
     /** @var RouteGeneratorAdapterInterface */
-    private RouteGeneratorAdapterInterface $routeGeneratorAdapter;
+    private $routeGeneratorAdapter;
 
     /** @var string */
-    private string $themeDirectoryPath;
+    private $themeDirectoryPath;
 
     /** @var array<string, string> */
-    private array $cellValueTemplates;
+    private $cellValueTemplates;
 
     public function __construct(
         ?RouteGeneratorAdapterInterface $routeGeneratorAdapter = null,
@@ -38,7 +38,9 @@ final class PhtmlRenderer implements HtmlTableRendererInterface
         $this->themeDirectoryPath = $themeDirectoryPath;
 
         $this->cellValueTemplates = array_map(
-            fn ($relativePath) => "$this->themeDirectoryPath/$relativePath",
+            function ($relativePath) {
+                return "$this->themeDirectoryPath/$relativePath";
+            },
             self::RELATIVE_DEFAULT_CELL_VALUE_TEMPLATES
         );
     }

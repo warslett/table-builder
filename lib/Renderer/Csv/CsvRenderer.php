@@ -14,10 +14,10 @@ use WArslett\TableBuilder\TableHeading;
 class CsvRenderer
 {
     /** @var bool */
-    private bool $includeHeader = true;
+    private $includeHeader = true;
 
     /** @var array<string, CsvCellValueTransformerInterface> */
-    private array $cellValueTransformers = [];
+    private $cellValueTransformers = [];
 
     /**
      * @param Table $table
@@ -29,7 +29,9 @@ class CsvRenderer
     public function renderTable(Table $table, Writer $csv): void
     {
         if ($this->includeHeader) {
-            $csv->insertOne(array_map(fn(TableHeading $heading) => $heading->getLabel(), $table->getHeadings()));
+            $csv->insertOne(array_map(function (TableHeading $heading) {
+                return $heading->getLabel();
+            }, $table->getHeadings()));
         }
 
         foreach ($table->getRows() as $row) {

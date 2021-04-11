@@ -10,10 +10,10 @@ use WArslett\TableBuilder\Exception\DataAdapterException;
 final class DoctrineOrmAdapter implements DataAdapterInterface
 {
     /** @var ORM\QueryBuilder */
-    private ORM\QueryBuilder $queryBuilder;
+    private $queryBuilder;
 
     /** @var array<string, string> */
-    private array $sortToggleMapping = [];
+    private $sortToggleMapping = [];
 
     public function __construct(ORM\QueryBuilder $queryBuilder)
     {
