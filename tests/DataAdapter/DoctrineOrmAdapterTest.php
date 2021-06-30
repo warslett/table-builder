@@ -141,7 +141,7 @@ class DoctrineOrmAdapterTest extends TestCase
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function testCountResetsSelect(): void
+    public function testCountResetsSelectAndOrderBy(): void
     {
         $expression = 'count(u)';
         $entityManager = $this->mockEntityManager(
@@ -149,7 +149,7 @@ class DoctrineOrmAdapterTest extends TestCase
             $this->mockExpressionBuilder($expression)
         );
         $queryBuilder = new QueryBuilder($entityManager);
-        $queryBuilder->select('u')->from('User', 'u');
+        $queryBuilder->select('u')->from('User', 'u')->orderBy('u.lastLogin', 'desc');
         $adapter = DoctrineOrmAdapter::withQueryBuilder($queryBuilder);
 
         $adapter->countTotalRows();
