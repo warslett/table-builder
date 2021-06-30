@@ -5,7 +5,6 @@
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fwarslett%2Ftable-builder%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/warslett/table-builder/master)
 ![Psalm coverage](https://shepherd.dev/github/warslett/table-builder/coverage.svg)
 [![Total Downloads](https://poser.pugx.org/warslett/table-builder/downloads)](//packagist.org/packages/warslett/table-builder)
-[![Latest Unstable Version](https://poser.pugx.org/warslett/table-builder/v/unstable)](//packagist.org/packages/warslett/table-builder)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 Table builder provides table abstraction, table building and table rendering. Allowing you to configure your tables,
