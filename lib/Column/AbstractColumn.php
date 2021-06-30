@@ -132,6 +132,7 @@ abstract class AbstractColumn implements ColumnInterface
     abstract protected function getCellValue($row);
 
     /**
+     * @psalm-suppress UnsafeGenericInstantiation - static here is fine because of final constructor
      * @param string $name
      * @return static
      */
