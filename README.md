@@ -20,7 +20,7 @@ If you are using symfony there is an optional bundle that will configure the ser
 `composer require warslett/table-builder-bundle warslett/table-builder`
 
 ## Requirements
-PHP 7.4 or 8.0.
+PHP 7.4, 8.0 or 8.1.
 
 ## Documentation
 Full documentation available [here](https://github.com/warslett/table-builder/blob/master/docs/en/index.md).
