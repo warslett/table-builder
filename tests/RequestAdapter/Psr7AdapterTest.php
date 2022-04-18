@@ -13,7 +13,6 @@ use Mockery\Mock;
 
 class Psr7AdapterTest extends TestCase
 {
-
     public function testGetParameters()
     {
         $queryString = 'table%5Bpage%5D=2&table%5Brows_per_page%5D=2&table%5Bsort_column%5D=name&unrelated_attr=foo';

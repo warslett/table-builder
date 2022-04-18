@@ -20,7 +20,6 @@ use WArslett\TableBuilder\TableBuilderFactory;
 
 class TableParametersIntegrationTest extends TestCase
 {
-
     /**
      * @return void
      * @throws NoDataAdapterException

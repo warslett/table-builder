@@ -6,7 +6,6 @@ namespace WArslett\TableBuilder\RouteGeneratorAdapter;
 
 interface RouteGeneratorAdapterInterface
 {
-
     /**
      * @param string $route
      * @param array<int|string, int|string> $params

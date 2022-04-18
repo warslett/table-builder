@@ -13,7 +13,6 @@ use WArslett\TableBuilder\ValueAdapter\ValueAdapterInterface;
 
 class ActionBuilderTest extends TestCase
 {
-
     public function testBuildNoLabelSetsTitleCaseNameAsLabel()
     {
         $builder = ActionBuilder::withName('foo_bar');

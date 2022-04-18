@@ -6,7 +6,6 @@ namespace WArslett\TableBuilder;
 
 final class TableBuilderFactory implements TableBuilderFactoryInterface
 {
-
     /**
      * @return TableBuilderInterface
      */

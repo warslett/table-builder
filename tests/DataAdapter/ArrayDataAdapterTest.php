@@ -9,7 +9,6 @@ use WArslett\TableBuilder\Tests\TestCase;
 
 class ArrayDataAdapterTest extends TestCase
 {
-
     public function testGetPageNoSortToggleGetsPageOfResult()
     {
         $dataAdapter = ArrayDataAdapter::withArray([

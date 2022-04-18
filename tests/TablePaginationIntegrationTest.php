@@ -15,7 +15,6 @@ use WArslett\TableBuilder\TableBuilderFactory;
 
 class TablePaginationIntegrationTest extends TestCase
 {
-
     /**
      * @return void
      */

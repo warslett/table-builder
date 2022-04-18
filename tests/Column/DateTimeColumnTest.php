@@ -15,7 +15,6 @@ use WArslett\TableBuilder\ValueAdapter\ValueAdapterInterface;
 
 class DateTimeColumnTest extends TestCase
 {
-
     /**
      * @return void
      * @throws NoValueAdapterException

@@ -12,7 +12,6 @@ use Mockery\Mock;
 
 class PropertyAccessAdapterTest extends TestCase
 {
-
     public function testGetValueGetsValueFromPropertyAccessor()
     {
         $propertyPath = 'foo';

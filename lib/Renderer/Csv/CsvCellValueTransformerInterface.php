@@ -6,7 +6,6 @@ namespace WArslett\TableBuilder\Renderer\Csv;
 
 interface CsvCellValueTransformerInterface
 {
-
     /**
      * @param mixed $value
      * @return bool|int|float|string|null

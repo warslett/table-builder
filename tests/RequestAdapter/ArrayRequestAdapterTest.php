@@ -9,7 +9,6 @@ use WArslett\TableBuilder\Tests\TestCase;
 
 class ArrayRequestAdapterTest extends TestCase
 {
-
     public function testGetParametersReturnsArray()
     {
         $array = ['foo' => 'bar'];

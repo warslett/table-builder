@@ -16,7 +16,6 @@ use WArslett\TableBuilder\TableBuilderFactory;
 
 class TableBuilderIntegrationTest extends TestCase
 {
-
     /**
      * @return void
      */

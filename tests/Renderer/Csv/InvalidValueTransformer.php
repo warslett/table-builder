@@ -9,7 +9,6 @@ use WArslett\TableBuilder\Renderer\Csv\CsvCellValueTransformerInterface;
 
 final class InvalidValueTransformer implements CsvCellValueTransformerInterface
 {
-
     /**
      * @param mixed $value
      * @return string

@@ -9,7 +9,6 @@ use Twig\Loader\LoaderInterface;
 
 final class StandardTemplatesLoader extends FilesystemLoader implements LoaderInterface
 {
-
     public function __construct()
     {
         $twigDir = __DIR__ . '/../../templates/twig';

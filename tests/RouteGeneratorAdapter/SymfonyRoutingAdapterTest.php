@@ -12,7 +12,6 @@ use Mockery\Mock;
 
 class SymfonyRoutingAdapterTest extends TestCase
 {
-
     public function testRenderRouteGeneratesRoute(): void
     {
         $router = $this->mockRouter();

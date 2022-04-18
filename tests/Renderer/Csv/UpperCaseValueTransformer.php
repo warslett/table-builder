@@ -8,7 +8,6 @@ use WArslett\TableBuilder\Renderer\Csv\CsvCellValueTransformerInterface;
 
 final class UpperCaseValueTransformer implements CsvCellValueTransformerInterface
 {
-
     /**
      * @param mixed $value
      * @return string

@@ -6,7 +6,6 @@ namespace WArslett\TableBuilder;
 
 interface ActionBuilderInterface
 {
-
     /**
      * @return string
      */

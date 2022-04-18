@@ -14,7 +14,6 @@ use WArslett\TableBuilder\ValueAdapter\ValueAdapterInterface;
 
 class TextColumnTest extends TestCase
 {
-
     /**
      * @return void
      * @throws NoValueAdapterException

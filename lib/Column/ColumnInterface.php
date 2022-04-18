@@ -9,7 +9,6 @@ use WArslett\TableBuilder\TableHeading;
 
 interface ColumnInterface
 {
-
     /**
      * @return string
      */

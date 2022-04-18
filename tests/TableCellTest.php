@@ -10,7 +10,6 @@ use WArslett\TableBuilder\TableCell;
 
 class TableCellTest extends TestCase
 {
-
     public function testConstructNonStringableValueThrowsException()
     {
         $this->expectException(ValueException::class);

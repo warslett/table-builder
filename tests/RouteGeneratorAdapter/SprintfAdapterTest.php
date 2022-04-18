@@ -9,7 +9,6 @@ use WArslett\TableBuilder\Tests\TestCase;
 
 class SprintfAdapterTest extends TestCase
 {
-
     public function testRenderRoute()
     {
         $adapter = new SprintfAdapter();

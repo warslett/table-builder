@@ -14,7 +14,6 @@ use WArslett\TableBuilder\ValueAdapter\ValueAdapterInterface;
 
 final class ActionBuilder implements ActionBuilderInterface
 {
-
     /** @var string */
     private string $name;
 

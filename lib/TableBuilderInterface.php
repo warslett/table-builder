@@ -8,7 +8,6 @@ use WArslett\TableBuilder\Column\ColumnInterface;
 
 interface TableBuilderInterface
 {
-
     /**
      * @param ColumnInterface $column
      * @return $this

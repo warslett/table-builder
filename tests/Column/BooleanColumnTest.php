@@ -14,7 +14,6 @@ use WArslett\TableBuilder\ValueAdapter\ValueAdapterInterface;
 
 class BooleanColumnTest extends TestCase
 {
-
     /**
      * @return void
      * @throws NoValueAdapterException

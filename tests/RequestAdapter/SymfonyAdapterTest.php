@@ -13,7 +13,6 @@ use Mockery\Mock;
 
 class SymfonyAdapterTest extends TestCase
 {
-
     /**
      * @return void
      */

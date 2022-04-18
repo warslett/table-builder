@@ -6,7 +6,6 @@ namespace WArslett\TableBuilder;
 
 interface TableBuilderFactoryInterface
 {
-
     /**
      * @return TableBuilderInterface
      */

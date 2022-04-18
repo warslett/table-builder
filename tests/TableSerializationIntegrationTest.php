@@ -20,7 +20,6 @@ use WArslett\TableBuilder\TableBuilderFactory;
 
 class TableSerializationIntegrationTest extends TestCase
 {
-
     /**
      * @return void
      */

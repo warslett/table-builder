@@ -8,7 +8,6 @@ use WArslett\TableBuilder\Exception\DataAdapterException;
 
 interface DataAdapterInterface
 {
-
     /**
      * @param int $pageNumber
      * @param int $rowsPerPage

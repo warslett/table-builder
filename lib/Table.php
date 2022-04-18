@@ -125,7 +125,7 @@ class Table implements JsonSerializable
         $tableRequestParameters = $this->params[$this->name] ?? [];
 
         $requestRowsPerPage = (int) ($tableRequestParameters['rows_per_page'] ?? $this->rowsPerPage);
-        $this->rowsPerPage = $requestRowsPerPage > $this->maxRowsPerPage ? $this->maxRowsPerPage : $requestRowsPerPage;
+        $this->rowsPerPage = min($requestRowsPerPage, $this->maxRowsPerPage);
         $this->pageNumber = (int) ($tableRequestParameters['page'] ?? 1);
         $this->totalRows = $this->dataAdapter->countTotalRows();
 

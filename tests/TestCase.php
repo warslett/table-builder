@@ -9,7 +9,6 @@ use Mockery as m;
 
 abstract class TestCase extends PHPUnitTestCase
 {
-
     /**
      * PHPUnit now throws a paddy if no assertions are made. Sometimes we assert using Mockery shouldHaveReceived and
      * shouldNotHaveReceived expectations. Mockery allows us to get the count of this but also includes a count of stubs

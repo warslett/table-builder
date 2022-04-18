@@ -15,7 +15,6 @@ use WArslett\TableBuilder\TableCell;
 
 class TwigRendererTest extends TestCase
 {
-
     public function testRenderRouteCallsRouteGeneratorAdapter()
     {
         $routeGeneratorAdapter = $this->mockRouteGeneratorAdaptor('/foo/bar');

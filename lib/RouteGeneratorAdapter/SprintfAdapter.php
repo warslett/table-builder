@@ -6,7 +6,6 @@ namespace WArslett\TableBuilder\RouteGeneratorAdapter;
 
 final class SprintfAdapter implements RouteGeneratorAdapterInterface
 {
-
     /**
      * @param string $route
      * @param array<int|string, int|string> $params

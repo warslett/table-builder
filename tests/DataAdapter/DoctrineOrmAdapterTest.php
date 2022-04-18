@@ -19,7 +19,6 @@ use Mockery\Mock;
 
 class DoctrineOrmAdapterTest extends TestCase
 {
-
     public function testGetPageBuildsQuery(): void
     {
         $query = $this->mockQueryWithResult();

@@ -14,7 +14,6 @@ use WArslett\TableBuilder\RouteGeneratorAdapter\RouteGeneratorAdapterInterface;
 
 class PhtmlRendererTest extends TestCase
 {
-
     public function testRenderRouteCallsRouteGeneratorAdapter()
     {
         $routeGeneratorAdapter = $this->mockRouteGeneratorAdaptor('/foo/bar');

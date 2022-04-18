@@ -16,7 +16,6 @@ use Mockery\Mock;
 
 class ActionGroupColumnTest extends TestCase
 {
-
     /**
      * @return void
      * @throws NoValueAdapterException

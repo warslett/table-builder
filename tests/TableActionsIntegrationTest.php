@@ -21,7 +21,6 @@ use WArslett\TableBuilder\TableBuilderFactory;
 
 class TableActionsIntegrationTest extends TestCase
 {
-
     /**
      * @return void
      * @throws NoDataAdapterException
