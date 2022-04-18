@@ -8,8 +8,8 @@ jobs:
       - checkout
 
       - run:
-          name: "Pull PHP 7.4 Image"
-          command: "docker pull php:7.4-cli"
+          name: "Pull PHP 8.1 Image"
+          command: "docker pull php:8.1-cli"
 
       - run:
           name: "Build Testing Image"
@@ -41,7 +41,15 @@ jobs:
 
       - run:
           name: "Run PHPUnit on PHP8"
-          command: "bin/php8 vendor/bin/phpunit"
+          command: "bin/php80 vendor/bin/phpunit"
+
+      - run:
+          name: "Pull PHP 7.4 Image"
+          command: "docker pull php:7.4-cli"
+
+      - run:
+          name: "Run PHPUnit on PHP7.4"
+          command: "bin/php74 vendor/bin/phpunit"
 
       - run:
           name: "Run Infection PHP (Mutation Testing)"
